@@ -1,0 +1,1104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PicoSAS Quick Start</title>
+<meta name="picosas-build" content="2026-10-08-v0.1">
+<link rel="icon" href="picosas.png">
+<script>document.documentElement.className+=" js"</script>
+<script>(function(){var l=null;try{l=localStorage.getItem("picosas-lang")}catch(e){}if(l!=="en"&&l!=="zh-Hant")l=/^zh(-hant)?-tw$/i.test(navigator.language||"")?"zh-Hant":"en";document.documentElement.lang=l})();</script>
+<style>
+.phones{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start}.phones figure{width:400px;max-width:100%;margin:0}.phones figcaption{font-size:14px;margin-top:6px;line-height:1.5}
+:root {
+  --bg: #f6f7fb; --card: #ffffff; --ink: #1c2233; --muted: #5d6679; --line: #dfe3ec;
+  --accent: #2563eb; --accent-ink: #ffffff; --soft: #eaf1ff; --ok: #15803d; --warn: #b45309;
+  --warn-bg: #fff7e6; --shot: #eef1f7; --code-bg: #0f172a; --code-ink: #e2e8f0;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0d1220; --card: #151c2e; --ink: #e6e9f2; --muted: #9aa3b8; --line: #27304a;
+    --accent: #5b8cff; --accent-ink: #0b1020; --soft: #1b2743; --ok: #4ade80; --warn: #fbbf24;
+    --warn-bg: #2a2212; --shot: #1b2236; --code-bg: #0a0f1c; --code-ink: #dbe4f5;
+    color-scheme: dark;
+  }
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--bg); color: var(--ink);
+  font: 16px/1.55 "Segoe UI", "Microsoft JhengHei", "PingFang TC", "Noto Sans TC", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif; }
+main { max-width: 760px; margin: 0 auto; padding: 32px 16px 56px; }
+header { display: flex; align-items: center; gap: 14px; margin-bottom: 8px; flex-wrap: wrap; }
+.lang { margin-left: auto; display: inline-flex; border: 1px solid var(--line); border-radius: 999px; background: var(--card); padding: 3px; }
+.lang button { border: 0; background: transparent; color: var(--muted); font: inherit; font-size: 14px; font-weight: 600;
+  padding: 4px 12px; border-radius: 999px; cursor: pointer; }
+.lang button[aria-pressed="true"] { background: var(--ink); color: var(--card); }
+:root[lang="en"] [lang="zh-Hant"], :root[lang="zh-Hant"] [lang="en"] { display: none !important; }
+header img { width: 56px; height: 56px; border-radius: 14px; }
+h1 { font-size: 30px; line-height: 1.15; margin: 0; letter-spacing: -0.01em; text-wrap: balance; }
+.sub { color: var(--muted); margin: 6px 0 18px; }
+nav.toc { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 8px; }
+nav.toc a { border: 1px solid var(--line); background: var(--card); color: var(--ink); border-radius: 999px;
+  padding: 6px 14px; text-decoration: none; font-size: 15px; }
+nav.toc a b { color: var(--accent); margin-right: 5px; }
+nav.toc a:hover { border-color: var(--accent); }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 24px; margin-top: 18px;
+  scroll-margin-top: 12px; }
+h2 { font-size: 23px; line-height: 1.25; margin: 0 0 6px; display: flex; align-items: center; gap: 10px; text-wrap: balance; }
+h2 .n { flex: none; width: 32px; height: 32px; border-radius: 9px; background: var(--accent); color: var(--accent-ink);
+  display: grid; place-items: center; font-size: 17px; }
+h2 .badge { font-size: 12px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--warn);
+  border: 1px solid currentColor; border-radius: 999px; padding: 1px 9px; }
+h3.part { font-size: 18px; margin: 26px 0 0; padding-top: 18px; border-top: 1px solid var(--line); }
+.lead { color: var(--muted); margin: 0; }
+ol.steps { list-style: none; counter-reset: s; padding: 0; margin: 22px 0 0; display: grid; gap: 22px; }
+ol.steps > li { counter-increment: s; display: grid; grid-template-columns: 36px minmax(0, 1fr); gap: 14px; align-items: start; }
+ol.steps > li::before { content: counter(s); width: 32px; height: 32px; border-radius: 50%; background: var(--soft);
+  color: var(--accent); font-weight: 700; display: grid; place-items: center; }
+.step h4 { margin: 3px 0 4px; font-size: 17px; }
+.step p { margin: 0 0 10px; color: var(--muted); }
+.step p b, .tip b, td b { color: var(--ink); }
+.shot { background: var(--shot); border: 1px solid var(--line); border-radius: 12px; padding: 12px; overflow-x: auto; }
+.shot img, .ext img { display: block; max-width: 100%; height: auto; margin: 0 auto; border-radius: 6px; }
+.shot a.zoom, .ext a.zoom { display: block; }
+.shot.narrow img { max-width: 420px; }
+.shot.pair { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+.shot.pair a.zoom { flex: 0 1 auto; }
+.shot.pair img { max-width: 100%; }
+.ext { margin-top: 10px; background: var(--shot); border: 1px solid var(--line); border-radius: 12px; padding: 12px; }
+.ext img { max-width: 420px; }
+.ext.wide img { max-width: 100%; }
+.drawn svg { display: block; width: 100%; max-width: 300px; height: auto; margin: 0 auto; font-family: system-ui, "Segoe UI", "Microsoft JhengHei", sans-serif; }
+pre.file { margin: 0; padding: 10px 12px; background: var(--code-bg); color: var(--code-ink); border-radius: 8px; overflow-x: auto; font: 13px/1.45 Consolas, monospace; }
+p.quote { margin: 4px 0 10px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--soft); border-radius: 0 8px 8px 0; }
+.cap { font-size: 13px; color: var(--muted); margin: 6px 2px 0; }
+.tip { background: var(--soft); border-radius: 12px; padding: 14px 16px; margin-top: 22px; }
+.tip.warn { background: var(--warn-bg); }
+.tip h4 { margin: 0 0 6px; font-size: 16px; }
+.tip p { margin: 0 0 6px; }
+.tip ul { margin: 0; padding-left: 20px; }
+.tip li { margin: 0 0 4px; }
+table.keys { width: 100%; border-collapse: collapse; margin-top: 14px; font-size: 15px; }
+table.keys td { border-top: 1px solid var(--line); padding: 8px 6px; vertical-align: top; }
+table.keys td.num { width: 34px; }
+table.keys td { overflow-wrap: anywhere; }
+a.xl { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; overflow-wrap: anywhere; }
+a.xl:hover { text-decoration-thickness: 2px; }
+table.keys.prov td.k { width: 15%; }
+table.keys.prov code { white-space: nowrap; }
+@media (max-width: 640px) { table.keys.prov, table.keys.prov tbody, table.keys.prov tr, table.keys.prov td { display: block; width: auto; }
+  table.keys.prov tr { border-top: 1px solid var(--line); padding: 8px 0; } table.keys.prov td { border: 0; padding: 2px 6px; }
+  table.keys.prov code { white-space: normal; overflow-wrap: anywhere; } }
+table.keys td.k { width: 36%; font-weight: 600; }
+.cmp-wrap { overflow-x: auto; }
+table.keys.cmp { min-width: 560px; }
+table.keys.cmp td { overflow-wrap: break-word; }
+table.keys.cmp td.k { width: 19%; }
+table.keys.btns td.k { white-space: nowrap; }
+.m { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: #fbbf24;
+  color: #1c2233; font: 700 12px system-ui, sans-serif; }
+kbd { border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 5px; padding: 0 5px; font: 13px Consolas, monospace; }
+code { font: 14px Consolas, "SF Mono", Menlo, monospace; background: var(--soft); border-radius: 5px; padding: 1px 5px; }
+a { color: var(--accent); }
+footer { margin-top: 28px; color: var(--muted); font-size: 15px; }
+footer h2 { font-size: 17px; color: var(--ink); margin: 0 0 6px; }
+a.btn { display: inline-block; background: var(--accent); color: var(--accent-ink); border-radius: 10px; padding: 9px 16px;
+  font-weight: 600; text-decoration: none; }
+a.btn:hover { filter: brightness(1.1); }
+code.line { display: inline-block; max-width: 100%; overflow-wrap: anywhere; user-select: all; padding: 4px 8px; }
+button.copy { font: inherit; font-size: 14px; border: 1px solid var(--line); background: var(--card); color: var(--ink);
+  border-radius: 8px; padding: 3px 12px; margin-left: 8px; cursor: pointer; }
+button.copy:hover { border-color: var(--accent); }
+button.copy[data-done]::after { content: " ✓"; color: var(--ok); }
+details.faq { border-top: 1px solid var(--line); padding: 12px 2px; }
+details.faq summary { cursor: pointer; font-weight: 600; }
+details.faq summary::marker { color: var(--accent); }
+details.faq p { margin: 8px 0 0; color: var(--muted); }
+details.faq p b, details.faq p code { color: var(--ink); }
+.wrap { display: grid; grid-template-columns: 272px minmax(0, 760px); gap: 28px; max-width: 1096px; margin: 0 auto; padding: 0 16px; align-items: start; }
+.wrap main { max-width: none; margin: 0; padding: 32px 0 56px; }
+aside.side { position: sticky; top: 12px; margin-top: 32px; max-height: calc(100vh - 24px); overflow: auto; background: var(--card);
+  border: 1px solid var(--line); border-radius: 16px; padding: 14px; }
+.drawer > summary { display: none; cursor: pointer; font-weight: 700; padding: 2px 2px 8px; }
+.search { position: relative; }
+.search input { width: 100%; font: inherit; font-size: 15px; color: var(--ink); background: var(--bg); border: 1px solid var(--line);
+  border-radius: 10px; padding: 9px 34px 9px 12px; }
+.search input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+.search button { position: absolute; right: 6px; top: 6px; border: 0; background: transparent; color: var(--muted); font-size: 15px;
+  cursor: pointer; padding: 3px 7px; border-radius: 6px; }
+.search button:hover { background: var(--soft); }
+.qinfo { font-size: 12.5px; color: var(--muted); margin: 8px 2px 6px; min-height: 1.2em; }
+.tree, .tree ul, .res { list-style: none; margin: 0; padding: 0; }
+.tree a { display: block; padding: 5px 8px; border-radius: 8px; color: var(--ink); text-decoration: none; font-size: 14px; line-height: 1.35; }
+.tree a:hover, .tree a:focus { background: var(--soft); outline: none; }
+.tree .row { display: flex; align-items: center; gap: 2px; }
+.tree .row > a { flex: 1; font-weight: 600; }
+.tree .row > a b { color: var(--accent); margin-right: 6px; }
+.tree .tg { flex: none; border: 0; background: transparent; color: var(--muted); cursor: pointer; width: 22px; height: 22px; border-radius: 6px; font-size: 11px; }
+.tree .tg:hover { background: var(--soft); }
+.tree .sub { display: none; margin: 0 0 4px 22px; padding-left: 8px; border-left: 1px solid var(--line); }
+.tree .ch.open > .sub { display: block; }
+.tree .sub a { font-size: 13px; color: var(--muted); padding: 3px 8px; }
+.tree .sub a:hover, .tree .sub a:focus { color: var(--ink); }
+.tree .ch.cur > .row > a { background: var(--soft); color: var(--accent); }
+.res a { display: block; padding: 7px 8px; border-radius: 8px; text-decoration: none; color: var(--ink); }
+.res a:hover, .res a:focus { background: var(--soft); outline: none; }
+.res .tag { display: block; font-size: 11px; letter-spacing: .04em; text-transform: uppercase; color: var(--accent); }
+.res b { display: block; font-size: 14px; }
+.res small { display: block; color: var(--muted); font-size: 12.5px; line-height: 1.4; overflow-wrap: anywhere; }
+mark { background: #fde68a; color: #1c2233; border-radius: 3px; padding: 0 1px; }
+@keyframes flash { from { background: var(--soft); box-shadow: 0 0 0 6px var(--soft); } to { background: transparent; box-shadow: 0 0 0 6px transparent; } }
+.flash { animation: flash 1.8s ease-out; border-radius: 10px; }
+h3.part, h4, li.step, details.faq, table.keys tr, .tip, p.lead { scroll-margin-top: 16px; }
+html:not(.js) aside.side { display: none; }
+html.js nav.toc { display: none; }
+@media (max-width: 920px) {
+  .wrap { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  aside.side { position: static; max-height: none; margin-top: 16px; }
+  .drawer > summary { display: block; }
+  .wrap main { padding-top: 16px; }
+}
+#totop { position: fixed; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); z-index: 50; width: 46px; height: 46px; border-radius: 50%;
+  border: 1px solid var(--line); background: var(--card); color: var(--accent); font: 700 20px/1 system-ui, sans-serif; cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, .22); opacity: 0; pointer-events: none; transform: translateY(10px); transition: opacity .2s, transform .2s; }
+#totop.show { opacity: 1; pointer-events: auto; transform: none; }
+#totop:hover, #totop:focus-visible { background: var(--soft); outline: 2px solid var(--accent); outline-offset: 2px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+@media (prefers-reduced-motion: reduce) { #totop { transition: none; } }
+[hidden] { display: none !important; }
+@media (max-width: 520px) {
+  h1 { font-size: 25px; } .card { padding: 18px; } h2 { font-size: 20px; }
+  table.keys td.k { width: auto; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<aside class="side" id="side">
+  <details class="drawer" id="drawer" open>
+    <summary><span lang="en">Contents and search</span><span lang="zh-Hant">目錄與搜尋</span></summary>
+    <div class="search" role="search"><input id="q" type="search" autocomplete="off" spellcheck="false"><button type="button" id="qclear" hidden aria-label="Clear">✕</button></div>
+    <div id="qinfo" class="qinfo" aria-live="polite"></div>
+    <nav aria-label="Contents"><ul id="tree" class="tree"></ul><ul id="res" class="res" hidden></ul></nav>
+  </details>
+</aside>
+<main>
+  <header>
+    <img src="picosas.png" alt="">
+    <h1 lang="en">PicoSAS Quick Start</h1><h1 lang="zh-Hant">PicoSAS 快速入門</h1>
+    <div class="lang" role="group" aria-label="Language / 語言"><button type="button" data-lang="en">EN</button><button type="button" data-lang="zh-Hant">中文</button></div>
+  </header>
+  <p class="sub" lang="en">Everything a first-time user needs, one small step at a time — each step shows a picture of what you will see.</p><p class="sub" lang="zh-Hant">第一次用會需要知道的事，一次一小步，每一步都附上你會看到的畫面。</p>
+
+  <nav class="toc" aria-label="Chapters">
+    <a href="#first"><b>★</b><span lang="en">Start here</span><span lang="zh-Hant">從這裡開始</span></a>
+    <a href="#screen"><b>1</b><span lang="en">The buttons</span><span lang="zh-Hant">各按鈕功能</span></a>
+    <a href="#ai"><b>2</b><span lang="en">The AI assistant</span><span lang="zh-Hant">AI 助理</span></a>
+    <a href="#model"><b>3</b><span lang="en">Change the AI model</span><span lang="zh-Hant">更換 AI 模型</span></a>
+    <a href="#google"><b>4</b><span lang="en">Google API key</span><span lang="zh-Hant">Google API 金鑰</span></a>
+    <a href="#telegram"><b>5</b><span lang="en">Telegram</span><span lang="zh-Hant">Telegram</span></a>
+    <a href="#voice"><b>6</b><span lang="en">Voice</span><span lang="zh-Hant">語音</span></a>
+    <a href="#fit"><b>7</b><span lang="en">From data to report</span><span lang="zh-Hant">從數據到報告</span></a>
+    <a href="#result"><b>8</b><span lang="en">Reading results</span><span lang="zh-Hant">看懂結果</span></a>
+    <a href="#data"><b>9</b><span lang="en">Your own data</span><span lang="zh-Hant">你的數據</span></a>
+    <a href="#help"><b>10</b><span lang="en">Problems</span><span lang="zh-Hant">遇到問題</span></a>
+    <a href="#shape3d"><b>11</b><span lang="en">3D (preview)</span><span lang="zh-Hant">3D（預覽）</span></a>
+    <a href="#validation"><b>12</b><span lang="en">How it compares</span><span lang="zh-Hant">和業界比較</span></a>
+  </nav>
+
+  <!-- ─────────────────────────── ★ Start here: the first result ─────────────────────────── -->
+  <section class="card" id="first">
+    <h2><span class="n">★</span><span lang="en">Start here: your first result in 3 minutes</span><span lang="zh-Hant">從這裡開始：3 分鐘看到第一個結果</span></h2>
+    <p class="lead" lang="en">No data of your own yet? Use our sample file. A computer made this curve from perfectly uniform spheres, so we know the right answer: a radius of 60 Å.</p><p class="lead" lang="zh-Hant">手邊還沒有自己的數據？用我們準備的範例檔。這條曲線是電腦用完全均勻的球體算出來的，所以我們知道標準答案：半徑 60 Å。</p>
+    <ol class="steps">
+      <li class="step"><div><h4 lang="en">Save the sample file</h4><h4 lang="zh-Hant">存下範例檔</h4>
+        <p lang="en">Click the button and keep the file where you can find it again, for example on your Desktop. It is a small text file with 90 points: q, I(q) and the error of each point.</p><p lang="zh-Hant">按下按鈕，把檔案存在你找得到的地方，例如桌面。它是很小的純文字檔，共 90 個點：q、I(q)，還有每個點的誤差。</p>
+        <p><a class="btn" href="PicoSAS-sample-sphere.dat" download>⬇ PicoSAS-sample-sphere.dat</a></p></div></li>
+      <li class="step"><div><h4 lang="en">Open PicoSAS and click Load Data…</h4><h4 lang="zh-Hant">打開 PicoSAS，按 Load Data…</h4>
+        <p lang="en">Choose the file you just saved. Your curve appears on the plot as dots, and the <b class="ui">Batch</b> tab (top left) opens with the file ticked. Leave it ticked.</p><p lang="zh-Hant">選剛剛存的檔案。曲線會以點的形式出現在圖上，左上角的 <b class="ui">Batch</b> 分頁也會打開，檔案已經打勾。保持打勾就好。</p>
+        <div class="shot wide"><a class="zoom" lang="en" href="img/sample-loaded.png" target="_blank" rel="noopener noreferrer"><img src="img/sample-loaded.png" width="1277" height="471" alt="PicoSAS with the sample file loaded: the Batch list on the left, the 90 dots on the plot" loading="lazy"></a><a class="zoom" lang="zh-Hant" href="img/sample-loaded.png" target="_blank" rel="noopener noreferrer"><img src="img/sample-loaded.png" width="1277" height="471" alt="PicoSAS 載入範例檔之後：左邊是 Batch 清單，圖上有 90 個點" loading="lazy"></a></div></div></li>
+      <li class="step"><div><h4 lang="en">Click ▶ Auto-Fit and describe the sample</h4><h4 lang="zh-Hant">按 ▶ Auto-Fit，描述樣品</h4>
+        <p lang="en">A window asks you to describe your sample. Type (or copy) this line, then click <b class="ui">✓  Use this</b>:</p><p lang="zh-Hant">會跳出一個視窗，請你描述樣品。輸入（或複製）下面這一行，再按 <b class="ui">✓  Use this</b>：</p>
+        <p><code class="line">Uniform spheres in D2O, SANS - particle radius</code><button type="button" class="copy" data-copy="Uniform spheres in D2O, SANS - particle radius"><span lang="en">Copy</span><span lang="zh-Hant">複製</span></button></p>
+        <p lang="en">Please use exactly this line, so that your result matches the one below. One line about what the sample is and what you want to know is all PicoSAS needs; without a question it has to guess what to answer.</p><p lang="zh-Hant">請照抄這一行英文，結果才會和下面寫的一樣。PicoSAS 只需要一行：樣品是什麼、你想知道什麼；沒有寫問題的話，它只能自己猜要回答什麼。</p></div></li>
+      <li class="step"><div><h4 lang="en">Wait about a minute</h4><h4 lang="zh-Hant">等大約一分鐘</h4>
+        <p lang="en">The <b class="ui">Flow</b> tab on the right shows each stage as it runs. On our test computer this took about a minute; an older laptop may need a few. <b class="ui">STOP</b> cancels.</p><p lang="zh-Hant">右邊的 <b class="ui">Flow</b> 分頁會即時顯示每個階段。在我們的測試電腦上大約一分鐘；比較舊的筆電可能要幾分鐘。<b class="ui">STOP</b> 可以取消。</p></div></li>
+      <li class="step"><div><h4 lang="en">Check the answer</h4><h4 lang="zh-Hant">對答案</h4>
+        <p lang="en">Four things tell you it worked. <span class="m">1</span> <b class="ui">SAS Model</b> says <code>sphere</code>. <span class="m">2</span> <b class="ui">chi2</b> is close to 1, between <span data-expect="chi2" data-lo="0.7" data-hi="1.5">0.7 and 1.5</span>. <span class="m">3</span> A line runs through the dots. <span class="m">4</span> The small strip under the plot, <b class="ui">Δ/σ</b>, shows dots scattered evenly around 0.</p><p lang="zh-Hant">有四個地方可以確認成功了。<span class="m">1</span> <b class="ui">SAS Model</b> 顯示 <code>sphere</code>。<span class="m">2</span> <b class="ui">chi2</b> 接近 1，介於 <span data-expect="chi2" data-lo="0.7" data-hi="1.5">0.7 到 1.5</span> 之間。<span class="m">3</span> 有一條線穿過那些點。<span class="m">4</span> 圖下方的小圖 <b class="ui">Δ/σ</b>，點均勻散在 0 的上下。</p>
+        <p lang="en">Then open the <b class="ui">Model</b> tab below the plot: the row <code>radius</code> should be between <span data-expect="radius" data-lo="57" data-hi="63">57 and 63</span> Å. We made the file with exactly 60 Å. The <b class="ui">Batch</b> tab now shows the file with its chi2 and <b class="ui">✓ done</b>.</p><p lang="zh-Hant">接著打開圖下方的 <b class="ui">Model</b> 分頁：<code>radius</code> 那一列應該介於 <span data-expect="radius" data-lo="57" data-hi="63">57 到 63</span> Å 之間。這個檔案是用剛好 60 Å 算出來的。<b class="ui">Batch</b> 分頁這時會顯示這個檔案的 chi2 和 <b class="ui">✓ done</b>。</p>
+        <div class="shot wide"><a class="zoom" lang="en" href="img/result.png" target="_blank" rel="noopener noreferrer"><img src="img/result.png" width="850" height="806" alt="After Auto-Fit: the fitted line through the dots, the residual strip, SAS Model sphere, chi2 1.0693 and the Model tab with the radius row (numbers 1 to 5)" loading="lazy"></a><a class="zoom" lang="zh-Hant" href="img/result.png" target="_blank" rel="noopener noreferrer"><img src="img/result.png" width="850" height="806" alt="Auto-Fit 之後：線穿過那些點、下方的殘差小圖、SAS Model 是 sphere、chi2 是 1.0693，以及 Model 分頁裡的 radius 那一列（編號 1 到 5）" loading="lazy"></a></div></div></li>
+    </ol>
+    <div class="tip">
+      <h4 lang="en">What you just did</h4><h4 lang="zh-Hant">你剛剛做了什麼</h4>
+      <p lang="en">You loaded a curve, told PicoSAS what you want to know, and got a number you can check. Your own data works the same way. Chapter 9 lists what to check first, and chapter 8 shows how to read the answer. Something different on your screen? See chapter 10, or click <b class="ui">Report a problem</b>.</p><p lang="zh-Hant">你載入了一條曲線，告訴 PicoSAS 你想知道什麼，然後得到一個可以自己核對的數字。用你自己的數據也是同樣三步。第 9 章列出事前要檢查的事，第 8 章教你看懂答案。畫面和這裡不一樣？看第 10 章，或按 <b class="ui">Report a problem</b>。</p>
+    </div>
+    <div class="tip">
+      <h4 lang="en">Which button? Four buttons, four jobs</h4><h4 lang="zh-Hant">該按哪一個？四個按鈕，四件不同的事</h4>
+      <table class="keys prov btns">
+        <tr><td class="k" lang="en">▶ Auto-Fit</td><td class="k" lang="zh-Hant">▶ Auto-Fit</td><td lang="en">PicoSAS chooses the model and fits every <b>ticked</b> file in <b class="ui">Batch</b>. You only describe the sample. <b>Start here</b> whenever you aren't sure which model fits.</td><td lang="zh-Hant">PicoSAS 自己選模型，擬合 <b class="ui">Batch</b> 裡<b>打勾</b>的每一個檔案。你只要描述樣品。<b>不確定該用哪個模型時，從這裡開始。</b></td></tr>
+        <tr><td class="k" lang="en">&gt;&gt; RUN FIT</td><td class="k" lang="zh-Hant">&gt;&gt; RUN FIT</td><td lang="en">Fits the <b>one model you chose</b> in the <b class="ui">Model</b> tab, on the file shown on the plot. Only the parameters with <b class="ui">Fit?</b> ticked move. Use it when you already know the model, or to fine-tune after Auto-Fit.</td><td lang="zh-Hant">擬合你在 <b class="ui">Model</b> 分頁<b>自己選的那一個模型</b>，對象是圖上顯示的那個檔案。只有 <b class="ui">Fit?</b> 打勾的參數會動。已經知道要用哪個模型，或 Auto-Fit 之後想再微調時用它。</td></tr>
+        <tr><td class="k" lang="en">Compute/Plot</td><td class="k" lang="zh-Hant">Compute/Plot</td><td lang="en">Draws the chosen model with the numbers now in the table. <b>Nothing is fitted and nothing changes.</b> Use it to see what a value does before you fit.</td><td lang="zh-Hant">用表格裡現在的數值，把選好的模型畫出來。<b>不擬合，也不改任何數值。</b>想先看看某個數值會長什麼樣子，再決定要不要擬合時用它。</td></tr>
+        <tr><td class="k" lang="en">Web Search</td><td class="k" lang="zh-Hant">Web Search</td><td lang="en">A switch, not a button. <b>On</b>: PicoSAS looks up papers about your sample, and the assistant may search the web. <b>Off</b>: nothing you describe or type is sent to a search site. It is on again each time you open PicoSAS.</td><td lang="zh-Hant">這是開關，不是按鈕。<b>開</b>：PicoSAS 會查你樣品的相關文獻，助理也可以上網查。<b>關</b>：你描述或輸入的內容都不會送到搜尋網站。每次打開 PicoSAS 都會回到「開」。</td></tr>
+      </table>
+      <p lang="en">Chapter 1 explains the difference in detail.</p><p lang="zh-Hant">第 1 章有更詳細的比較。</p>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────── 1. The screen ─────────────────────────── -->
+  <section class="card" id="screen">
+    <h2><span class="n">1</span><span lang="en">What each button does</span><span lang="zh-Hant">每個按鈕在做什麼</span></h2>
+    <p class="lead" lang="en">Double-click the <b>PicoSAS</b> icon on your desktop. This window opens — the numbers match the list below. Here it is after the sample file of “Start here” has been fitted.</p><p class="lead" lang="zh-Hant">在桌面上按兩下 <b>PicoSAS</b> 圖示，會打開這個視窗——圖上的數字對應下面的表格。這張圖是「從這裡開始」的範例檔擬合完之後的樣子。</p>
+    <div class="shot wide"><a class="zoom" lang="en" href="img/main-window.png" target="_blank" rel="noopener noreferrer"><img src="img/main-window.png" width="1600" height="960" alt="The PicoSAS main window with its parts numbered 1 to 12" loading="lazy"></a><a class="zoom" lang="zh-Hant" href="img/main-window.png" target="_blank" rel="noopener noreferrer"><img src="img/main-window.png" width="1600" height="960" alt="PicoSAS 主視窗，各部分標上 1 到 12 的編號" loading="lazy"></a></div>
+    <table class="keys">
+      <tr><td class="num"><span class="m">1</span></td><td class="k" lang="en">Load Data…</td><td class="k" lang="zh-Hant">Load Data…</td><td lang="en">Open your measurement file (.dat .abs .txt .xml .h5).</td><td lang="zh-Hant">開啟你的量測資料檔（.dat .abs .txt .xml .h5）。</td></tr>
+      <tr><td class="num"><span class="m">2</span></td><td class="k" lang="en">↻ Restart</td><td class="k" lang="zh-Hant">↻ Restart</td><td lang="en">Clear everything and start a new sample.</td><td lang="zh-Hant">全部清掉，換一個新樣品。</td></tr>
+      <tr><td class="num"><span class="m">3</span></td><td class="k" lang="en" data-tabs="left_tabs">Batch · AI Config · 🔑 Keys · Report</td><td class="k" lang="zh-Hant" data-tabs="left_tabs">Batch · AI Config · 🔑 Keys · Report</td><td lang="en"><b class="ui">Batch</b>: the files you loaded. When you click Auto-Fit, the ticked files are fitted: one ticked file is a normal fit, several are a batch. <b class="ui">AI Config</b>: settings for the AI, voice and Telegram. <b class="ui">Keys</b>: API keys and tokens, kept only on this computer. <b class="ui">Report</b>: write and save the report. </td><td lang="zh-Hant"><b class="ui">Batch</b>：你載入的檔案。按 Auto-Fit 時，會擬合打勾的檔案：只勾一個是一般擬合，勾多個就是批次。<b class="ui">AI Config</b>：AI、語音和 Telegram 的設定。<b class="ui">Keys</b>：API 金鑰和 Token，只存在這台電腦。<b class="ui">Report</b>：產生並儲存報告。</td></tr>
+      <tr><td class="num"><span class="m">4</span></td><td class="k" lang="en">AI:</td><td class="k" lang="zh-Hant">AI:</td><td lang="en">Which AI answers. <b class="ui">Built-in</b> is the AI on your own computer. Under it: <b class="ui">SAS Model</b> (the model PicoSAS chose) and <b class="ui">chi2</b> (how closely it fits — near 1 is best).</td><td lang="zh-Hant">由哪個 AI 回答。<b class="ui">Built-in</b> 就是你自己電腦上的 AI。下面的 <b class="ui">SAS Model</b> 是 PicoSAS 選的模型，<b class="ui">chi2</b> 是擬合的好壞（越接近 1 越好）。</td></tr>
+      <tr><td class="num"><span class="m">5</span></td><td class="k" lang="en" data-tabs="plot_tabs">I(Q) / Fit · P(r) · 3D</td><td class="k" lang="zh-Hant" data-tabs="plot_tabs">I(Q) / Fit · P(r) · 3D</td><td lang="en">The plot: your data (dots) and the fitted model (line). The <b class="ui">P(r)</b> tab shows the distance distribution. The <b class="ui">3D</b> tab (chapter 11) is a preview in this beta: it hasn't yet passed its accuracy test.</td><td lang="zh-Hant">圖：你的數據（點）和擬合出的模型（線）。<b class="ui">P(r)</b> 分頁顯示距離分布。<b class="ui">3D</b> 分頁（第 11 章）是這個封測版的預覽功能：還沒通過準確度測試。</td></tr>
+      <tr><td class="num"><span class="m">6</span></td><td class="k" lang="en">▶ Auto-Fit</td><td class="k" lang="zh-Hant">▶ Auto-Fit</td><td lang="en">The main button: PicoSAS picks a model and fits it for you. <b>&gt;&gt; RUN FIT</b> fits a model you chose yourself, <b class="ui">STOP</b> stops. The same row also has <b class="ui">Web Search</b> (a switch: may PicoSAS use the internet?), <b class="ui">Compute/Plot</b> (draw a model without fitting) and <b class="ui">Export</b> (save results as CSV, DAT or JSON).</td><td lang="zh-Hant">最主要的按鈕：PicoSAS 幫你選模型、做擬合。<b>&gt;&gt; RUN FIT</b> 用你自己選的模型擬合，<b class="ui">STOP</b> 停止。同一列還有 <b class="ui">Web Search</b>（開關：PicoSAS 可不可以上網）、<b class="ui">Compute/Plot</b>（只畫模型、不擬合）和 <b class="ui">Export</b>（把結果存成 CSV、DAT 或 JSON）。</td></tr>
+      <tr><td class="num"><span class="m">7</span></td><td class="k" lang="en" data-tabs="fit_tabs">Model · Fit Options · Polydispersity · Magnetism · Combine Models</td><td class="k" lang="zh-Hant" data-tabs="fit_tabs">Model · Fit Options · Polydispersity · Magnetism · Combine Models</td><td lang="en">Choose and adjust a model by hand — for experienced users.</td><td lang="zh-Hant">自己選模型、調參數——給有經驗的使用者。</td></tr>
+      <tr><td class="num"><span class="m">8</span></td><td class="k" lang="en" data-tabs="right_tabs">Flow · KB · S-EVO · Refs · Display · Fit Log</td><td class="k" lang="zh-Hant" data-tabs="right_tabs">Flow · KB · S-EVO · Refs · Display · Fit Log</td><td lang="en"><b class="ui">Flow</b>: the analysis stages, live. <b>KB</b>: your past fits. <b class="ui">S-EVO</b>: PicoSAS's growing knowledge library. <b class="ui">Refs</b>: literature for this sample. <b class="ui">Display</b>: font sizes. <b class="ui">Fit Log</b>: every fitting step. The row of tabs scrolls: use its small arrows to reach the last ones.</td><td lang="zh-Hant"><b class="ui">Flow</b>：分析各階段的即時進度。<b>KB</b>：你過去的擬合。<b class="ui">S-EVO</b>：PicoSAS 越用越豐富的知識庫。<b class="ui">Refs</b>：這個樣品的相關文獻。<b class="ui">Display</b>：字體大小。<b class="ui">Fit Log</b>：每一步擬合的紀錄。這一排分頁可以捲動，用旁邊的小箭頭切到最後幾個。</td></tr>
+      <tr><td class="num"><span class="m">9</span></td><td class="k" lang="en">Report a problem</td><td class="k" lang="zh-Hant">Report a problem</td><td lang="en">Tell the PicoSAS team what went wrong — your log is attached automatically.</td><td lang="zh-Hant">告訴 PicoSAS 團隊哪裡出了問題——你的 log 會自動附上。</td></tr>
+      <tr><td class="num"><span class="m">10</span></td><td class="k" lang="en">PicoSAS bubble</td><td class="k" lang="zh-Hant">小伐頭像</td><td lang="en">Your AI assistant (called 小伐 in Chinese). Click it to chat.</td><td lang="zh-Hant">你的 AI 助理（英文介面叫 PicoSAS）。點它就能對話。</td></tr>
+      <tr><td class="num"><span class="m">11</span></td><td class="k" lang="en">◢ Holographic</td><td class="k" lang="zh-Hant">◢ Holographic</td><td lang="en">The look of the window: Holographic, Dark or Light.</td><td lang="zh-Hant">視窗的外觀：Holographic（全像）、Dark（深色）或 Light（淺色）。</td></tr>
+      <tr><td class="num"><span class="m">12</span></td><td class="k" lang="en">AI · System</td><td class="k" lang="zh-Hant">AI · System</td><td lang="en">How the AI you chose is doing, and how busy your computer is. <b>AI</b>: its speed, measured on your computer; the label under it says where it runs: <b>AI·GPU</b>, <b>AI·CPU</b> or <b>AI·Cloud</b>. The other dials are memory (<b>RAM</b>), the processor (<b>CPU</b>) and the graphics or AI chip (<b>iGPU</b> / <b>NPU</b>). If the built-in AI runs on the processor, the CPU dial says <b>CPU·AI</b>. It turns red while a fit is running, because the AI and the fit share the processor and both slow down. A cloud AI or the GPU avoids this. The line under the dials names the AI and how long one reply takes. Point at the panel to compare every AI you have used here and to see the memory the built-in AI holds.</td><td lang="zh-Hant">你選的 AI 現在的狀況，以及電腦忙不忙。<b>AI</b>：在你的電腦上實際量到的速度；底下的標籤寫它跑在哪裡：<b>AI·GPU</b>、<b>AI·CPU</b> 或 <b>AI·Cloud</b>（雲端）。其他幾個儀表是記憶體（<b>RAM</b>）、處理器（<b>CPU</b>），以及顯示晶片或 AI 晶片（<b>iGPU</b>／<b>NPU</b>）。內建 AI 跑在處理器上時，CPU 儀表會寫 <b>CPU·AI</b>；正在擬合時它會變紅，表示 AI 和擬合搶同一個處理器，兩邊都會變慢，改用雲端 AI 或 GPU 就不會。儀表下面那一行是 AI 的名稱和回答一次要多久。滑鼠移到這一區上，可以比較你在這台電腦用過的每一種 AI，也看得到內建 AI 佔了多少記憶體。</td></tr>
+      <tr><td class="num"></td><td class="k" lang="en">Menus</td><td class="k" lang="zh-Hant">選單</td><td lang="en"><b class="ui">Project</b>: <span data-menu="Project">Save Project… · Open Project… · Recall (re-verify)…</span> &nbsp; <b class="ui">Help</b>: <span data-menu="Help">Quick Start Guide · Check for Updates · Open Log Folder · Decision Trail… · Contribute Knowledge… · Report a Problem…</span></td><td lang="zh-Hant"><b class="ui">Project</b>：<span data-menu="Project">Save Project… · Open Project… · Recall (re-verify)…</span>（儲存、開啟、重新驗證專案）&nbsp; <b class="ui">Help</b>：<span data-menu="Help">Quick Start Guide · Check for Updates · Open Log Folder · Decision Trail… · Contribute Knowledge… · Report a Problem…</span>（這份說明書、檢查更新、開啟 log 資料夾、決策紀錄、貢獻知識、回報問題）</td></tr>
+    </table>
+    <h3 class="part" lang="en">Auto-Fit, RUN FIT and Compute/Plot: what is different</h3><h3 class="part" lang="zh-Hant">Auto-Fit、RUN FIT、Compute/Plot 差在哪裡</h3>
+    <p lang="en">All three use the same plot and the same <b class="ui">Model</b> tab. They differ in who chooses the model and what gets changed.</p><p lang="zh-Hant">三個用的是同一張圖、同一個 <b class="ui">Model</b> 分頁，差別在於誰選模型、會改動什麼。</p>
+    <div class="cmp-wrap"><table class="keys cmp">
+      <tr><td class="k" lang="en"></td><td class="k" lang="zh-Hant"></td><td lang="en"><b>▶ Auto-Fit</b></td><td lang="zh-Hant"><b>▶ Auto-Fit</b></td><td lang="en"><b>&gt;&gt; RUN FIT</b></td><td lang="zh-Hant"><b>&gt;&gt; RUN FIT</b></td><td lang="en"><b>Compute/Plot</b></td><td lang="zh-Hant"><b>Compute/Plot</b></td></tr>
+      <tr><td class="k" lang="en">Who chooses the model</td><td class="k" lang="zh-Hant">誰選模型</td><td lang="en">PicoSAS, from the data and your description</td><td lang="zh-Hant">PicoSAS，依數據和你的描述</td><td lang="en">You, in the <b class="ui">Model</b> tab</td><td lang="zh-Hant">你自己，在 <b class="ui">Model</b> 分頁選</td><td lang="en">You, in the <b class="ui">Model</b> tab</td><td lang="zh-Hant">你自己，在 <b class="ui">Model</b> 分頁選</td></tr>
+      <tr><td class="k" lang="en">Which file</td><td class="k" lang="zh-Hant">對哪個檔案</td><td lang="en">Every ticked file in <b class="ui">Batch</b> (two or more ticked run one after another)</td><td lang="zh-Hant"><b class="ui">Batch</b> 裡打勾的每一個（勾兩個以上就依序一個一個跑）</td><td lang="en">The file on the plot</td><td lang="zh-Hant">圖上顯示的那個檔案</td><td lang="en">The file on the plot</td><td lang="zh-Hant">圖上顯示的那個檔案</td></tr>
+      <tr><td class="k" lang="en">What changes</td><td class="k" lang="zh-Hant">會改動什麼</td><td lang="en">Model, parameters, the answer to your question, the report</td><td lang="zh-Hant">模型、參數、你問題的答案、報告</td><td lang="en">Only the parameters with <b class="ui">Fit?</b> ticked, kept between <b class="ui">Min</b> and <b class="ui">Max</b></td><td lang="zh-Hant">只有 <b class="ui">Fit?</b> 打勾的參數，而且不超出 <b class="ui">Min</b> 和 <b class="ui">Max</b></td><td lang="en">Nothing. It only draws the line</td><td lang="zh-Hant">什麼都不改，只畫線</td></tr>
+      <tr><td class="k" lang="en">Checks the physics</td><td class="k" lang="zh-Hant">會檢查物理合不合理</td><td lang="en">Yes: it compares models and says when a number can't be trusted</td><td lang="zh-Hant">會：比較多個模型，也會告訴你哪個數字不可信</td><td lang="en">No: it fits exactly what you asked for</td><td lang="zh-Hant">不會：你叫它擬合什麼就擬合什麼</td><td lang="en">No</td><td lang="zh-Hant">不會</td></tr>
+      <tr><td class="k" lang="en">Time</td><td class="k" lang="zh-Hant">要多久</td><td lang="en">About a minute per file on our test computer</td><td lang="zh-Hant">在我們的測試電腦上，每個檔案大約一分鐘</td><td lang="en">One fit, much shorter</td><td lang="zh-Hant">只做一次擬合，快很多</td><td lang="en">Immediate</td><td lang="zh-Hant">馬上</td></tr>
+    </table></div>
+    <p lang="en">A good order for your own data: <b>Auto-Fit</b> first. If you want to try a model of your own, choose it in the <b class="ui">Model</b> tab, press <b>Compute/Plot</b> to check the starting numbers look sensible, then <b>&gt;&gt; RUN FIT</b>. Auto-Fit always chooses its own model, so a model you set by hand isn't kept when you press Auto-Fit. <b class="ui">STOP</b> stops Auto-Fit and RUN FIT.</p><p lang="zh-Hant">用自己的數據時，建議的順序：先按 <b>Auto-Fit</b>。想試自己的模型，就在 <b class="ui">Model</b> 分頁選好，按 <b>Compute/Plot</b> 看看起始數值畫出來合不合理，再按 <b>&gt;&gt; RUN FIT</b>。Auto-Fit 一定會自己選模型，所以你手動設定的模型，按 Auto-Fit 之後就不會保留。<b class="ui">STOP</b> 可以停止 Auto-Fit 和 RUN FIT。</p>
+    <h3 class="part" lang="en">Web Search: what it sends, and when to turn it off</h3><h3 class="part" lang="zh-Hant">Web Search：會送出什麼，什麼時候該關掉</h3>
+    <table class="keys">
+      <tr><td class="k" lang="en">On (default)</td><td class="k" lang="zh-Hant">開（預設）</td><td lang="en">During Auto-Fit PicoSAS looks up papers about the material it understood from your description (for example "graphite"), and the report lists them. The assistant can search the web for questions such as news, weather or a facility's instruments.</td><td lang="zh-Hant">Auto-Fit 時，PicoSAS 會用它從你的描述理解到的材料名（例如「graphite」）去查文獻，報告會列出來。助理也可以上網查新聞、天氣、某個設施有哪些儀器這類問題。</td></tr>
+      <tr><td class="k" lang="en">Off</td><td class="k" lang="zh-Hant">關</td><td lang="en">Nothing you describe or type is sent to a search site. Fitting works exactly the same; the report just has no literature list. If you ask the assistant something that needs the web, it says the switch is off instead of guessing.</td><td lang="zh-Hant">你描述或輸入的內容都不會送到搜尋網站。擬合完全照常，只是報告裡不會有文獻清單。問助理需要上網的問題時，它會告訴你開關是關的，不會亂猜。</td></tr>
+    </table>
+    <p lang="en">Turn it off for a confidential sample. Two things to know: it is <b>on again every time you open PicoSAS</b>, and it doesn't cover a cloud AI. If you chose Gemini, Claude or MiniMax, that AI still receives what you ask it; use the built-in AI for a confidential sample.</p><p lang="zh-Hant">樣品需要保密時就關掉。有兩件事要知道：<b>每次打開 PicoSAS 它都會回到「開」</b>；它也管不到雲端 AI。如果你選的是 Gemini、Claude 或 MiniMax，那個 AI 還是會收到你問它的內容；樣品需要保密時，請改用內建 AI。</p>
+  </section>
+
+  <!-- ─────────────────────────── 2. The AI assistant ─────────────────────────── -->
+  <section class="card" id="ai">
+    <h2><span class="n">2</span><span lang="en">Your AI assistant</span><span lang="zh-Hant">你的 AI 助理</span></h2>
+    <p class="lead" lang="en">PicoSAS comes with its own AI. It runs on your computer — no account, no key, no fee, and it keeps working without internet.</p><p class="lead" lang="zh-Hant">PicoSAS 內建自己的 AI，就在你的電腦上執行——不用帳號、不用金鑰、不用付費，沒有網路也能用。</p>
+    <div class="tip warn"><h4 lang="en">Using it as a general assistant? Choose a bigger AI</h4><h4 lang="zh-Hant">要當通用助理用？請選更大的 AI</h4>
+      <p lang="en">For general use — asking about anything, looking things up, long conversations — we strongly recommend a <b>cloud AI</b> (Gemini, Claude, MiniMax, or any provider you add yourself; see <a href="#model">chapter 3</a>) or a <b>local AI of 27B parameters or more</b>. The built-in AI only gives you the most basic, limited abilities: it reads your data, explains a result and answers simple questions, but it isn't comprehensive.</p><p lang="zh-Hant">當你把它當通用助理使用——什麼都問、查資料、長時間對話——我們強烈建議使用<b>雲端 AI</b>（Gemini、Claude、MiniMax，或你自己加入的任何業者，見<a href="#model">第 3 章</a>），或<b>270 億參數（27B）以上的本地 AI</b>。內建的 AI 只提供最基礎、有限的能力：它能讀你的數據、說明結果、回答簡單的問題，但還不夠全面。</p></div>
+    <ol class="steps">
+      <li class="step"><div><h4 lang="en">The first time, the AI downloads by itself</h4><h4 lang="zh-Hant">第一次啟動時，AI 會自己下載</h4>
+        <p lang="en">About 5 GB, once — usually 10 to 40 minutes. The bottom-right corner shows the progress. You can keep working; if you close PicoSAS, it continues next time.</p><p lang="zh-Hant">大約 5 GB，只下載一次——通常 10 到 40 分鐘。右下角會顯示進度。你可以先開始用；關掉 PicoSAS 也沒關係，下次會續傳。</p>
+        <div class="shot"><a class="zoom" lang="en" href="img/status-download.png" target="_blank" rel="noopener noreferrer"><img src="img/status-download.png" width="408" height="39" alt="The status bar while the offline AI downloads: Offline AI assistant 1/1: 42% of 5.0 GB" loading="lazy"></a><a class="zoom" lang="zh-Hant" href="img/status-download.png" target="_blank" rel="noopener noreferrer"><img src="img/status-download.png" width="408" height="39" alt="離線 AI 下載時的狀態列：Offline AI assistant 1/1: 42% of 5.0 GB" loading="lazy"></a></div></div></li>
+      <li class="step"><div><h4 lang="en">Open the assistant</h4><h4 lang="zh-Hant">打開助理</h4>
+        <p lang="en">Click the round picture at the <b>bottom-right of your screen</b>. Shortcut: <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>A</kbd>. It can answer once the download above has finished.</p><p lang="zh-Hant">點螢幕<b>右下角</b>的圓形頭像。快速鍵：<kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>A</kbd>。上面的下載完成後它才能回答。</p>
+        <div class="shot"><a class="zoom" lang="en" href="img/chat-bubble.png" target="_blank" rel="noopener noreferrer"><img src="img/chat-bubble.png" width="62" height="62" alt="The round PicoSAS picture that floats at the bottom-right of the screen" loading="lazy"></a><a class="zoom" lang="zh-Hant" href="img/chat-bubble.png" target="_blank" rel="noopener noreferrer"><img src="img/chat-bubble.png" width="62" height="62" alt="浮在螢幕右下角的圓形小伐頭像" loading="lazy"></a></div></div></li>
+      <li class="step"><div><h4 lang="en">Ask anything</h4><h4 lang="zh-Hant">想問什麼都可以</h4>
+        <p lang="en">Type your question and press <kbd>Enter</kbd>, or tap a suggestion. It answers in the language you write in.</p><p lang="zh-Hant">輸入問題後按 <kbd>Enter</kbd>，或直接點一個建議。你用什麼語言問，它就用什麼語言答。</p>
+        <div class="shot narrow"><a class="zoom" lang="en" href="img/chat-window-en.png" target="_blank" rel="noopener noreferrer"><img src="img/chat-window-en.png" width="360" height="520" alt="The PicoSAS chat window with its buttons numbered 1 to 6" loading="lazy"></a><a class="zoom" lang="zh-Hant" href="img/chat-window-zh-Hant.png" target="_blank" rel="noopener noreferrer"><img src="img/chat-window-zh-Hant.png" width="360" height="520" alt="小伐的對話視窗，按鈕標上 1 到 6 的編號" loading="lazy"></a></div>
+        <table class="keys">
+          <tr><td class="num"><span class="m">1</span></td><td class="k" lang="en">Suggestions</td><td class="k" lang="zh-Hant">建議問題</td><td lang="en">Tap one to ask it.</td><td lang="zh-Hant">點一下就會問它。</td></tr>
+          <tr><td class="num"><span class="m">2</span></td><td class="k" lang="en">Question box · ➤</td><td class="k" lang="zh-Hant">輸入框 · ➤</td><td lang="en">Type, then <kbd>Enter</kbd> or ➤. While it is answering or analyzing, ➤ turns into a red <b>■</b>: press it to stop (the analysis and the rest of the batch too). <kbd>Enter</kbd> still adds a message to the queue.</td><td lang="zh-Hant">輸入後按 <kbd>Enter</kbd> 或 ➤。回答或分析進行中，➤ 會變成紅色的 <b>■</b>：按下去就停止（分析和批次裡還沒跑的檔案也一起停）。這時按 <kbd>Enter</kbd> 仍會把訊息排進佇列。</td></tr>
+          <tr><td class="num"><span class="m">3</span></td><td class="k" lang="en">🎤 Microphone</td><td class="k" lang="zh-Hant">🎤 麥克風</td><td lang="en">Talk instead of typing (chapter 6).</td><td lang="zh-Hant">用說的，不用打字（第 6 章）。</td></tr>
+          <tr><td class="num"><span class="m">4</span></td><td class="k" lang="en">🔊 Speaker</td><td class="k" lang="zh-Hant">🔊 喇叭</td><td lang="en">Read the answers aloud.</td><td lang="zh-Hant">把回答唸出來。</td></tr>
+          <tr><td class="num"><span class="m">5</span></td><td class="k" lang="en">EN / 中</td><td class="k" lang="zh-Hant">EN / 中</td><td lang="en">Switch the answer language.</td><td lang="zh-Hant">切換回答的語言。</td></tr>
+          <tr><td class="num"></td><td class="k" lang="en">🎧 · —</td><td class="k" lang="zh-Hant">🎧 · —</td><td lang="en">🎧: you can interrupt it by talking. —: shrink back to the round picture. Typing <code>/stop</code> does the same as ■.</td><td lang="zh-Hant">🎧：它說話時可以直接開口打斷。—：縮回圓形頭像。打 <code>/stop</code> 和按 ■ 一樣。</td></tr>
+          <tr><td class="num"><span class="m">6</span></td><td class="k" lang="en">📎 Attach</td><td class="k" lang="zh-Hant">📎 附加</td><td lang="en">Give it a file or a picture. You can also paste it (<kbd>Ctrl</kbd> + <kbd>V</kbd>) or drag it into the window.</td><td lang="zh-Hant">交給它檔案或圖片。也可以直接貼上（<kbd>Ctrl</kbd> + <kbd>V</kbd>）或拖進視窗。</td></tr>
+        </table></div></li>
+      <li class="step"><div><h4 lang="en">Give it files and pictures</h4><h4 lang="zh-Hant">交給它檔案和圖片</h4>
+        <p lang="en">Click <b>📎</b>, paste, or drag files in. They appear above the question box (✕ removes one); type a question if you like, then send. You can send a file without typing anything.</p><p lang="zh-Hant">按 <b>📎</b>、貼上，或把檔案拖進來。它們會列在輸入框上方（按 ✕ 可以拿掉）；想問什麼就打字，再送出。不打字直接送也可以。</p>
+        <table class="keys prov">
+          <tr><td class="k" lang="en">Measurement data</td><td class="k" lang="zh-Hant">量測數據</td><td lang="en"><code>.dat .abs .txt .csv .xml .h5 .nxs</code> — loaded into <b class="ui">Batch</b> and onto the plot. Then say “analyze”.</td><td lang="zh-Hant"><code>.dat .abs .txt .csv .xml .h5 .nxs</code>——載入 <b class="ui">Batch</b> 並畫在圖上。接著說「開始分析」。</td></tr>
+          <tr><td class="k" lang="en">Papers and notes</td><td class="k" lang="zh-Hant">論文和筆記</td><td lang="en"><code>.pdf .md .txt</code> — added to your own material. Ask about them and it names the file and page. A scanned PDF (pictures of pages, no text) can't be read yet.</td><td lang="zh-Hant"><code>.pdf .md .txt</code>——加進你自己的資料。之後問它內容，它會註明檔名和頁碼。掃描的 PDF（每頁是圖片、沒有文字）目前還讀不了。</td></tr>
+          <tr><td class="k" lang="en">Pictures</td><td class="k" lang="zh-Hant">圖片</td><td lang="en"><code>.png .jpg .webp</code>, screenshots — it describes the picture and reads the text in it, answering your question. It takes about 1–4 minutes per picture on a laptop, and it can be wrong about details: check what matters.</td><td lang="zh-Hant"><code>.png .jpg .webp</code>、螢幕截圖——它會描述圖片、讀出圖上的文字，並回答你的問題。在筆電上每張大約 1–4 分鐘，細節可能看錯：重要的地方請自己核對。</td></tr>
+        </table>
+        <p lang="en">Reading pictures uses the built-in Qwen3.5-4B with its vision file. If it isn't installed yet (usually on computers with 12 GB of memory or more), PicoSAS asks before it reads your first picture. It tells you how much it needs to download (about 3.5 GB, or 0.7 GB if the 4B is already there) and waits for your “yes”.</p><p lang="zh-Hant">看圖用的是內建的 Qwen3.5-4B 和它的視覺檔。還沒裝的電腦（通常是 12 GB 以上記憶體的），第一次傳圖片時它會先問你——告訴你要下載多少（約 3.5 GB；已經有 4B 的話約 0.7 GB），等你說「要」才下載。</p></div></li>
+      <li class="step"><div><h4 lang="en">When it isn't sure what you mean, it asks</h4><h4 lang="zh-Hant">它不確定你的意思時，會先問你</h4>
+        <p lang="en">Before acting, it reads what you are asking for. If it can't tell whether you want an analysis started, it asks instead of guessing. Questions that merely contain the word “analyze” no longer start an analysis, and writing, translating or general questions aren't sent to your data. Reading your message takes a few extra seconds.</p><p lang="zh-Hant">動手之前，它會先讀懂你要什麼。分不出你是不是要它開始分析時，它會先問你，不會用猜的。只是剛好有「分析」兩個字的問題，不會再被當成要開跑；寫東西、翻譯或一般問題也不會被拿去動你的數據。讀懂你的話會多花幾秒鐘。</p></div></li>
+      <li class="step"><div><h4 lang="en">“AI:” says Built-in — that's the offline AI</h4><h4 lang="zh-Hant">「AI:」顯示 Built-in——就是離線的 AI</h4>
+        <p lang="en">It is already selected. Built-in answers everything — chat, analysis and reports — on your own computer.</p><p lang="zh-Hant">已經預先選好了。Built-in 會回答所有事——對話、分析和報告——全部在你自己的電腦上完成。</p>
+        <div class="shot narrow"><a class="zoom" lang="en" href="img/ai-box-list.png" target="_blank" rel="noopener noreferrer"><img src="img/ai-box-list.png" width="160" height="335" alt="The AI box set to Built-in, with the list of providers open" loading="lazy"></a><a class="zoom" lang="zh-Hant" href="img/ai-box-list.png" target="_blank" rel="noopener noreferrer"><img src="img/ai-box-list.png" width="160" height="335" alt="AI 方塊選的是 Built-in，供應者清單展開" loading="lazy"></a></div></div></li>
+      <li class="step"><div><h4 lang="en">Ask it how to use PicoSAS</h4><h4 lang="zh-Hant">問它怎麼操作 PicoSAS</h4>
+        <p lang="en">Ask in your own words, for example <i>“how do I get a Gemini API key?”</i> or <i>“how do I add my own cloud AI?”</i>. When this guide covers the question, the assistant quotes its steps word for word and gives the link to the chapter.</p><p lang="zh-Hant">用你自己的話問就好，例如「怎麼申請 Gemini API 金鑰？」或「我要怎麼加自己的雲端 AI？」。說明書有寫到的問題，助理會把說明書裡的步驟原文回給你，並附上那一章的連結。</p></div></li>
+    </ol>
+  </section>
+
+  <!-- ─────────────────────────── 3. Change the AI model ─────────────────────────── -->
+  <section class="card" id="model">
+    <h2><span class="n">3</span><span lang="en">Change the AI model</span><span lang="zh-Hant">更換 AI 模型</span></h2>
+    <p class="lead" lang="en">Optional — the built-in AI is enough to start. Choose A, B, C or D.</p><p class="lead" lang="zh-Hant">不一定要做——內建的 AI 就夠用了。想換的話，選 A、B、C 或 D。</p>
+    <div class="tip"><h4 lang="en">Which built-in AI you get</h4><h4 lang="zh-Hant">你會得到哪一個內建 AI</h4>
+      <p lang="en">PicoSAS picks the built-in AI from your computer's memory. With <b data-pick="12:qwen3-8b-q4_k_m">12 GB or more</b> it is <b>Qwen3-8B</b>; with <b data-pick="8:qwen3.5-4b-q4_k_m">8 to 12 GB</b> it is the smaller <b>Qwen3.5-4B</b>. Both are instruct models: they answer directly instead of thinking at length. <b data-pick="6:">Below 8 GB</b> there is no built-in AI, so you can use only a cloud AI (B or D below). These are the models that did best on SAS questions in our own tests; smaller ones answered them unreliably.</p><p lang="zh-Hant">PicoSAS 依你電腦的記憶體挑內建 AI。<b data-pick="12:qwen3-8b-q4_k_m">12 GB 以上</b>用 <b>Qwen3-8B</b>；<b data-pick="8:qwen3.5-4b-q4_k_m">8 到 12 GB</b>用較小的 <b>Qwen3.5-4B</b>。兩個都是 instruct 模型：直接回答，不會長篇推理。<b data-pick="6:">低於 8 GB</b> 沒有內建 AI，只能使用雲端 AI（下面的 B 或 D）。這兩個是我們自己測試中回答 SAS 問題最好的；更小的模型回答這類問題不可靠。</p></div>
+
+    <h3 class="part" lang="en">A. Another built-in model (offline)</h3><h3 class="part" lang="zh-Hant">A. 另一個內建模型（離線）</h3>
+    <ol class="steps">
+      <li class="step"><div><h4 lang="en">Open AI Config → Built-in LLM</h4><h4 lang="zh-Hant">打開 AI Config → Built-in LLM</h4>
+        <p lang="en">Click the <b class="ui">AI Config</b> tab on the left. <b class="ui">Built-in LLM</b> is the first box.</p><p lang="zh-Hant">點左邊的 <b class="ui">AI Config</b> 分頁，第一個方塊就是 <b class="ui">Built-in LLM</b>。</p>
+        <div class="shot narrow"><a class="zoom" lang="en" href="img/builtin-llm-box.png" target="_blank" rel="noopener noreferrer"><img src="img/builtin-llm-box.png" width="390" height="198" alt="The Built-in LLM box with Model, Download, Installed and Use (numbers 1 to 4)" loading="lazy"></a><a class="zoom" lang="zh-Hant" href="img/builtin-llm-box.png" target="_blank" rel="noopener noreferrer"><img src="img/builtin-llm-box.png" width="390" height="198" alt="Built-in LLM 方塊：Model、Download、Installed、Use（編號 1 到 4）" loading="lazy"></a></div></div></li>
+      <li class="step"><div><h4 lang="en">Pick a model <span class="m">1</span>, click Download <span class="m">2</span></h4><h4 lang="zh-Hant">選一個模型 <span class="m">1</span>，按 Download <span class="m">2</span></h4>
+        <p lang="en">Or type a name and click <b class="ui">Search HF</b> to find any model on HuggingFace. When the download ends, PicoSAS asks <i>“Switch the AI provider to 'Built-in' now?”</i> — click <b>Yes</b>.</p><p lang="zh-Hant">也可以輸入名稱後按 <b class="ui">Search HF</b>，在 HuggingFace 上找任何模型。下載完成後 PicoSAS 會問「Switch the AI provider to 'Built-in' now?」（要現在切換到 Built-in 嗎？）——按 <b>Yes</b>。</p></div></li>
+      <li class="step"><div><h4 lang="en">Switch between models you already have <span class="m">3</span> <span class="m">4</span></h4><h4 lang="zh-Hant">在已下載的模型之間切換 <span class="m">3</span> <span class="m">4</span></h4>
+        <p lang="en">Pick one under <b class="ui">Installed</b> and click <b class="ui">Use</b> — no download. Bigger models are smarter but slower and need more memory: an 8B model needs about 12 GB of RAM.</p><p lang="zh-Hant">在 <b class="ui">Installed</b> 選一個，按 <b class="ui">Use</b>——不用重新下載。模型越大越聰明，但也越慢、越吃記憶體：8B 的模型大約要 12 GB 的記憶體。</p></div></li>
+    </ol>
+
+    <h3 class="part" lang="en">B. A cloud AI — Gemini, Claude or MiniMax</h3><h3 class="part" lang="zh-Hant">B. 雲端 AI——Gemini、Claude 或 MiniMax</h3>
+    <div class="tip warn"><h4 lang="en">Most cloud AIs are paid</h4><h4 lang="zh-Hant">雲端 AI 大多要付費</h4>
+      <p lang="en">Most cloud AIs charge for use. The free options (Gemini's free tier and OpenRouter's free models) have limits: a set number of requests per day, and only some of the models. The companies can change these limits at any time (see <a class="xl" href="https://ai.google.dev/gemini-api/docs/pricing" target="_blank" rel="noopener noreferrer">Gemini pricing</a>, <a class="xl" href="https://openrouter.ai/docs/api-reference/limits" target="_blank" rel="noopener noreferrer">OpenRouter limits</a>). For everyday, general-purpose use, we recommend a <b>paid cloud AI</b> or a <b>local model of 27B parameters or more</b>. The built-in AI covers basic SAS data analysis and questions about it.</p><p lang="zh-Hant">大部分雲端 AI 都要付費使用。免費的選擇——Gemini 的免費方案、OpenRouter 的免費模型——能用的量有限：每天可以呼叫幾次、可以用哪些模型都有限制，而且業者會隨時調整（以他們自己的說明為準：<a class="xl" href="https://ai.google.dev/gemini-api/docs/pricing" target="_blank" rel="noopener noreferrer">Gemini 價格</a>、<a class="xl" href="https://openrouter.ai/docs/api-reference/limits" target="_blank" rel="noopener noreferrer">OpenRouter 限制</a>）。要讓 AI 助理做一般用途，還是建議使用<b>付費的雲端 AI</b>，或 <b>27B 以上的本地模型</b>，才有最好的使用體驗。內建模型只提供基本的 SAS 數據分析與問答功能。</p></div>
+    <ol class="steps">
+      <li class="step"><div><h4 lang="en">Get an API key</h4><h4 lang="zh-Hant">取得 API 金鑰</h4>
+        <p lang="en">For Google Gemini, follow chapter 4. Claude: <a class="xl" href="https://console.anthropic.com/" target="_blank" rel="noopener noreferrer">console.anthropic.com</a>. MiniMax: <a class="xl" href="https://platform.minimaxi.com/" target="_blank" rel="noopener noreferrer">platform.minimaxi.com</a>.</p><p lang="zh-Hant">Google Gemini 請看第 4 章。Claude：<a class="xl" href="https://console.anthropic.com/" target="_blank" rel="noopener noreferrer">console.anthropic.com</a>。MiniMax：<a class="xl" href="https://platform.minimaxi.com/" target="_blank" rel="noopener noreferrer">platform.minimaxi.com</a>。</p></div></li>
+      <li class="step"><div><h4 lang="en">Paste it in the 🔑 Keys tab, click Save</h4><h4 lang="zh-Hant">貼到 🔑 Keys 分頁，按 Save</h4>
+        <p lang="en">Pictures in chapter 4, steps 4–5.</p><p lang="zh-Hant">圖片在第 4 章的第 4–5 步。</p></div></li>
+      <li class="step"><div><h4 lang="en">Choose it in the “AI:” box</h4><h4 lang="zh-Hant">在「AI:」選它</h4>
+        <p lang="en">Pick <b class="ui">Gemini</b>, <b class="ui">Claude</b> or <b class="ui">MiniMax</b>. The quick chat stays on the built-in AI; the cloud AI takes the analysis and the reports. What you send goes to that company. Your cloud AI isn't one of these three? See D below.</p><p lang="zh-Hant">選 <b class="ui">Gemini</b>、<b class="ui">Claude</b> 或 <b class="ui">MiniMax</b>。快速對話仍由內建 AI 負責；分析和報告交給雲端 AI。你送出的內容會傳到那家公司。你的雲端 AI 不是這三個？請看下面的 D。</p></div></li>
+    </ol>
+
+    <h3 class="part" lang="en">C. Your own AI server (LM Studio, Ollama)</h3><h3 class="part" lang="zh-Hant">C. 你自己的 AI 伺服器（LM Studio、Ollama）</h3>
+    <p class="lead" style="margin-top:10px" lang="en">AI Config → <b class="ui">Edge AI</b>: type a <b class="ui">Name</b>, the <b class="ui">Endpoint</b> (for example <code><a class="xl" href="http://localhost:1234/v1" target="_blank" rel="noopener noreferrer">http://localhost:1234/v1</a></code>), click <b>↻</b> to list its models, choose one, click <b class="ui">Test</b>, then <b class="ui">Save AI Config</b>. Finally choose <b class="ui">Edge AI</b> in the “AI:” box.</p><p class="lead" style="margin-top:10px" lang="zh-Hant">AI Config → <b class="ui">Edge AI</b>：填 <b class="ui">Name</b>（名稱）和 <b class="ui">Endpoint</b>（例如 <code><a class="xl" href="http://localhost:1234/v1" target="_blank" rel="noopener noreferrer">http://localhost:1234/v1</a></code>），按 <b>↻</b> 列出它的模型，選一個，按 <b class="ui">Test</b>，再按 <b class="ui">Save AI Config</b>。最後在「AI:」選 <b class="ui">Edge AI</b>。</p>
+
+    <h3 class="part" lang="en">D. Any other cloud AI — OpenAI, OpenRouter, DeepSeek, Groq, Mistral …</h3><h3 class="part" lang="zh-Hant">D. 其他的雲端 AI——OpenAI、OpenRouter、DeepSeek、Groq、Mistral …</h3>
+    <p class="lead" style="margin-top:10px" lang="en">Your cloud AI isn't Gemini, Claude or MiniMax? Almost every other provider speaks the same “OpenAI-compatible” language, so you can add it yourself in the <b class="ui">Edge AI</b> box. You need two things from the provider: an <b>endpoint</b> (a web address) and an <b>API key</b>. The example below uses OpenRouter, which has free models — the other providers work the same way.</p><p class="lead" style="margin-top:10px" lang="zh-Hant">你的雲端 AI 不是 Gemini、Claude 或 MiniMax？其他業者幾乎都用同一種「OpenAI 相容」的介面，所以你可以自己加進 <b class="ui">Edge AI</b> 方塊。你只需要向業者拿兩樣東西：<b>endpoint</b>（一個網址）和 <b>API 金鑰</b>。下面用 OpenRouter 當例子（它有免費模型），其他業者的做法一樣。</p>
+    <ol class="steps">
+      <li class="step"><div><h4 lang="en">Get the endpoint and a key from the provider</h4><h4 lang="zh-Hant">向業者取得 endpoint 和金鑰</h4>
+        <p lang="en">Sign in on the provider's website, open its keys page, create a key and copy it — most providers show it only once. The endpoint is in the table.</p><p lang="zh-Hant">到業者的網站登入，打開它的金鑰頁面，建立一把金鑰並複製起來——多數業者只會顯示一次。endpoint 看下面的表。</p>
+        <table class="keys prov">
+          <tr><td class="k">OpenRouter</td><td><code><a class="xl" href="https://openrouter.ai/api/v1" target="_blank" rel="noopener noreferrer">https://openrouter.ai/api/v1</a></code></td><td lang="en">Keys: <a class="xl" href="https://openrouter.ai/keys" target="_blank" rel="noopener noreferrer">openrouter.ai/keys</a>. Has free models (limited requests per day).</td><td lang="zh-Hant">金鑰：<a class="xl" href="https://openrouter.ai/keys" target="_blank" rel="noopener noreferrer">openrouter.ai/keys</a>。有免費模型（每天次數有限）。</td></tr>
+          <tr><td class="k">OpenAI</td><td><code><a class="xl" href="https://api.openai.com/v1" target="_blank" rel="noopener noreferrer">https://api.openai.com/v1</a></code></td><td lang="en">Keys: <a class="xl" href="https://platform.openai.com/settings/organization/api-keys" target="_blank" rel="noopener noreferrer">platform.openai.com/settings/organization/api-keys</a>. Add prepaid credit first.</td><td lang="zh-Hant">金鑰：<a class="xl" href="https://platform.openai.com/settings/organization/api-keys" target="_blank" rel="noopener noreferrer">platform.openai.com/settings/organization/api-keys</a>。要先儲值。</td></tr>
+          <tr><td class="k">DeepSeek</td><td><code><a class="xl" href="https://api.deepseek.com" target="_blank" rel="noopener noreferrer">https://api.deepseek.com</a></code></td><td lang="en">Keys: <a class="xl" href="https://platform.deepseek.com/api_keys" target="_blank" rel="noopener noreferrer">platform.deepseek.com/api_keys</a>. No <code>/v1</code> at the end. Add balance first.</td><td lang="zh-Hant">金鑰：<a class="xl" href="https://platform.deepseek.com/api_keys" target="_blank" rel="noopener noreferrer">platform.deepseek.com/api_keys</a>。網址後面沒有 <code>/v1</code>。要先儲值。</td></tr>
+          <tr><td class="k">Groq</td><td><code><a class="xl" href="https://api.groq.com/openai/v1" target="_blank" rel="noopener noreferrer">https://api.groq.com/openai/v1</a></code></td><td lang="en">Keys: <a class="xl" href="https://console.groq.com/keys" target="_blank" rel="noopener noreferrer">console.groq.com/keys</a>. Has a free tier with rate limits.</td><td lang="zh-Hant">金鑰：<a class="xl" href="https://console.groq.com/keys" target="_blank" rel="noopener noreferrer">console.groq.com/keys</a>。有免費額度，但有速率限制。</td></tr>
+          <tr><td class="k">Mistral</td><td><code><a class="xl" href="https://api.mistral.ai/v1" target="_blank" rel="noopener noreferrer">https://api.mistral.ai/v1</a></code></td><td lang="en">Keys: <a class="xl" href="https://console.mistral.ai/api-keys" target="_blank" rel="noopener noreferrer">console.mistral.ai/api-keys</a>. Has a free mode without a credit card.</td><td lang="zh-Hant">金鑰：<a class="xl" href="https://console.mistral.ai/api-keys" target="_blank" rel="noopener noreferrer">console.mistral.ai/api-keys</a>。有免刷卡的免費模式。</td></tr>
+        </table>
+        <p lang="en" style="margin-top:10px">The addresses in the middle column go into the <b class="ui">Endpoint</b> box; opening one in a browser shows an error page, which is normal. Prices, free allowances and model names change often — trust the provider's own page over this table. Another provider not listed? Its documentation calls it “OpenAI-compatible” and gives a “base URL”: that is the endpoint.</p><p lang="zh-Hant" style="margin-top:10px">中間那欄的網址是要貼進 <b class="ui">Endpoint</b> 欄位用的；在瀏覽器裡直接打開會看到錯誤頁，這是正常的。價格、免費額度和模型名稱常常變動——以業者自己的頁面為準。表裡沒有的業者？它的文件會寫「OpenAI-compatible」並給一個「base URL」：那就是 endpoint。</p></div></li>
+      <li class="step"><div><h4 lang="en">AI Config → Edge AI: type a Name and the Endpoint <span class="m">1</span> <span class="m">2</span></h4><h4 lang="zh-Hant">AI Config → Edge AI：填 Name 和 Endpoint <span class="m">1</span> <span class="m">2</span></h4>
+        <p lang="en">Click the <b class="ui">AI Config</b> tab on the left; <b class="ui">Edge AI</b> is the box with these fields. In <b class="ui">Name</b> type any name you will recognise, for example <i>OpenRouter</i>. A new name adds a new entry; pick an old name from the list to load it again; the red ✖ removes the entry. In <b class="ui">Endpoint</b> paste the address from the table.</p><p lang="zh-Hant">點左邊的 <b class="ui">AI Config</b> 分頁，有這些欄位的就是 <b class="ui">Edge AI</b> 方塊。在 <b class="ui">Name</b> 填一個你認得的名字，例如 <i>OpenRouter</i>。填新名字就是新增一筆；從清單選舊名字就是重新載入它；紅色的 ✖ 會刪除這一筆。在 <b class="ui">Endpoint</b> 貼上表裡的網址。</p>
+        <div class="shot narrow"><a class="zoom" lang="en" href="img/edge-ai-box.png" target="_blank" rel="noopener noreferrer"><img src="img/edge-ai-box.png" width="390" height="208" alt="The Edge AI box filled in for OpenRouter: Name, Endpoint, Key, the refresh and Test buttons, and Save AI Config (numbers 1 to 6)" loading="lazy"></a><a class="zoom" lang="zh-Hant" href="img/edge-ai-box.png" target="_blank" rel="noopener noreferrer"><img src="img/edge-ai-box.png" width="390" height="208" alt="填好 OpenRouter 的 Edge AI 方塊：Name、Endpoint、Key、重新整理和 Test 按鈕、Save AI Config（編號 1 到 6）" loading="lazy"></a></div></div></li>
+      <li class="step"><div><h4 lang="en">Paste the Key, click ↻, choose a model <span class="m">3</span> <span class="m">4</span></h4><h4 lang="zh-Hant">貼上 Key、按 ↻、選一個模型 <span class="m">3</span> <span class="m">4</span></h4>
+        <p lang="en">The key goes into the <b class="ui">Key</b> field of this same box — not into the 🔑 Keys tab. Then click <b>↻</b>: PicoSAS asks the provider for its list of models and fills the <b class="ui">Model</b> box. For OpenRouter's free models choose <code>openrouter/free</code> or any name ending in <code>:free</code>. If the list doesn't come, you can still type a model name from the provider's website into the <b class="ui">Model</b> box.</p><p lang="zh-Hant">金鑰貼在同一個方塊的 <b class="ui">Key</b> 欄位——不是 🔑 Keys 分頁。然後按 <b>↻</b>：PicoSAS 會向業者要它的模型清單，填進 <b class="ui">Model</b> 方塊。OpenRouter 的免費模型請選 <code>openrouter/free</code>，或任何以 <code>:free</code> 結尾的名字。如果清單出不來，也可以把業者網站上的模型名稱直接打進 <b class="ui">Model</b> 方塊。</p></div></li>
+      <li class="step"><div><h4 lang="en">Click Test <span class="m">5</span></h4><h4 lang="zh-Hant">按 Test <span class="m">5</span></h4>
+        <p lang="en">PicoSAS sends the model one tiny question. Success prints <i>“✓ … connection OK (streaming works)”</i> and the status bar says <i>“…: OK”</i>. A line starting with ✗ means it failed, and it carries the provider's own message — see the table below.</p><p lang="zh-Hant">PicoSAS 會問模型一個極小的問題。成功的話會印出「✓ … connection OK (streaming works)」，狀態列顯示「…: OK」。以 ✗ 開頭的一行表示失敗，並附上業者自己的訊息——請看下面的對照表。</p></div></li>
+      <li class="step"><div><h4 lang="en">Save AI Config, then choose Edge AI in the “AI:” box <span class="m">6</span></h4><h4 lang="zh-Hant">按 Save AI Config，再到「AI:」選 Edge AI <span class="m">6</span></h4>
+        <p lang="en">Click <b class="ui">Save AI Config</b>, then open the <b class="ui">AI:</b> box and pick <b class="ui">Edge AI</b>. From now on the analysis and the reports use that provider; the quick chat stays on the built-in AI. To go back, pick <b class="ui">Built-in</b> in the same box.</p><p lang="zh-Hant">按 <b class="ui">Save AI Config</b>，再打開 <b class="ui">AI:</b> 方塊，選 <b class="ui">Edge AI</b>。從此分析和報告都改用那家業者；快速對話仍由內建 AI 負責。想換回來，在同一個方塊選 <b class="ui">Built-in</b>。</p></div></li>
+    </ol>
+    <div class="tip warn"><h4 lang="en">Before you use one: what you send leaves this PC</h4><h4 lang="zh-Hant">用之前：你送出的內容會離開這台電腦</h4>
+      <p lang="en">Your questions, sample descriptions and data summaries go to that company. Some free endpoints may keep or use what you send — read the provider's privacy page. For confidential samples stay on <b class="ui">Built-in</b>. Models also differ in quality: if answers get worse, switch back in the <b class="ui">AI:</b> box.</p><p lang="zh-Hant">你的問題、樣品描述和數據摘要會送到那家公司。有些免費端點可能會保留或利用你送出的內容——請讀業者的隱私頁面。機密樣品請留在 <b class="ui">Built-in</b>。模型的品質也不一樣：答案變差時，在 <b class="ui">AI:</b> 方塊切回來。</p></div>
+    <div class="tip"><h4 lang="en">If something fails</h4><h4 lang="zh-Hant">失敗的時候</h4>
+      <table class="keys">
+        <tr><td class="k">Authentication failed (401)</td><td lang="en">The key is wrong, expired, or belongs to another provider. Copy it again into <b class="ui">Key</b>.</td><td lang="zh-Hant">金鑰不對、過期，或是別家業者的。重新複製，貼進 <b class="ui">Key</b>。</td></tr>
+        <tr><td class="k">Cannot connect</td><td lang="en">The endpoint has a typo, or there is no internet. Compare it letter by letter with the table.</td><td lang="zh-Hant">endpoint 打錯，或沒有網路。逐字對照上面的表。</td></tr>
+        <tr><td class="k">Timeout (10s)</td><td lang="en">The provider is busy. Wait a minute and click ↻ again.</td><td lang="zh-Hant">業者太忙。等一分鐘再按 ↻。</td></tr>
+        <tr><td class="k">No models returned</td><td lang="en">Usually a wrong ending on the endpoint (a missing or extra <code>/v1</code>). Fix it, or type the model name by hand.</td><td lang="zh-Hant">通常是 endpoint 結尾不對（少了或多了 <code>/v1</code>）。改正它，或手動輸入模型名稱。</td></tr>
+        <tr><td class="k">402 / 429 in the ✗ line</td><td lang="en">The provider says you are out of credit (402) or asking too fast (429). Add credit, or wait and try again.</td><td lang="zh-Hant">業者說你的餘額用完（402）或問得太快（429）。儲值，或等一下再試。</td></tr>
+      </table></div>
+  </section>
+
+  <!-- ─────────────────────────── 4. Google API key ─────────────────────────── -->
+  <section class="card" id="google">
+    <h2><span class="n">4</span><span lang="en">Get a Google (Gemini) API key</span><span lang="zh-Hant">申請 Google（Gemini）API 金鑰</span></h2>
+    <p class="lead" lang="en">Needed only if you want Google's Gemini as your AI. You need a Google account. Google's own page is the authority on the steps and on what is free; this chapter follows Google's current guide.</p><p class="lead" lang="zh-Hant">只有想用 Google 的 Gemini 當 AI 時才需要。你需要一個 Google 帳號。步驟和免費額度以 Google 自己的頁面為準；這一章照著 Google 目前的說明寫。</p>
+    <ol class="steps">
+      <li class="step"><div><h4 lang="en">Open the API keys page and sign in</h4><h4 lang="zh-Hant">打開 API keys 頁面並登入</h4>
+        <p lang="en">Go to <b class="ui"><a class="xl" href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer">aistudio.google.com/apikey</a></b> and sign in with your Google account. The first time, Google asks you to accept its terms; read them and accept if you agree. The page you land on is titled <b>API Keys</b>. The <b>Create API key</b> button you will use in step 2 is at the top right. The list shows only the keys of projects that AI Studio knows about, so it can be empty even if you made a key somewhere else.</p><p lang="zh-Hant">到 <b class="ui"><a class="xl" href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer">aistudio.google.com/apikey</a></b>，用 Google 帳號登入。第一次使用時，Google 會請你同意它的條款；請先讀過，同意再按。你會看到標題是 <b>API Keys</b> 的頁面，第 2 步要用的 <b>Create API key</b> 按鈕在右上角。清單只列出 AI Studio 知道的專案裡的金鑰，所以就算你在別處建過金鑰，這裡也可能是空的。</p>
+        <div class="ext wide" data-src="img/ext-aistudio-keys.png" data-alt-en="Google AI Studio, API keys page: the list of keys and the Create API key button" data-alt-zh="Google AI Studio 的 API keys 頁面：金鑰清單和 Create API key 按鈕" hidden></div></div></li>
+      <li class="step"><div><h4 lang="en">Create the key</h4><h4 lang="zh-Hant">建立金鑰</h4>
+        <p lang="en">A new user gets a project and a first key automatically after accepting the terms, so the page may already list one. To make one yourself, click <b>Create API key</b>. A box named <b>Create a new key</b> opens: type a name under <b>Name your key</b> (any name), pick a project under <b>Choose an imported project</b>, then click <b>Create key</b>. The <b>Create key</b> button stays grey until a project is chosen. If the project list says <b>No Cloud Projects Available</b>, close the box and open <b>Projects</b> in the left menu. Click <b>Import projects</b>, find your Google Cloud project, select it and click <b>Import</b>. Then come back to <b>API Keys</b> and create the key.</p><p lang="zh-Hant">新使用者同意條款之後，會自動得到一個專案和第一把金鑰，所以頁面上可能已經有一把。要自己建一把，就按 <b>Create API key</b>。會跳出一個標題是 <b>Create a new key</b> 的視窗：在 <b>Name your key</b> 填一個名稱（隨意），在 <b>Choose an imported project</b> 選一個專案，再按 <b>Create key</b>。還沒選專案之前，<b>Create key</b> 按鈕是灰的。如果專案清單寫著 <b>No Cloud Projects Available</b>，先關掉視窗，到左邊選單的 <b>Projects</b> 按 <b>Import projects</b>；搜尋你的 Google Cloud 專案、選取它、按 <b>Import</b>。然後回到 <b>API Keys</b> 建立金鑰。</p>
+        <div class="ext" data-src="img/ext-aistudio-create-key.png" data-alt-en="Google AI Studio, the Create a new key box: Name your key, Choose an imported project, Create key" data-alt-zh="Google AI Studio 的 Create a new key 視窗：Name your key、Choose an imported project、Create key" hidden></div></div></li>
+      <li class="step"><div><h4 lang="en">Copy the key</h4><h4 lang="zh-Hant">複製金鑰</h4>
+        <p lang="en">Copy the key from the page. Treat it like a password: never post it, e-mail it or put it in a document you share. Anyone who has it can use your Google quota.</p><p lang="zh-Hant">從頁面上把金鑰複製起來。把它當成密碼：不要貼在網路上、不要用 email 傳、也不要寫進會分享出去的文件。拿到它的人就能用掉你的 Google 額度。</p></div></li>
+      <li class="step"><div><h4 lang="en">Paste it in PicoSAS: 🔑 Keys → Gemini API key → Save</h4><h4 lang="zh-Hant">貼到 PicoSAS：🔑 Keys → Gemini API key → Save</h4>
+        <p lang="en">In PicoSAS, open the <b class="ui">🔑 Keys</b> tab. Under <b class="ui">AI providers</b>, paste the key into <b class="ui">Gemini API key</b> <span class="m">1</span> and click <b class="ui">Save</b> <span class="m">2</span>. The label next to the box changes from <i>empty</i> to <i>saved</i>, and the box is cleared on purpose: a saved key is never shown again.</p><p lang="zh-Hant">在 PicoSAS 打開 <b class="ui">🔑 Keys</b> 分頁。在 <b class="ui">AI providers</b> 底下，把金鑰貼到 <b class="ui">Gemini API key</b> <span class="m">1</span>，按 <b class="ui">Save</b> <span class="m">2</span>。方塊旁的標籤會從 <i>empty</i> 變成 <i>saved</i>，方塊本身會清空，這是刻意的：存好的金鑰不會再顯示出來。</p>
+        <div class="shot narrow pair"><a class="zoom" lang="en" href="img/keys-gemini.png" target="_blank" rel="noopener noreferrer"><img src="img/keys-gemini.png" width="379" height="284" alt="The Keys tab, AI providers: a key typed into Gemini API key (number 1) and the Save button (number 2)" loading="lazy"></a><a class="zoom" lang="zh-Hant" href="img/keys-gemini.png" target="_blank" rel="noopener noreferrer"><img src="img/keys-gemini.png" width="379" height="284" alt="Keys 分頁的 AI providers：Gemini API key 裡輸入了金鑰（編號 1）和 Save 按鈕（編號 2）" loading="lazy"></a><a class="zoom" lang="en" href="img/keys-gemini-saved.png" target="_blank" rel="noopener noreferrer"><img src="img/keys-gemini-saved.png" width="379" height="284" alt="The same box after Save: the label says saved and the box is empty" loading="lazy"></a><a class="zoom" lang="zh-Hant" href="img/keys-gemini-saved.png" target="_blank" rel="noopener noreferrer"><img src="img/keys-gemini-saved.png" width="379" height="284" alt="按 Save 之後的同一個方塊：標籤是 saved，方塊已清空" loading="lazy"></a></div>
+        <p class="cap" lang="en">First picture: the key pasted, before Save. Second picture: after Save. The key in these pictures is a made-up example.</p><p class="cap" lang="zh-Hant">第一張：貼上金鑰、按 Save 之前。第二張：按 Save 之後。這些圖裡的金鑰是自己編的範例。</p></div></li>
+      <li class="step"><div><h4 lang="en">Choose Gemini in the “AI:” box</h4><h4 lang="zh-Hant">在「AI:」選 Gemini</h4>
+        <p lang="en">Done. To pick a Gemini version: AI Config → <b class="ui">Cloud AI</b> → <b class="ui">Gemini Model</b> (gemini-2.5-flash is fast).</p><p lang="zh-Hant">完成。想選 Gemini 的版本：AI Config → <b class="ui">Cloud AI</b> → <b class="ui">Gemini Model</b>（gemini-2.5-flash 比較快）。</p>
+        <div class="shot narrow"><a class="zoom" lang="en" href="img/ai-box-gemini.png" target="_blank" rel="noopener noreferrer"><img src="img/ai-box-gemini.png" width="164" height="104" alt="The AI box set to Gemini" loading="lazy"></a><a class="zoom" lang="zh-Hant" href="img/ai-box-gemini.png" target="_blank" rel="noopener noreferrer"><img src="img/ai-box-gemini.png" width="164" height="104" alt="AI 方塊選的是 Gemini" loading="lazy"></a></div></div></li>
+    </ol>
+    <div class="tip warn">
+      <h4 lang="en">Before you send unpublished data</h4><h4 lang="zh-Hant">送出未發表的數據之前</h4>
+      <p lang="en">With a <b>free</b> Gemini key, Google may use what you send to improve its products, and asks users not to send sensitive or confidential information. For confidential samples, stay on <b class="ui">Built-in</b>.</p><p lang="zh-Hant">用<b>免費</b>的 Gemini 金鑰時，Google 可能會用你送出的內容來改進它的產品，也要求使用者不要送敏感或機密資料。機密樣品請留在 <b class="ui">Built-in</b>。</p>
+      <p lang="en">If your key leaks, delete it on the same API keys page and create a new one.</p><p lang="zh-Hant">金鑰如果外洩：到同一個 API keys 頁面刪除它，再建一把新的。</p>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────── 5. Telegram ─────────────────────────── -->
+  <section class="card" id="telegram">
+    <h2><span class="n">5</span><span lang="en">Telegram: use PicoSAS from your phone</span><span lang="zh-Hant">Telegram：用手機操作 PicoSAS</span></h2>
+    <p class="lead" lang="en">Talk to PicoSAS from your phone: ask questions, send it a data file, and get the plots and a PDF report back. Think of it as a remote control for the PicoSAS that runs on your own computer. You need a Telegram account.</p><p class="lead" lang="zh-Hant">用手機和 PicoSAS 對話：問問題、傳數據檔給它，再收回圖和 PDF 報告。可以把它想成遙控器，遙控的是你自己電腦上的 PicoSAS。你需要一個 Telegram 帳號。</p>
+    <div class="tip warn"><h4 lang="en">Three things to know before you start</h4><h4 lang="zh-Hant">開始之前，先知道三件事</h4>
+      <ul lang="en">
+        <li><b>PicoSAS must be open on your computer.</b> The bot is part of the program, not a service on the internet. When PicoSAS is closed or the computer is off, the bot says nothing. What you sent in the meantime waits at Telegram, and PicoSAS may answer it the next time you open the program.</li>
+        <li><b>Everything passes through Telegram.</b> Your messages, data files, plots and reports travel through Telegram's servers, and chats with a bot are not end-to-end encrypted. For a confidential sample, do not use this; use the chat window on the computer.</li>
+        <li><b>The token is a password.</b> Whoever has it can control your bot. PicoSAS keeps it only in the settings file on this computer (<code>picosas.ini</code>, in PicoSAS's folder) and does not sync it. You type it in the <b class="ui">🔑 Keys</b> tab.</li>
+      </ul>
+      <ul lang="zh-Hant">
+        <li><b>電腦上的 PicoSAS 一定要開著。</b>機器人是程式的一部分，不是網路上的服務。PicoSAS 關掉、或電腦關機時，機器人不會回話。這段時間你傳的訊息會先放在 Telegram，下次打開程式時，PicoSAS 可能會回覆它們。</li>
+        <li><b>所有內容都會經過 Telegram。</b>你的訊息、數據檔、圖和報告，都會經過 Telegram 的伺服器，而且和機器人的對話沒有端到端加密。樣品需要保密的話，請不要用這個功能，改用電腦上的對話視窗。</li>
+        <li><b>Token 就是密碼。</b>拿到它的人就能控制你的機器人。PicoSAS 只把它存在這台電腦的設定檔裡（PicoSAS 資料夾裡的 <code>picosas.ini</code>），不會同步出去。你在 <b class="ui">🔑 Keys</b> 分頁輸入它。</li>
+      </ul>
+    </div>
+    <ol class="steps">
+      <li class="step"><div><h4 lang="en">Create your bot with @BotFather</h4><h4 lang="zh-Hant">用 @BotFather 建立你的機器人</h4>
+        <p lang="en">@BotFather is Telegram's own helper for making bots. In Telegram, search <b>@BotFather</b>, open it and send <code>/newbot</code>. It asks for a <b>name</b> (anything, for example <i>My PicoSAS</i>) and then a <b>username</b>. The username must end in <b>bot</b> and be 5 to 32 letters, numbers or _ (for example <i>my_picosas_bot</i>). If Telegram says the username is taken, try another. Tip: do steps 1 and 2 in Telegram on the same computer (the Telegram app or <a class="xl" href="https://web.telegram.org/" target="_blank" rel="noopener noreferrer">web.telegram.org</a>), so you can copy and paste.</p><p lang="zh-Hant">@BotFather 是 Telegram 官方用來建立機器人的小幫手。在 Telegram 搜尋 <b>@BotFather</b>，打開它，送出 <code>/newbot</code>。它會先問<b>名稱</b>（隨便取，例如 <i>My PicoSAS</i>），再問<b>使用者名稱</b>。使用者名稱的結尾一定要是 <b>bot</b>，長度 5 到 32 個英文字母、數字或 _（例如 <i>my_picosas_bot</i>）。如果 Telegram 說這個名字有人用了，換一個就好。小撇步：步驟 1 和 2 直接在同一台電腦上的 Telegram（桌面版或 <a class="xl" href="https://web.telegram.org/" target="_blank" rel="noopener noreferrer">web.telegram.org</a>）做，這樣才能複製貼上。</p>
+        <div class="ext" data-src="img/ext-botfather-newbot.png" data-alt-en="Telegram, chat with BotFather: /newbot, the name and the username" data-alt-zh="Telegram 和 BotFather 的對話：/newbot、名稱和使用者名稱"><div class="drawn"><svg class="sans" viewBox="190 0 260 330" role="img" aria-label="Chat with BotFather: newbot, name, username, then the token">
+          <rect x="196" y="6" width="248" height="318" rx="28" fill="#1c2233" stroke="#5a6680" stroke-width="1.5"/>
+          <rect x="206" y="22" width="228" height="286" rx="16" fill="#dfe7ef"/>
+          <path d="M206 38a16 16 0 0 1 16-16h196a16 16 0 0 1 16 16v20H206z" fill="#ffffff"/>
+          <circle cx="232" cy="40" r="12" fill="#2aa3df"/><text x="232" y="45" font-size="12" fill="#ffffff" text-anchor="middle">B</text>
+          <text x="252" y="38" font-size="12.5" font-weight="700" fill="#1c2233">BotFather</text><text x="252" y="52" font-size="10" fill="#5d6679">bot</text>
+          <rect x="360" y="68" width="66" height="22" rx="10" fill="#effdde"/><text x="370" y="83" font-size="11" fill="#1c2233">/newbot</text>
+          <rect x="214" y="96" width="176" height="22" rx="10" fill="#ffffff"/><text x="224" y="111" font-size="10.5" fill="#1c2233">Choose a name for your bot.</text>
+          <rect x="356" y="124" width="70" height="22" rx="10" fill="#effdde"/><text x="366" y="139" font-size="11" fill="#1c2233">My PicoSAS</text>
+          <rect x="214" y="152" width="186" height="36" rx="10" fill="#ffffff"/><text x="224" y="166" font-size="10.5" fill="#1c2233">Now choose a username.</text><text x="224" y="181" font-size="10.5" fill="#1c2233">It must end in “bot”.</text>
+          <rect x="336" y="194" width="90" height="22" rx="10" fill="#effdde"/><text x="346" y="209" font-size="11" fill="#1c2233">my_picosas_bot</text>
+          <rect x="214" y="222" width="206" height="62" rx="10" fill="#ffffff"/><text x="224" y="237" font-size="10.5" fill="#1c2233">Done! Congratulations on your</text><text x="224" y="251" font-size="10.5" fill="#1c2233">new bot. Your token:</text>
+          <rect x="222" y="258" width="186" height="18" rx="4" fill="#fff3c4"/><text x="228" y="271" font-size="10.5" fill="#1c2233" font-family="Consolas, monospace">123456789:AAH-x9Kq…</text>
+          <path d="M206 292h228" stroke="#c9d3de"/>
+          <g class="mk"><circle cx="350" cy="79" r="10"/><text x="350" y="83">1</text></g>
+          <g class="mk"><circle cx="326" cy="205" r="10"/><text x="326" y="209">2</text></g>
+          <g class="mk"><circle cx="418" cy="267" r="10"/><text x="418" y="271">3</text></g>
+        </svg><p class="cap" lang="en">This picture is drawn, not a screenshot: the real chat shows your secret token. BotFather's messages are shortened here.</p><p class="cap" lang="zh-Hant">這張是繪圖，不是截圖：真正的對話畫面會露出你的權杖（Token）。圖裡 BotFather 的訊息是縮短過的。</p></div></div></div></li>
+      <li class="step"><div><h4 lang="en">Copy the token</h4><h4 lang="zh-Hant">複製 Token</h4>
+        <p lang="en">When the bot is made, BotFather sends a message with its <b>token</b>: digits, a colon, then a long run of letters and numbers (Telegram's own example looks like <code>110201543:AAH…</code>). Copy all of it. If you ever lose it or it leaks, send <code>/token</code> to @BotFather for a new one.</p><p lang="zh-Hant">機器人建好後，BotFather 會傳一則訊息，裡面有它的 <b>Token</b>：一串數字、一個冒號，再接一長串英文字母和數字（Telegram 官方的範例長得像 <code>110201543:AAH…</code>）。整串複製起來。弄丟或外洩的話，對 @BotFather 送出 <code>/token</code> 就能換一個新的。</p>
+        <div class="ext" data-src="img/ext-botfather-token.png" data-alt-en="Telegram, BotFather's message with the token (the token itself hidden)" data-alt-zh="Telegram 裡 BotFather 附上 Token 的那則訊息（Token 本身已遮起來）" hidden></div></div></li>
+      <li class="step"><div><h4 lang="en">Paste it in PicoSAS: 🔑 Keys → Telegram bot token → Save</h4><h4 lang="zh-Hant">貼到 PicoSAS：🔑 Keys → Telegram bot token → Save</h4>
+        <p lang="en">Open the <b class="ui">🔑 Keys</b> tab and scroll down to <b class="ui">Remote control (Telegram)</b>; click its title to open it. Paste the token into <b class="ui">Telegram bot token</b> <span class="m">1</span> and click <b class="ui">Save</b> <span class="m">2</span>. The label changes from <i>empty</i> to <i>saved</i>.</p><p lang="zh-Hant">打開 <b class="ui">🔑 Keys</b> 分頁，往下捲到 <b class="ui">Remote control (Telegram)</b>，點它的標題展開。把 Token 貼到 <b class="ui">Telegram bot token</b> <span class="m">1</span>，按 <b class="ui">Save</b> <span class="m">2</span>。標籤會從 <i>empty</i> 變成 <i>saved</i>。</p>
+        <div class="shot narrow pair"><a class="zoom" lang="en" href="img/keys-telegram.png" target="_blank" rel="noopener noreferrer"><img src="img/keys-telegram.png" width="379" height="158" alt="The Keys tab, Remote control (Telegram): a token typed into Telegram bot token (number 1) and the Save button (number 2)" loading="lazy"></a><a class="zoom" lang="zh-Hant" href="img/keys-telegram.png" target="_blank" rel="noopener noreferrer"><img src="img/keys-telegram.png" width="379" height="158" alt="Keys 分頁的 Remote control (Telegram)：Telegram bot token 裡輸入了 Token（編號 1）和 Save 按鈕（編號 2）" loading="lazy"></a><a class="zoom" lang="en" href="img/keys-telegram-saved.png" target="_blank" rel="noopener noreferrer"><img src="img/keys-telegram-saved.png" width="379" height="158" alt="The same box after Save: the label says saved and the box is empty" loading="lazy"></a><a class="zoom" lang="zh-Hant" href="img/keys-telegram-saved.png" target="_blank" rel="noopener noreferrer"><img src="img/keys-telegram-saved.png" width="379" height="158" alt="按 Save 之後的同一個方塊：標籤是 saved，方塊已清空" loading="lazy"></a></div>
+        <p class="cap" lang="en">First picture: the token pasted, before Save. Second picture: after Save. The token in these pictures is a made-up example.</p><p class="cap" lang="zh-Hant">第一張：貼上 Token、按 Save 之前。第二張：按 Save 之後。這些圖裡的 Token 是自己編的範例。</p></div></li>
+      <li class="step"><div><h4 lang="en">Turn the bot on</h4><h4 lang="zh-Hant">開啟機器人</h4>
+        <p lang="en"><b class="ui">AI Config</b> tab → click the title <b class="ui">Remote Control (Telegram)</b> to open it → switch on <b class="ui">Enable bot</b> <span class="m">1</span>. The line under it says <i>“✅ Bot enabled — starting on this machine.”</i> (If no token is saved yet it says <i>“Enabled — but no token yet. Paste a @BotFather token, then Save.”</i>) From now on the bot starts by itself every time you open PicoSAS, until you switch it off.</p><p lang="zh-Hant"><b class="ui">AI Config</b> 分頁 → 點標題 <b class="ui">Remote Control (Telegram)</b> 展開 → 打開 <b class="ui">Enable bot</b> <span class="m">1</span> 的開關。下面那一行會顯示「<i>✅ Bot enabled — starting on this machine.</i>」（如果還沒存 Token，會顯示「<i>Enabled — but no token yet. Paste a @BotFather token, then Save.</i>」）。從此每次打開 PicoSAS，機器人都會自己啟動，直到你把開關關掉。</p>
+        <div class="shot narrow"><a class="zoom" lang="en" href="img/telegram-box.png" target="_blank" rel="noopener noreferrer"><img src="img/telegram-box.png" width="390" height="136" alt="The Remote Control (Telegram) box: Enable bot (number 1), Allowed chat IDs (number 2) and Save chat IDs (number 3)" loading="lazy"></a><a class="zoom" lang="zh-Hant" href="img/telegram-box.png" target="_blank" rel="noopener noreferrer"><img src="img/telegram-box.png" width="390" height="136" alt="Remote Control (Telegram) 方塊：Enable bot（編號 1）、Allowed chat IDs（編號 2）、Save chat IDs（編號 3）" loading="lazy"></a></div>
+        <p class="cap" lang="en">The switch is off here, as you first see it.</p><p class="cap" lang="zh-Hant">這張圖裡開關是關著的，就是你剛打開時看到的樣子。</p></div></li>
+      <li class="step"><div><h4 lang="en">Message your bot to get your chat ID</h4><h4 lang="zh-Hant">傳訊息給你的機器人，取得 chat ID</h4>
+        <p lang="en">In Telegram open your bot (<b>t.me/my_picosas_bot</b>, with your own bot's username) and tap <b>Start</b>, or send any message. The bot is locked until you allow your chat, so it answers with your <b>chat ID</b>, a number. This is its exact reply:</p><p lang="zh-Hant">在 Telegram 打開你的機器人（<b>t.me/my_picosas_bot</b>，換成你自己的機器人使用者名稱），按 <b>Start</b>，或隨便傳一則訊息。你的聊天室還沒被允許之前，機器人是鎖住的，所以它會回你的 <b>chat ID</b>，一串數字。它的回覆一字不差是這樣（只有英文版）：</p>
+        <p class="quote"><code>This bot is locked. Your chat ID is:</code><br><code>123456789</code><br><code>To unlock it, open PicoSAS on the PC: AI Config → Remote Control (Telegram) → paste this number into Allowed chat IDs → click Save chat IDs.</code></p>
+        <p lang="en">(The number is an example; yours is different.) It says this <b>once</b> per chat each time PicoSAS starts. Did you miss it? Restart PicoSAS and write to the bot again. No reply at all usually means PicoSAS isn't running, the bot isn't switched on, or the token is wrong.</p><p lang="zh-Hant">（數字只是範例，你的會不一樣。）每次 PicoSAS 啟動後，同一個聊天室它<b>只會說一次</b>。沒看到？重開 PicoSAS，再傳一次訊息給機器人。完全沒有回覆，通常是 PicoSAS 沒開、機器人沒打開開關，或 Token 不對。</p>
+        <div class="ext" data-src="img/ext-bot-locked.png" data-alt-en="Telegram on a phone: the bot's locked reply with the chat ID" data-alt-zh="手機上的 Telegram：機器人鎖住時的回覆和 chat ID"><div class="drawn"><svg class="sans" viewBox="190 0 260 250" role="img" aria-label="Your bot replies: This bot is locked. Your chat ID is 123456789">
+          <rect x="196" y="6" width="248" height="238" rx="28" fill="#1c2233" stroke="#5a6680" stroke-width="1.5"/>
+          <rect x="206" y="22" width="228" height="206" rx="16" fill="#dfe7ef"/>
+          <path d="M206 38a16 16 0 0 1 16-16h196a16 16 0 0 1 16 16v20H206z" fill="#ffffff"/>
+          <circle cx="232" cy="40" r="12" fill="#38bdf8"/><text x="232" y="45" font-size="12" fill="#04121c" text-anchor="middle">S</text>
+          <text x="252" y="38" font-size="12.5" font-weight="700" fill="#1c2233">My PicoSAS</text><text x="252" y="52" font-size="10" fill="#5d6679">bot</text>
+          <rect x="370" y="68" width="56" height="22" rx="10" fill="#effdde"/><text x="380" y="83" font-size="11" fill="#1c2233">/start</text>
+          <rect x="214" y="96" width="210" height="122" rx="10" fill="#ffffff"/>
+          <text class="ui" x="224" y="112" font-size="10.5" fill="#1c2233">This bot is locked. Your chat ID is:</text>
+          <rect x="222" y="119" width="84" height="20" rx="4" fill="#fff3c4"/><text x="230" y="134" font-size="12" font-weight="700" fill="#1c2233" font-family="Consolas, monospace">123456789</text>
+          <g font-size="10" fill="#1c2233"><text x="224" y="156">To unlock it, open PicoSAS on the PC:</text><text x="224" y="170">AI Config → Remote Control (Telegram)</text><text x="224" y="184">→ paste this number into Allowed</text><text x="224" y="198">chat IDs → click Save chat IDs.</text></g>
+          <g class="mk"><circle cx="318" cy="129" r="10"/><text x="318" y="133">1</text></g>
+        </svg><p class="cap" lang="en">This picture is drawn, not a screenshot: the real chat shows a private chat ID. The words are the ones PicoSAS sends.</p><p class="cap" lang="zh-Hant">這張是繪圖，不是截圖：真正的對話畫面會露出私人的 chat ID。圖上的文字是 PicoSAS 實際送出的內容。</p></div></div></div></li>
+      <li class="step"><div><h4 lang="en">Paste the chat ID, click Save chat IDs</h4><h4 lang="zh-Hant">貼上 chat ID，按 Save chat IDs</h4>
+        <p lang="en">Back in PicoSAS, in the same box: paste the number into <b class="ui">Allowed chat IDs</b> <span class="m">2</span> and click <b class="ui">Save chat IDs</b> <span class="m">3</span> (picture in the step before). To let several people in, write their IDs with commas between them. PicoSAS restarts the bot, checks the token with Telegram and says <i>“✅ @your_bot running — locked to 123456789”</i>. Now only the chats on the list can use your bot; anyone else gets no answer at all. If it says <i>“⚠ Telegram rejected the token”</i>, the token is wrong: paste it again in 🔑 Keys.</p><p lang="zh-Hant">回到 PicoSAS，同一個方塊：把那串數字貼到 <b class="ui">Allowed chat IDs</b> <span class="m">2</span>，按 <b class="ui">Save chat IDs</b> <span class="m">3</span>（圖在上一步）。想讓好幾個人用，就把他們的 ID 用逗號隔開。PicoSAS 會重新啟動機器人、向 Telegram 確認 Token，然後顯示「<i>✅ @你的機器人 running — locked to 123456789</i>」。從現在起，只有名單上的聊天室能用你的機器人；其他人完全收不到回應。如果顯示「<i>⚠ Telegram rejected the token</i>」，表示 Token 不對：到 🔑 Keys 重新貼一次。</p></div></li>
+      <li class="step"><div><h4 lang="en">Use it</h4><h4 lang="zh-Hant">開始使用</h4>
+        <p lang="en">Just write to it, as in the chat window on the computer (chapter 2). To analyze data: send your data file <b>as a file</b> (📎 → <b>File</b> — not <b>Gallery</b> or <b>Photo or Video</b>: PicoSAS reads a picture as a picture, never as data, and Telegram compresses it). PicoSAS answers <i>“✅ Loaded “name” (90 pts) into Batch. What next?”</i> (in the language of your Telegram app: any Chinese app language gets Traditional Chinese, everything else English) with <b>buttons</b> under the message. Tap <b>▶ Auto Fit</b> (or write <b>analyze</b>). While it works, Telegram shows <b>typing…</b> under the bot's name. Afterwards ask <b>send the plot</b>: you get the fit picture (and the P(r) picture when the data supports one). Ask for a <b>PDF report</b>: you get one PDF file. A copy of the plots and the report is also kept in the <code>reports</code> folder of PicoSAS on the computer.</p><p lang="en"><b>Sending the data file from an Android phone.</b> The bot can't open your phone's file picker for you: you pick the file in Telegram, then send it to the bot's chat. The names of the menu items can differ a little between Telegram versions. Way 1: in the bot's chat, tap <b>📎</b> → <b>File</b>, then tap <b>Browse</b> to open Android's file picker. Look in <b>Downloads</b> or <b>Internal storage</b>. The picker shows all file types, so you'll see your <code>.dat</code> and <code>.ABS</code> files. Way 2: open your phone's <b>Files</b> app, press and hold the data file, tap <b>Share</b>, choose <b>Telegram</b>, then choose the bot's chat. Way 3: if the file is on your computer, drag it into the bot's chat in Telegram on the computer (the same Telegram account). If Telegram's File tab shows pictures and music but not your data file, Android is hiding other file types from the app. Use Way 1 or Way 2 instead. A file that another app keeps in its own private folder can't be seen by Telegram; export or save it to <b>Downloads</b> first.</p><p lang="en"><b>Buttons.</b> Under its answers PicoSAS shows the buttons that make sense at that moment, so you don't have to find the right words. No data yet: <b>📤 Upload data</b>. A file is loaded: <b>▶ Auto Fit</b>, <b>📈 I(Q) plot</b>, <b>🔧 Q range</b>. After a result: <b>📋 Results</b>, <b>📈 I(Q) plot</b>, <b>📉 P(r) plot</b> (only when the data supports one), <b>📄 Fit report</b>, <b>🔧 Q range</b>, <b>▶ Auto Fit</b> again. While it works: <b>⏳ Progress</b> and <b>⏹ Stop</b>. Tap a button to run that function. You can also send these commands at any time: <b>/menu</b> shows the buttons. <b>/stop</b> stops what is running. <b>/help</b> (or tap <b>📖 Guide</b>) gives a short explanation and a link to this chapter. <b>/model</b> (or tap <b>🤖 AI model</b>) chooses which AI answers: the built-in one, your own endpoint, or a cloud service whose key you saved. <b>/restart</b> (or tap <b>🔄 Restart</b>) starts over: after you confirm, it clears the loaded files, the results and the conversation (the files on your computer aren't touched). If PicoSAS isn't sure what you mean, it shows the buttons instead of guessing. <b>🔧 Q range</b> shows the q window the fit will use for the file on screen. Tap <b>✂ Q min</b> or <b>✂ Q max</b> to cut points off that end, <b>↺</b> to get them back, and <b>⚙</b> to choose how many points one tap moves (1, 2, 5, 10 or 20). You can also send two numbers, such as <code>0.005 0.2</code> (1/Å). <b>↔ Full range</b> brings back the whole range. Then tap <b>▶ Auto Fit</b>. The window stays set for that file, just like in the desktop program. A <b>🧊 3D Shape</b> button appears only when your build has that feature turned on. It asks how many runs you want, then starts. While it runs, one message keeps updating with the run, the stage, the time so far, the time left and the current chi2, and the picture of the bead model updates too. When it's done, PicoSAS sends the final picture and the numbers.</p><p lang="zh-Hant">就直接對它說話，和電腦上的對話視窗一樣（第 2 章）。要分析數據：把數據檔<b>以檔案方式</b>傳給它（📎 → <b>檔案</b>，不要選相簿、照片或影片那一類：PicoSAS 會把圖片當成圖片看，不會當成數據，Telegram 還會把它壓縮）。PicoSAS 會回一句確認：「<i>✅ Loaded “name” (90 pts) into Batch. What next?</i>」（語言跟著你 Telegram App 的語言：App 是任何一種中文就回繁體中文，其他語言回英文。中文版是「已載入「檔名」（90 點）到 Batch。接下來要做什麼？」），訊息底下有<b>按鈕</b>。按 <b>▶ Auto Fit</b>（或直接說<b>開始分析</b>）。它工作時，Telegram 會在機器人名稱底下顯示<b>正在輸入…</b>。完成後說<b>把圖傳給我</b>：你會收到擬合圖（數據撐得起 P(r) 的話，還會多一張 P(r) 圖）。說 <b>PDF 報告</b>：你會收到一個 PDF 檔。圖和報告也會留一份在電腦上 PicoSAS 資料夾的 <code>reports</code> 裡。</p><p lang="zh-Hant"><b>用 Android 手機傳數據檔。</b>機器人沒辦法替你打開手機的檔案選擇器：檔案要你自己在 Telegram 裡選好，再傳到機器人的聊天室。選單名稱在不同版本的 Telegram 可能有一點差別。方法 1：在機器人的聊天室點 <b>📎</b> → <b>檔案</b>，再點 <b>瀏覽</b>（會打開 Android 系統自己的檔案選擇器），到 <b>下載</b> 或 <b>內部儲存空間</b> 找檔案；這個選擇器不會依類型過濾，<code>.dat</code>、<code>.ABS</code> 都看得到。方法 2：打開手機的<b>檔案</b> App，長按數據檔，點<b>分享</b>，選 <b>Telegram</b>，再選機器人的聊天室。方法 3：檔案在電腦上的話，用電腦上的 Telegram（同一個帳號），把檔案直接拖進機器人的聊天視窗。如果 Telegram「檔案」分頁裡只看到圖片和音樂、看不到你的數據檔，是因為 Android 不讓 App 看到圖片、影片、音樂以外的檔案：改用方法 1 或方法 2。被別的 App 放在它私有資料夾裡的檔案，Telegram 看不到；請先在那個 App 裡匯出或另存到<b>下載</b>。</p><p lang="zh-Hant"><b>按鈕。</b>PicoSAS 的回覆底下，會依當下的情況顯示合適的按鈕，你不用去想該怎麼說。還沒有資料：<b>📤 上傳數據</b>。檔案已載入：<b>▶ Auto Fit</b>、<b>📈 I(Q) 圖</b>、<b>🔧 Q 範圍</b>。有結果之後：<b>📋 數據結果</b>、<b>📈 I(Q) 圖</b>、<b>📉 P(r) 圖</b>（數據撐得起 P(r) 才有）、<b>📄 擬合報告</b>、<b>🔧 Q 範圍</b>，還有再來一次 <b>▶ Auto Fit</b>。它工作時：<b>⏳ 目前進度</b> 和 <b>⏹ 停止</b>。按下去就直接執行那個功能。隨時送出 <b>/menu</b> 就能叫出按鈕，<b>/stop</b> 停止正在做的事，<b>/help</b>（或按 <b>📖 說明書</b>）會給你簡短說明和這一章的連結，<b>/model</b>（或按 <b>🤖 AI 模型</b>）選要用哪個 AI：內建的、你自己的端點，或是存了金鑰的雲端服務，<b>/restart</b>（或按 <b>🔄 重新開始</b>）會重新開始：你確認之後，清掉已載入的檔案、結果和對話（電腦上的檔案不會被刪）。PicoSAS 聽不出你的意思時，會給你按鈕，不會亂猜。<b>🔧 Q 範圍</b> 會顯示這次擬合要用的 Q 範圍（畫面上那個檔案）；按 <b>✂ Q min</b> 或 <b>✂ Q max</b> 把那一端切掉幾個數據點（<b>↺</b> 還回來），<b>⚙</b> 選每按一次動幾點（1、2、5、10 或 20 點），也可以直接傳兩個數字，例如 <code>0.005 0.2</code>（單位 1/Å）；<b>↔ 全範圍</b> 會回到整段量測範圍。設好後按 <b>▶ Auto Fit</b>；這個範圍會跟著那個檔案，和電腦版一樣。<b>🧊 3D Shape</b> 按鈕只有在你這個版本開啟了這個功能時才會出現；按下去會先問你要跑幾次，然後開始重建。重建進行中，一則訊息會顯示第幾次、目前階段、已用時間、剩餘時間（第一次跑完才估得出來）和目前的 χ²，並原地更新，另有一張珠子模型的圖，畫面有變化就換掉；完成後 PicoSAS 會再傳最後的圖和數字。</p>
+        <div class="ext" data-src="img/ext-telegram-chat.png" data-alt-en="Telegram on a phone: a data file sent, the analysis, and the PDF report coming back" data-alt-zh="手機上的 Telegram：傳出數據檔、分析、收回 PDF 報告"><div class="drawn"><svg class="sans" viewBox="190 0 260 330" role="img" aria-label="Telegram: send a file, analyze, then PDF report">
+          <rect x="196" y="6" width="248" height="318" rx="28" fill="#1c2233" stroke="#5a6680" stroke-width="1.5"/>
+          <rect x="206" y="22" width="228" height="286" rx="16" fill="#dfe7ef"/>
+          <path d="M206 38a16 16 0 0 1 16-16h196a16 16 0 0 1 16 16v20H206z" fill="#ffffff"/>
+          <circle cx="232" cy="40" r="12" fill="#38bdf8"/><text x="232" y="45" font-size="12" fill="#04121c" text-anchor="middle">S</text>
+          <text x="252" y="38" font-size="12.5" font-weight="700" fill="#1c2233">My PicoSAS</text><text x="252" y="52" font-size="10" fill="#5d6679">bot</text>
+          <rect x="320" y="66" width="106" height="30" rx="10" fill="#effdde"/><text x="330" y="86" font-size="11" fill="#1c2233">📄 sample.dat</text>
+          <g lang="en"><rect x="214" y="102" width="206" height="36" rx="10" fill="#ffffff"/><text x="224" y="117" font-size="10.5" fill="#1c2233">✅ Loaded “sample.dat” (412 pts) into Batch.</text><text x="224" y="131" font-size="10.5" fill="#1c2233">What next?</text></g><g lang="zh-Hant"><rect x="214" y="102" width="206" height="36" rx="10" fill="#ffffff"/><text x="224" y="117" font-size="10.5" fill="#1c2233">✅ 已載入「sample.dat」（412 點）到 Batch。</text><text x="224" y="131" font-size="10.5" fill="#1c2233">接下來要做什麼？</text></g>
+          <g lang="en"><rect x="350" y="144" width="76" height="22" rx="10" fill="#effdde"/><text x="360" y="159" font-size="11" fill="#1c2233">▶ Auto Fit</text></g><g lang="zh-Hant"><rect x="350" y="144" width="76" height="22" rx="10" fill="#effdde"/><text x="360" y="159" font-size="11" fill="#1c2233">▶ Auto Fit</text></g>
+          <rect x="214" y="172" width="170" height="30" rx="10" fill="#ffffff"/><rect x="224" y="181" width="140" height="4" rx="2" fill="#c9d3de"/><rect x="224" y="191" width="100" height="4" rx="2" fill="#c9d3de"/>
+          <g lang="en"><rect x="346" y="208" width="80" height="22" rx="10" fill="#effdde"/><text x="356" y="223" font-size="11" fill="#1c2233">PDF report</text></g><g lang="zh-Hant"><rect x="346" y="208" width="80" height="22" rx="10" fill="#effdde"/><text x="356" y="223" font-size="11" fill="#1c2233">PDF 報告</text></g>
+          <g lang="en"><rect x="214" y="236" width="196" height="22" rx="10" fill="#ffffff"/><text x="224" y="251" font-size="10.5" fill="#1c2233">OK — building the PDF report ⏳</text></g><g lang="zh-Hant"><rect x="214" y="236" width="196" height="22" rx="10" fill="#ffffff"/><text x="224" y="251" font-size="10.5" fill="#1c2233">好，我把分析報告整理成 PDF ⏳</text></g>
+          <rect x="214" y="264" width="120" height="30" rx="10" fill="#ffffff"/><text x="224" y="284" font-size="11" fill="#1c2233">📄 report.pdf</text>
+        </svg><p class="cap" lang="en">This picture is drawn, not a screenshot: the real chat shows a private chat ID. The words are the ones PicoSAS sends.</p><p class="cap" lang="zh-Hant">這張是繪圖，不是截圖：真正的對話畫面會露出私人的 chat ID。圖上的文字是 PicoSAS 實際送出的內容。</p></div></div></div></li>
+    </ol>
+    <h3 class="part" lang="en">Analyze data from your phone: step by step</h3><h3 class="part" lang="zh-Hant">用手機分析數據：一步一步來</h3>
+    <table class="keys prov">
+      <tr><td class="k" lang="en">1. Send the data file</td><td class="k" lang="zh-Hant">1. 傳數據檔</td><td lang="en">In the bot's chat tap <b>📎</b> → <b>File</b> and send your data file (on Android see “Sending the data file from an Android phone” above). PicoSAS answers <i>“✅ Loaded “name” (90 pts) into Batch. What next?”</i> with buttons.</td><td lang="zh-Hant">在機器人的聊天室點 <b>📎</b> → <b>檔案</b>，傳你的數據檔（Android 手機請看上面的「用 Android 手機傳數據檔」）。PicoSAS 會回「<i>已載入「檔名」（90 點）到 Batch。接下來要做什麼？</i>」，下面有按鈕。</td></tr>
+      <tr><td class="k" lang="en">2. Optional: set the fitting q range</td><td class="k" lang="zh-Hant">2. 選擇性：設定擬合的 Q 範圍</td><td lang="en">Tap <b>📈 I(Q) plot</b> first to see your data before any fit. If part of it should be left out (a beamstop shadow at low q, or Bragg peaks or a rising background at high q), PicoSAS shades that part, says why and offers <b>✅ Use the suggested range</b>. To set it yourself tap <b>🔧 Q range</b>. It shows the window the fit will use, how many points that is and how many were cut at each end. <b>✂ Q min</b> / <b>✂ Q max</b> cut points off that end, <b>↺</b> gives them back, <b>⚙</b> chooses how many points one tap moves, <b>↔ Full range</b> restores everything. Or send two numbers such as <code>0.005 0.2</code>. If you don't choose a range, ▶ Auto Fit uses the range PicoSAS suggests and tells you what it cut.</td><td lang="zh-Hant">先按 <b>📈 I(Q) 圖</b>：還沒擬合時，它會傳數據本身的圖；如果程式看到應該排除的範圍（低 Q 的 beamstop 陰影、高 Q 的繞射峰或背景回升），會塗上顏色、說明原因，並給你 <b>✅ 套用建議的範圍</b>。要自己設就點 <b>🔧 Q 範圍</b>。它會顯示這次擬合要用的範圍、有幾個點、兩端各切掉幾點。<b>✂ Q min</b>／<b>✂ Q max</b> 把那一端切掉幾點，<b>↺</b> 還回來，<b>⚙</b> 選每按一次動幾點，<b>↔ 全範圍</b> 全部還原。也可以直接傳兩個數字，例如 <code>0.005 0.2</code>。如果你完全沒選範圍，▶ Auto Fit 會用程式自己會用的那個範圍（切掉 beamstop 陰影、繞射峰或背景回升），並告訴你切了哪裡。</td></tr>
+      <tr><td class="k" lang="en">3. Tap ▶ Auto Fit</td><td class="k" lang="zh-Hant">3. 按 ▶ Auto Fit</td><td lang="en">If PicoSAS doesn't yet know what the sample is, it asks once: <i>“Before we start, briefly describe the sample (material, expected structure, what you want to know)?”</i> Answer in one sentence, for example <i>carbon powder, I want the particle size</i>. If the file doesn't say whether its intensity is on an absolute scale (1/cm) or in arbitrary units, it asks once with buttons (absolute / arbitrary / not sure). Your answer decides whether it can work out the volume fraction and molecular weight. Then it starts: <i>“On it — analyzing “name”. One moment ⏳”</i>.</td><td lang="zh-Hant">如果 PicoSAS 還不知道樣品是什麼，會問你一次：「<i>開始前，請簡短描述這個樣品（材料、預期結構、你想知道什麼）？</i>」用一句話回答，例如「碳粉末，我想知道粒徑」。如果檔案沒有寫強度是絕對強度（1/cm）還是任意單位，它會用按鈕問一次（絕對強度／任意單位／不確定）——答案決定能不能算體積分率和分子量。接著它會開始：「<i>好的，我開始自動分析「檔名」，稍等一下下 ⏳</i>」。</td></tr>
+      <tr><td class="k" lang="en">4. Watch the progress line</td><td class="k" lang="zh-Hant">4. 看進度那一行</td><td lang="en">While it works, one line keeps updating with the stage and the time so far, for example <i>“⏳ fitting… (1:05 so far)”</i>. At the end it says <i>“✅ Analysis done (2:10)”</i>. Tap <b>⏳ Progress</b> for details, or <b>📸 Current view</b> to see the computer's screen right now (a short clip of about ten seconds while something is running). To end it, tap <b>⏹ Stop</b> or send <code>/stop</code>. A fit usually takes a few minutes.</td><td lang="zh-Hant">分析時，有一行訊息會原地更新階段和已經花的時間，例如「<i>⏳ 擬合中…（已 1:05）</i>」，結束時變成「<i>✅ 分析完成（用時 2:10）</i>」。按 <b>⏳ 目前進度</b> 看細節，按 <b>📸 目前畫面</b> 看電腦螢幕上現在的圖（有東西在跑的時候，傳來的是大約十秒的小動畫），按 <b>⏹ 停止</b>（或送出 <code>/stop</code>）可以中止。一次擬合通常要幾分鐘。</td></tr>
+      <tr><td class="k" lang="en">5. Read the result</td><td class="k" lang="zh-Hant">5. 讀結果</td><td lang="en">The result message starts with the <b>bottom line</b>. If the data gave an answer it says what it can answer. If not, it says so plainly, then explains <b>Why</b> and <b>What would help</b>. Next come the model and how well it fits (<i>a good fit / an acceptable fit / a poor fit</i>, with the reduced χ²). Last are any measurement warnings. They're listed for you, but they don't change the conclusion.</td><td lang="zh-Hant">結果訊息的第一行是<b>結論</b>。資料有答案時，它會說能回答什麼；沒有就直說沒有，接著是<b>原因</b>（用白話）和<b>怎麼辦</b>。後面是模型和擬合好壞（<i>擬合得很好／擬合尚可／擬合偏差大</i>，附 reduced χ²），再來是量測條件提醒——它們只是列出來，不會改變結論。</td></tr>
+      <tr><td class="k" lang="en">6. Ask for more</td><td class="k" lang="zh-Hant">6. 再看更多</td><td lang="en">Under the result are buttons: <b>📋 Results</b> (the message again), <b>📈 I(Q) plot</b> and <b>📉 P(r) plot</b> (sent as pictures; the P(r) one only appears when the data supports it), <b>📄 Fit report</b> (a PDF file), <b>🔧 Q range</b> to change the window and fit again with <b>▶ Auto Fit</b>. <b>🧊 3D Shape</b> appears only if your build has it and the data gives a radius of gyration. It asks how many runs you want (1 to 9). One run is fastest; with two or more, PicoSAS can compare the runs with each other.</td><td lang="zh-Hant">結果下面有按鈕：<b>📋 數據結果</b>（再看一次這則訊息）、<b>📈 I(Q) 圖</b>和<b>📉 P(r) 圖</b>（以圖片傳來；P(r) 要資料撐得起才有）、<b>📄 擬合報告</b>（一個 PDF 檔）、<b>🔧 Q 範圍</b>改範圍後再按 <b>▶ Auto Fit</b> 重新擬合。<b>🧊 3D Shape</b> 只有在這個版本有開放、而且資料讀得出迴轉半徑時才會出現；按了會先問要跑幾次（1 到 9）：1 次最快，2 次以上才能比較各次之間是否一致。</td></tr>
+    </table>
+    <h3 class="part" lang="en">What the phone shows, step by step</h3><h3 class="part" lang="zh-Hant">手機上會看到什麼：一步一步的畫面</h3>
+    <p lang="en">The pictures below show the bot's real messages, buttons, plots and files, placed in a phone frame. (A real Telegram screen would also show a private chat ID.) The grey chip above a reply says which button was tapped.</p><p lang="zh-Hant">下面的圖是程式真正送出的訊息、按鈕、圖和檔案，從機器人端錄下來、畫進手機框（真正的 Telegram 畫面會露出私人的 chat ID）。回覆上方灰色的小字是按了哪個按鈕。</p>
+    <div class="phones"><figure><div class="shot"><a class="zoom" lang="en" href="img/tg-upload-en.png" target="_blank" rel="noopener noreferrer"><img src="img/tg-upload-en.png" width="400" height="332" alt="Telegram: the data file sent, PicoSAS's 'Loaded' reply and the first buttons" loading="lazy"></a><a class="zoom" lang="zh-Hant" href="img/tg-upload-zh-Hant.png" target="_blank" rel="noopener noreferrer"><img src="img/tg-upload-zh-Hant.png" width="400" height="332" alt="Telegram：傳出數據檔、PicoSAS 回「已載入」和第一排按鈕" loading="lazy"></a></div><figcaption lang="en"><b>1 · Upload.</b> Tap 📎 → <b>File</b> and send your data file. PicoSAS replies that it is loaded and shows the buttons for what you can do next. The same buttons come back whenever you send <code>/menu</code>.</figcaption><figcaption lang="zh-Hant"><b>1 · 上傳。</b>點 📎 → <b>檔案</b>，把數據檔傳出去。PicoSAS 回「已載入」，下面就是接下來能做的事的按鈕。任何時候送出 <code>/menu</code>，同一組按鈕就會再出現。</figcaption></figure>
+<figure><div class="shot"><a class="zoom" lang="en" href="img/tg-menu-en.png" target="_blank" rel="noopener noreferrer"><img src="img/tg-menu-en.png" width="400" height="332" alt="Telegram: /menu brings the buttons back" loading="lazy"></a><a class="zoom" lang="zh-Hant" href="img/tg-menu-zh-Hant.png" target="_blank" rel="noopener noreferrer"><img src="img/tg-menu-zh-Hant.png" width="400" height="332" alt="Telegram：/menu 叫出按鈕" loading="lazy"></a></div><figcaption lang="en"><b>2 · The menu.</b> Type <code>/menu</code> (or pick it from Telegram's ☰ command list) — the buttons that fit the current state appear under the message.</figcaption><figcaption lang="zh-Hant"><b>2 · 選單。</b>打 <code>/menu</code>（或從 Telegram 的 ☰ 指令清單選）——符合目前狀態的按鈕就出現在訊息下面。</figcaption></figure>
+<figure><div class="shot"><a class="zoom" lang="en" href="img/tg-iq-data-en.png" target="_blank" rel="noopener noreferrer"><img src="img/tg-iq-data-en.png" width="400" height="614" alt="Telegram: the I(Q) picture before any fit, with the suggested q range" loading="lazy"></a><a class="zoom" lang="zh-Hant" href="img/tg-iq-data-zh-Hant.png" target="_blank" rel="noopener noreferrer"><img src="img/tg-iq-data-zh-Hant.png" width="400" height="595" alt="Telegram：還沒擬合時的 I(Q) 圖和建議的 Q 範圍" loading="lazy"></a></div><figcaption lang="en"><b>3 · Look at the data first.</b> 📈 <b>I(Q) plot</b> before any fit sends the data itself and says whether part of it should be left out (a beamstop shadow, Bragg peaks). Here nothing needs cutting.</figcaption><figcaption lang="zh-Hant"><b>3 · 先看數據。</b>還沒擬合時按 📈 <b>I(Q) 圖</b>，它把數據本身傳給你，並說有沒有該切掉的範圍（beamstop 陰影、繞射峰）。這份不用切。</figcaption></figure>
+<figure><div class="shot"><a class="zoom" lang="en" href="img/tg-qrange-en.png" target="_blank" rel="noopener noreferrer"><img src="img/tg-qrange-en.png" width="400" height="620" alt="Telegram: the Q range panel; one tap on ✂ Q min cut one point" loading="lazy"></a><a class="zoom" lang="zh-Hant" href="img/tg-qrange-zh-Hant.png" target="_blank" rel="noopener noreferrer"><img src="img/tg-qrange-zh-Hant.png" width="400" height="620" alt="Telegram：Q 範圍面板；按一下 ✂ Q min 切掉了 1 點" loading="lazy"></a></div><figcaption lang="en"><b>4 · Change the q range.</b> 🔧 <b>Q range</b> shows the window the fit will use. Each ✂ tap cuts points off that end (↺ gives them back), ⚙ changes how many points one tap moves, ↔ restores the whole range. Or send two numbers such as <code>0.005 0.2</code>. It is ONE message: the data with the part that will be left out shaded, the window in words and the buttons. Every tap on a button updates that same message, so you see the shading move. The picture is after one tap on ✂ Q min.</figcaption><figcaption lang="zh-Hant"><b>4 · 改 Q 範圍。</b>🔧 <b>Q 範圍</b> 顯示擬合會用的範圍。每按一次 ✂ 就從那一端切掉幾點（↺ 還回去），⚙ 改每次切幾點，↔ 回到全範圍；也可以直接傳兩個數字，例如 <code>0.005 0.2</code>。它是同一則訊息：數據圖、將被切掉的部分塗了色、文字說明和按鈕都在裡面；每按一次按鈕，就原地更新這一則，你直接看到塗色範圍在動。這張是按了一次 ✂ Q min 之後的樣子。</figcaption></figure>
+<figure><div class="shot"><a class="zoom" lang="en" href="img/tg-progress-en.png" target="_blank" rel="noopener noreferrer"><img src="img/tg-progress-en.png" width="400" height="454" alt="Telegram: the start message with the q window, and the progress line" loading="lazy"></a><a class="zoom" lang="zh-Hant" href="img/tg-progress-zh-Hant.png" target="_blank" rel="noopener noreferrer"><img src="img/tg-progress-zh-Hant.png" width="400" height="473" alt="Telegram：開始訊息（含 Q 範圍）和進度那一行" loading="lazy"></a></div><figcaption lang="en"><b>5 · Auto Fit.</b> ▶ <b>Auto Fit</b> starts the analysis. The first message shows the q window in use (including any points you cut). Below it, one line keeps updating with the stage, the models tried so far, the best one so far, the lowest χ² and the time. One picture of the fit updates whenever the screen changes, so your chat doesn't fill up with pictures. Tap 📸 Current view for a snapshot.</figcaption><figcaption lang="zh-Hant"><b>5 · Auto Fit。</b>▶ <b>Auto Fit</b> 開始分析。第一則寫出這次用的 Q 範圍（包括你切掉的點）；它下面那一行會原地一直更新：階段、做完幾個候選模型、目前最好的是哪個、正在跑的擬合目前最低的 χ²、已用時間。它下面有一張擬合圖，畫面有變化時就原地換成最新的那一張（對話不會被一堆新圖洗版）；想要即時截圖就按 📸 目前畫面。</figcaption></figure>
+<figure><div class="shot"><a class="zoom" lang="en" href="img/tg-result-en.png" target="_blank" rel="noopener noreferrer"><img src="img/tg-result-en.png" width="400" height="509" alt="Telegram: the result message with the result buttons" loading="lazy"></a><a class="zoom" lang="zh-Hant" href="img/tg-result-zh-Hant.png" target="_blank" rel="noopener noreferrer"><img src="img/tg-result-zh-Hant.png" width="400" height="470" alt="Telegram：結果訊息和結果的按鈕" loading="lazy"></a></div><figcaption lang="en"><b>6 · The result.</b> The conclusion comes first, then why, then the model and how good the fit is. Under it: 📋 Results, 📈 I(Q) plot, 📉 P(r) plot (when the data supports it), 📄 Fit report, 🔧 Q range, ▶ Auto Fit again.</figcaption><figcaption lang="zh-Hant"><b>6 · 結果。</b>先是結論，再是原因，再是模型和擬合好壞。下面有：📋 數據結果、📈 I(Q) 圖、📉 P(r) 圖（資料撐得起才有）、📄 擬合報告、🔧 Q 範圍、再按一次 ▶ Auto Fit。</figcaption></figure>
+<figure><div class="shot"><a class="zoom" lang="en" href="img/tg-report-en.png" target="_blank" rel="noopener noreferrer"><img src="img/tg-report-en.png" width="400" height="332" alt="Telegram: the PDF report arrives as a file" loading="lazy"></a><a class="zoom" lang="zh-Hant" href="img/tg-report-zh-Hant.png" target="_blank" rel="noopener noreferrer"><img src="img/tg-report-zh-Hant.png" width="400" height="332" alt="Telegram：PDF 報告以檔案送來" loading="lazy"></a></div><figcaption lang="en"><b>7 · Download the report.</b> 📄 <b>Fit report</b> sends the PDF as a file: tap it in Telegram to open or save it. Plots arrive as pictures the same way.</figcaption><figcaption lang="zh-Hant"><b>7 · 下載報告。</b>📄 <b>擬合報告</b> 把 PDF 當檔案傳給你，在 Telegram 裡點它就能開啟或儲存。圖也是這樣以圖片傳來。</figcaption></figure>
+<figure><div class="shot"><a class="zoom" lang="en" href="img/tg-3d-runs-en.png" target="_blank" rel="noopener noreferrer"><img src="img/tg-3d-runs-en.png" width="400" height="332" alt="Telegram: 3D Shape asks how many runs" loading="lazy"></a><a class="zoom" lang="zh-Hant" href="img/tg-3d-runs-zh-Hant.png" target="_blank" rel="noopener noreferrer"><img src="img/tg-3d-runs-zh-Hant.png" width="400" height="332" alt="Telegram：3D Shape 先問要跑幾次" loading="lazy"></a></div><figcaption lang="en"><b>3D.</b> 🧊 <b>3D Shape</b> (a preview in this beta) first asks how many runs, 1 to 9; the picture comes back when it is done.</figcaption><figcaption lang="zh-Hant"><b>3D。</b>🧊 <b>3D Shape</b>（這個封測版的預覽功能）先問要跑幾次（1 到 9），跑完把圖傳回來。</figcaption></figure>
+<figure><div class="shot"><a class="zoom" lang="en" href="img/tg-restart-en.png" target="_blank" rel="noopener noreferrer"><img src="img/tg-restart-en.png" width="400" height="332" alt="Telegram: /restart asks before clearing" loading="lazy"></a><a class="zoom" lang="zh-Hant" href="img/tg-restart-zh-Hant.png" target="_blank" rel="noopener noreferrer"><img src="img/tg-restart-zh-Hant.png" width="400" height="332" alt="Telegram：/restart 會先問" loading="lazy"></a></div><figcaption lang="en"><b>8 · Start over.</b> <code>/restart</code> (or 🔄) asks first and says what it clears; your files on the computer are untouched.</figcaption><figcaption lang="zh-Hant"><b>8 · 重新開始。</b><code>/restart</code>（或 🔄）會先問、並說清楚會清掉什麼；電腦上的檔案不會動。</figcaption></figure></div>
+    <h3 class="part" lang="en">Every button</h3><h3 class="part" lang="zh-Hant">每個按鈕的意思</h3>
+    <table class="keys prov">
+<tr><td class="k" lang="en" data-button="upload">📤 Upload data</td><td class="k" lang="zh-Hant" data-button="upload">📤 上傳數據</td><td lang="en">Says where to send a file (📎 → File, not Photo or Video); it doesn't pick a file for you. <i>(no data loaded)</i></td><td lang="zh-Hant">說明檔案怎麼傳（📎 → 檔案，不是照片或影片）；它不會替你選檔。<i>（還沒有數據時）</i></td></tr>
+<tr><td class="k" lang="en" data-button="autofit">▶ Auto Fit</td><td class="k" lang="zh-Hant" data-button="autofit">▶ Auto Fit</td><td lang="en">Starts the automatic analysis of the file on screen (asks for a one-line sample description if it has none). <i>(data loaded)</i></td><td lang="zh-Hant">對螢幕上的檔案開始自動分析（還不知道樣品是什麼時會先問一句）。<i>（有數據時）</i></td></tr>
+<tr><td class="k" lang="en" data-button="plot_iq">📈 I(Q) plot</td><td class="k" lang="zh-Hant" data-button="plot_iq">📈 I(Q) 圖</td><td lang="en">Before a fit: the data with the suggested q range. After a fit: the fitted curve and residuals. <i>(data loaded)</i></td><td lang="zh-Hant">擬合前：數據圖和建議的 Q 範圍。擬合後：擬合曲線和殘差。<i>（有數據時）</i></td></tr>
+<tr><td class="k" lang="en" data-button="plot_pr">📉 P(r) plot</td><td class="k" lang="zh-Hant" data-button="plot_pr">📉 P(r) 圖</td><td lang="en">The pair-distance distribution P(r), when the data supports it. <i>(after a fit)</i></td><td lang="zh-Hant">距離分布 P(r)，資料撐得起才有。<i>（擬合後）</i></td></tr>
+<tr><td class="k" lang="en" data-button="result">📋 Results</td><td class="k" lang="zh-Hant" data-button="result">📋 數據結果</td><td lang="en">The result message again. <i>(after a fit)</i></td><td lang="zh-Hant">再看一次結果訊息。<i>（擬合後）</i></td></tr>
+<tr><td class="k" lang="en" data-button="report">📄 Fit report</td><td class="k" lang="zh-Hant" data-button="report">📄 擬合報告</td><td lang="en">The analysis report as a PDF file. <i>(after a fit)</i></td><td lang="zh-Hant">分析報告，PDF 檔。<i>（擬合後）</i></td></tr>
+<tr><td class="k" lang="en" data-button="qrange">🔧 Q range</td><td class="k" lang="zh-Hant" data-button="qrange">🔧 Q 範圍</td><td lang="en">The fitting q window with the cut / restore buttons below. <i>(data loaded)</i></td><td lang="zh-Hant">擬合用的 Q 範圍，下面是切與還的按鈕。<i>（有數據時）</i></td></tr>
+<tr><td class="k" lang="en" data-button="qmin_up">✂ Q min cut n pt</td><td class="k" lang="zh-Hant" data-button="qmin_up">✂ Q min 切 n 點</td><td lang="en">Cuts n points off the low-q end (n is set by ⚙). <i>(in the Q range panel)</i></td><td lang="zh-Hant">從低 Q 端切掉 n 點（n 由 ⚙ 決定）。<i>（Q 範圍面板裡）</i></td></tr>
+<tr><td class="k" lang="en" data-button="qmin_dn">↺ Q min back n pt</td><td class="k" lang="zh-Hant" data-button="qmin_dn">↺ Q min 還 n 點</td><td lang="en">Gives n points back at the low-q end. <i>(in the Q range panel)</i></td><td lang="zh-Hant">低 Q 端還回 n 點。<i>（Q 範圍面板裡）</i></td></tr>
+<tr><td class="k" lang="en" data-button="qmax_dn">✂ Q max cut n pt</td><td class="k" lang="zh-Hant" data-button="qmax_dn">✂ Q max 切 n 點</td><td lang="en">Cuts n points off the high-q end. <i>(in the Q range panel)</i></td><td lang="zh-Hant">從高 Q 端切掉 n 點。<i>（Q 範圍面板裡）</i></td></tr>
+<tr><td class="k" lang="en" data-button="qmax_up">↺ Q max back n pt</td><td class="k" lang="zh-Hant" data-button="qmax_up">↺ Q max 還 n 點</td><td lang="en">Gives n points back at the high-q end. <i>(in the Q range panel)</i></td><td lang="zh-Hant">高 Q 端還回 n 點。<i>（Q 範圍面板裡）</i></td></tr>
+<tr><td class="k" lang="en" data-button="q_step">⚙ n pt per tap</td><td class="k" lang="zh-Hant" data-button="q_step">⚙ 每次 n 點</td><td lang="en">How many points one tap moves: 1 → 2 → 5 → 10 → 20 → 1. <i>(in the Q range panel)</i></td><td lang="zh-Hant">每按一次切幾點：1 → 2 → 5 → 10 → 20 → 1 循環。<i>（Q 範圍面板裡）</i></td></tr>
+<tr><td class="k" lang="en" data-button="q_full">↔ Full range</td><td class="k" lang="zh-Hant" data-button="q_full">↔ 全範圍</td><td lang="en">Back to the whole measured range. <i>(in the Q range panel)</i></td><td lang="zh-Hant">回到量到的全範圍。<i>（Q 範圍面板裡）</i></td></tr>
+<tr><td class="k" lang="en" data-button="q_done">✔ Done</td><td class="k" lang="zh-Hant" data-button="q_done">✔ 完成</td><td lang="en">Leaves the Q range panel and shows the menu. <i>(in the Q range panel)</i></td><td lang="zh-Hant">離開 Q 範圍面板，回到選單。<i>（Q 範圍面板裡）</i></td></tr>
+<tr><td class="k" lang="en" data-button="status">⏳ Progress</td><td class="k" lang="zh-Hant" data-button="status">⏳ 目前進度</td><td lang="en">What the running analysis is doing right now. <i>(while running)</i></td><td lang="zh-Hant">正在跑的分析現在到哪裡。<i>（分析進行中）</i></td></tr>
+<tr><td class="k" lang="en" data-button="view">📸 Current view</td><td class="k" lang="zh-Hant" data-button="view">📸 目前畫面</td><td lang="en">A picture of what is on the computer's screen now (a short animation while something is running). <i>(while running)</i></td><td lang="zh-Hant">電腦螢幕上現在的畫面（有東西在跑時是一小段動畫）。<i>（分析進行中）</i></td></tr>
+<tr><td class="k" lang="en" data-button="stop">⏹ Stop</td><td class="k" lang="zh-Hant" data-button="stop">⏹ 停止</td><td lang="en">Stops the running analysis (also /stop). <i>(while running)</i></td><td lang="zh-Hant">停止正在跑的分析（也可以打 /stop）。<i>（分析進行中）</i></td></tr>
+<tr><td class="k" lang="en" data-button="shape3d">🧊 3D Shape</td><td class="k" lang="zh-Hant" data-button="shape3d">🧊 3D Shape</td><td lang="en">The 3D bead-model reconstruction; asks how many runs first. <i>(data loaded, a preview feature)</i></td><td lang="zh-Hant">3D 珠子模型重建，先問跑幾次。<i>（有數據時（預覽功能））</i></td></tr>
+<tr><td class="k" lang="en" data-button="conditions">📐 Conditions</td><td class="k" lang="zh-Hant" data-button="conditions">📐 量測條件</td><td lang="en">Tell PicoSAS the measurement conditions (temperature, concentration…) that go into the report. <i>(data loaded)</i></td><td lang="zh-Hant">告訴 PicoSAS 量測條件（溫度、濃度…），會寫進報告。<i>（有數據時）</i></td></tr>
+<tr><td class="k" lang="en" data-button="model">🤖 AI model</td><td class="k" lang="zh-Hant" data-button="model">🤖 AI 模型</td><td lang="en">Choose which AI answers: the built-in model or a cloud model you set up (also /model). <i>(always)</i></td><td lang="zh-Hant">選哪個 AI 回答：內建模型或你設定的雲端模型（也可以打 /model）。<i>（任何時候）</i></td></tr>
+<tr><td class="k" lang="en" data-button="help">📖 Guide</td><td class="k" lang="zh-Hant" data-button="help">📖 說明書</td><td lang="en">Opens this chapter of the guide (also /help). <i>(always)</i></td><td lang="zh-Hant">打開說明書的這一章（也可以打 /help）。<i>（任何時候）</i></td></tr>
+<tr><td class="k" lang="en" data-button="restart">🔄 Restart</td><td class="k" lang="zh-Hant" data-button="restart">🔄 重新開始</td><td lang="en">Clears the files, results and conversation after asking (also /restart). <i>(always)</i></td><td lang="zh-Hant">問過之後清掉檔案、結果和對話（也可以打 /restart）。<i>（任何時候）</i></td></tr>
+<tr><td class="k" lang="en" data-button="restart_yes">✅ Yes, start over</td><td class="k" lang="zh-Hant" data-button="restart_yes">✅ 確定重新開始</td><td lang="en">Confirms the restart. <i>(after 🔄)</i></td><td lang="zh-Hant">確認重新開始。<i>（按了 🔄 之後）</i></td></tr>
+<tr><td class="k" lang="en" data-button="restart_no">Cancel</td><td class="k" lang="zh-Hant" data-button="restart_no">取消</td><td lang="en">Keeps everything. <i>(after 🔄)</i></td><td lang="zh-Hant">什麼都不動。<i>（按了 🔄 之後）</i></td></tr>
+    </table>
+    <h3 class="part" lang="en">What you can send</h3><h3 class="part" lang="zh-Hant">你可以傳什麼</h3>
+    <table class="keys prov">
+      <tr><td class="k" lang="en">A data file</td><td class="k" lang="zh-Hant">數據檔</td><td lang="en"><code>.dat .abs .txt .csv .xml .h5 .hdf .hdf5 .nxs</code>, sent as a file. It is loaded into <b class="ui">Batch</b> and onto the plot on your computer.</td><td lang="zh-Hant"><code>.dat .abs .txt .csv .xml .h5 .hdf .hdf5 .nxs</code>，以檔案方式傳。它會載入你電腦上的 <b class="ui">Batch</b> 和圖。</td></tr>
+      <tr><td class="k" lang="en">A paper or notes</td><td class="k" lang="zh-Hant">論文或筆記</td><td lang="en"><code>.pdf .md</code>, sent as a file: added to your own material, as in chapter 2.</td><td lang="zh-Hant"><code>.pdf .md</code>，以檔案方式傳：加進你自己的資料，和第 2 章一樣。</td></tr>
+      <tr><td class="k" lang="en">A picture</td><td class="k" lang="zh-Hant">圖片</td><td lang="en">A photo, or a file ending in <code>.png .jpg .jpeg .webp .bmp .gif</code>. Write your question as the caption; the picture is read like in chapter 2 (it can take minutes).</td><td lang="zh-Hant">照片，或副檔名是 <code>.png .jpg .jpeg .webp .bmp .gif</code> 的檔案。把問題寫在照片的說明裡；圖片的讀法和第 2 章一樣（可能要幾分鐘）。</td></tr>
+      <tr><td class="k" lang="en">Text</td><td class="k" lang="zh-Hant">文字</td><td lang="en">Any question or instruction, in any language. A caption on a file is treated as a message too.</td><td lang="zh-Hant">任何問題或指令，什麼語言都可以。檔案的說明文字也會當成一則訊息處理。</td></tr>
+    </table>
+    <h3 class="part" lang="en">What happens when…</h3><h3 class="part" lang="zh-Hant">遇到這些狀況時</h3>
+    <table class="keys prov">
+      <tr><td class="k" lang="en">You write while it is still answering</td><td class="k" lang="zh-Hant">它還在回答時你又傳訊息</td><td lang="en">It answers one message at a time. The new one waits: <i>“(Still answering the previous message — this one is next in line.)”</i></td><td lang="zh-Hant">它一次只回一則。新的那則會排隊：「<i>（還在回上一則，這則排在後面。）</i>」</td></tr>
+      <tr><td class="k" lang="en"><code>/stop</code></td><td class="k" lang="zh-Hant"><code>/stop</code></td><td lang="en">Stops the answer or the analysis that is running, empties the queue and replies <i>“Stopped.”</i></td><td lang="zh-Hant">停止正在進行的回答或分析，清空排隊的訊息，並回「<i>已停止。</i>」</td></tr>
+      <tr><td class="k" lang="en">You can't see your data file when you pick it (Android)</td><td class="k" lang="zh-Hant">選檔案時看不到數據檔（Android）</td><td lang="en">Android hides files that aren't pictures, video or music from Telegram's own file list. Tap <b>📎</b> → <b>File</b> → <b>Browse</b>, or share the file from your phone's <b>Files</b> app to the bot's chat (step “Use it”).</td><td lang="zh-Hant">Android 不讓 Telegram 自己的檔案清單看到圖片、影片、音樂以外的檔案。點 <b>📎</b> → <b>檔案</b> → <b>瀏覽</b>，或在手機的<b>檔案</b> App 把檔案分享到機器人的聊天室（「使用」那一步）。</td></tr>
+      <tr><td class="k" lang="en">A file type it doesn't take, or a file over about 20 MB</td><td class="k" lang="zh-Hant">不收的檔案類型，或超過約 20 MB 的檔案</td><td lang="en"><i>“⚠ unsupported file type '.xyz'”</i> or <i>“⚠ file too large (Telegram caps bot downloads at ~20 MB)”</i>. Nothing is loaded.</td><td lang="zh-Hant">「<i>⚠ unsupported file type '.xyz'</i>」或「<i>⚠ file too large (Telegram caps bot downloads at ~20 MB)</i>」。什麼都不會載入。</td></tr>
+      <tr><td class="k" lang="en">You also use the chat window on the computer</td><td class="k" lang="zh-Hant">你同時也用電腦上的對話視窗</td><td lang="en">The two chats mirror each other. What you write on the computer shows on the phone with a 🖥 in front, and the answers show in both places.</td><td lang="zh-Hant">兩邊的對話會互相同步。你在電腦上打的字，會在手機上出現、前面加一個 🖥，回答兩邊都看得到。</td></tr>
+      <tr><td class="k" lang="en">Two computers run PicoSAS with the same bot</td><td class="k" lang="zh-Hant">兩台電腦用同一個機器人跑 PicoSAS</td><td lang="en">Only one may use a bot at a time. The one that notices stops, switches <b class="ui">Enable bot</b> off and says <i>“⚠ Another machine is already running this bot — stopped here (only one may run). Turn it off there, then flip this switch on to run it here.”</i></td><td lang="zh-Hant">一個機器人同一時間只能一台電腦用。發現衝突的那一台會自己停下來、把 <b class="ui">Enable bot</b> 關掉，並顯示「<i>⚠ Another machine is already running this bot — stopped here (only one may run). Turn it off there, then flip this switch on to run it here.</i>」</td></tr>
+      <tr><td class="k" lang="en">Somebody else finds your bot</td><td class="k" lang="zh-Hant">別人找到你的機器人</td><td lang="en">Once your chat ID list is saved, they get no answer at all and nothing runs. (Before the list exists, anyone who writes to the bot is told their own chat ID, nothing more.)</td><td lang="zh-Hant">名單存好之後，他們完全收不到回應，也不會執行任何東西。（名單還不存在的時候，任何人傳訊息給機器人，只會被告知他自己的 chat ID，僅此而已。）</td></tr>
+    </table>
+    <h3 class="part" lang="en">What it cannot do</h3><h3 class="part" lang="zh-Hant">它做不到的事</h3>
+    <ul lang="en">
+      <li>It cannot answer while PicoSAS is closed.</li>
+      <li>Voice messages, video and stickers get no reply: it reads text, files and photos only.</li>
+      <li>It takes only the file types in the table above, up to about 20 MB each.</li>
+      <li>The report comes as a PDF. The DOCX version is only on the <b class="ui">Report</b> tab on the computer.</li>
+      <li>It is as good as the AI you chose in the “AI:” box (chapter 3): a cloud AI receives what you ask, whether you ask from the phone or the computer.</li>
+    </ul>
+    <ul lang="zh-Hant">
+      <li>PicoSAS 關掉的時候，它不能回答。</li>
+      <li>語音訊息、影片和貼圖都不會有回應：它只讀文字、檔案和照片。</li>
+      <li>只收上面表格列的檔案類型，每個檔案最大約 20 MB。</li>
+      <li>報告只會以 PDF 傳給你。DOCX 版本只能在電腦上的 <b class="ui">Report</b> 分頁拿到。</li>
+      <li>它的聰明程度取決於你在「AI:」選的 AI（第 3 章）：選雲端 AI 的話，不管你從手機還是電腦問，雲端 AI 都會收到你問的內容。</li>
+    </ul>
+    <div class="tip"><h4 lang="en">If the token leaks</h4><h4 lang="zh-Hant">Token 如果外洩</h4>
+      <p lang="en">Send <code>/token</code> to @BotFather and follow its questions to get a new token (the old one stops working). Paste the new one in 🔑 Keys and click <b class="ui">Save</b>, then click <b class="ui">Save chat IDs</b> in the Remote Control box: that restarts the bot with the new token.</p><p lang="zh-Hant">對 @BotFather 送出 <code>/token</code>，照它的問題回答，拿一個新的 Token（舊的就失效了）。把新的貼到 🔑 Keys，按 <b class="ui">Save</b>，再到 Remote Control 方塊按 <b class="ui">Save chat IDs</b>：這樣機器人會用新的 Token 重新啟動。</p></div>
+  </section>
+
+  <!-- ─────────────────────────── 6. Voice ─────────────────────────── -->
+  <section class="card" id="voice">
+    <h2><span class="n">6</span><span lang="en">Voice: talk to it, and record your voice</span><span lang="zh-Hant">語音：用說的，並錄下你的聲紋</span> <span class="badge">Windows</span></h2>
+    <p class="lead" lang="en">Speak your questions and hear the answers. In this beta, voice works on Windows; on macOS and Linux, type instead.</p><p class="lead" lang="zh-Hant">用說的問問題、聽它回答。這個封測版的語音功能只在 Windows 上可用；macOS 和 Linux 請用打字。</p>
+    <ol class="steps">
+      <li class="step"><div><h4 lang="en">Click the microphone and talk</h4><h4 lang="zh-Hant">點麥克風，開始說話</h4>
+        <p lang="en">In the chat window, click <b>🎤</b>. It turns <b>cyan</b> while it listens — just talk, nothing to hold. Click it again to stop. The very first time it may need a minute to get ready.</p><p lang="zh-Hant">在對話視窗點 <b>🎤</b>。聆聽時它會變成<b>藍綠色</b>——直接說就好，不用按著。再點一下就停止。第一次使用可能要等一分鐘準備。</p>
+        <div class="shot narrow"><a class="zoom" lang="en" href="img/chat-mic-en.png" target="_blank" rel="noopener noreferrer"><img src="img/chat-mic-en.png" width="360" height="170" alt="The bottom of the chat window while it listens: the microphone button is filled cyan" loading="lazy"></a><a class="zoom" lang="zh-Hant" href="img/chat-mic-zh-Hant.png" target="_blank" rel="noopener noreferrer"><img src="img/chat-mic-zh-Hant.png" width="360" height="170" alt="聆聽中的對話視窗下方：麥克風按鈕變成藍綠色" loading="lazy"></a></div></div></li>
+      <li class="step"><div><h4 lang="en">Start with its name</h4><h4 lang="zh-Hant">先叫它的名字</h4>
+        <p lang="en">Say <b>“PicoSAS, …”</b> (in Chinese: <b>“小伐，…”</b>). Until it knows your voice (next step), it only follows sentences that start with its name — so people talking nearby don't set it off.</p><p lang="zh-Hant">說「<b>小伐，…</b>」（英文介面：「<b>PicoSAS, …</b>」）。在它認得你的聲音之前（下一步），它只聽以它的名字開頭的句子——旁邊有人說話也不會誤觸發。</p></div></li>
+      <li class="step"><div><h4 lang="en">Record your voice — 6 seconds, once</h4><h4 lang="zh-Hant">錄下你的聲音——6 秒，一次就好</h4>
+        <p lang="en"><b class="ui">AI Config</b> tab → <b class="ui">Voice</b> box → click <b class="ui">Enroll voiceprint (6s)</b> <span class="m">1</span>. (Or just say or type <b>“PicoSAS, enroll my voice”</b>.)</p><p lang="zh-Hant"><b class="ui">AI Config</b> 分頁 → <b class="ui">Voice</b> 方塊 → 按 <b class="ui">Enroll voiceprint (6s)</b> <span class="m">1</span>。（或直接說、或打字「<b>小伐 錄聲紋</b>」。）</p>
+        <div class="shot narrow"><a class="zoom" lang="en" href="img/voice-box.png" target="_blank" rel="noopener noreferrer"><img src="img/voice-box.png" width="390" height="350" alt="The Voice box: STT model, Voice language, Microphone and Enroll voiceprint (numbers 1 to 4)" loading="lazy"></a><a class="zoom" lang="zh-Hant" href="img/voice-box.png" target="_blank" rel="noopener noreferrer"><img src="img/voice-box.png" width="390" height="350" alt="Voice 方塊：STT model、Voice language、Microphone、Enroll voiceprint（編號 1 到 4）" loading="lazy"></a></div></div></li>
+      <li class="step"><div><h4 lang="en">Press OK and read the sentence shown</h4><h4 lang="zh-Hant">按 OK，唸出畫面上的句子</h4>
+        <p lang="en">Recording starts when you press <b>OK</b> and lasts 6 seconds. Read in your normal voice, at your usual distance from the computer.</p><p lang="zh-Hant">按 <b>OK</b> 後開始錄音，持續 6 秒。用平常的音量、平常和電腦的距離來唸。</p>
+        <div class="shot narrow"><a class="zoom" lang="en" href="img/enroll-voiceprint.png" target="_blank" rel="noopener noreferrer"><img src="img/enroll-voiceprint.png" width="500" height="217" alt="The Enroll voiceprint window with the sentences to read and the OK button" loading="lazy"></a><a class="zoom" lang="zh-Hant" href="img/enroll-voiceprint.png" target="_blank" rel="noopener noreferrer"><img src="img/enroll-voiceprint.png" width="500" height="217" alt="錄聲紋的視窗：要唸的句子和 OK 按鈕" loading="lazy"></a></div></div></li>
+      <li class="step"><div><h4 lang="en">Done: “Enrolled ✓”</h4><h4 lang="zh-Hant">完成：「Enrolled ✓」</h4>
+        <p lang="en">The Voice box now says <i>“Enrolled ✓ — hands-free accepts your voice (or the assistant's name).”</i> It listens to you — no name needed. Your voiceprint stays on this computer. Record again any time; <b class="ui">Clear</b> deletes it.</p><p lang="zh-Hant">Voice 方塊會顯示「<i>Enrolled ✓ — hands-free accepts your voice (or the assistant's name).</i>」。之後它只聽你的聲音——不用再叫名字。聲紋只存在這台電腦。隨時可以重錄；<b class="ui">Clear</b> 會刪掉它。</p></div></li>
+      <li class="step"><div><h4 lang="en">Hear the answers</h4><h4 lang="zh-Hant">聽它回答</h4>
+        <p lang="en">Click <b>🔊</b> at the top of the chat window. You can interrupt it just by talking. English is spoken offline; the Chinese voice needs the internet.</p><p lang="zh-Hant">點對話視窗上方的 <b>🔊</b>。它說話時你可以直接開口打斷。英文語音可離線；中文語音需要網路。</p></div></li>
+    </ol>
+    <div class="tip">
+      <h4 lang="en">If it doesn't hear you well</h4><h4 lang="zh-Hant">聽不清楚你說話？</h4>
+      <ul lang="en">
+        <li>Wrong microphone? Voice box → <b class="ui">Microphone</b> <span class="m">2</span> → pick yours.</li>
+        <li>Nothing at all? Windows <b>Settings → Privacy &amp; security → Microphone</b>: turn on <b>Microphone access</b> and <b>Let desktop apps access your microphone</b>.</li>
+        <li>Short Chinese sentences written as English? <b class="ui">Voice language</b> <span class="m">3</span> → <b>中文</b>.</li>
+        <li>Want more accurate recognition? <b class="ui">STT model</b> <span class="m">4</span> → <b class="ui">medium</b> (one-time ~1.5 GB download, a bit slower).</li>
+      </ul>
+      <ul lang="zh-Hant">
+        <li>麥克風不對？Voice 方塊 → <b class="ui">Microphone</b> <span class="m">2</span> → 選你要用的那一支。</li>
+        <li>完全沒反應？Windows <b>設定 → 隱私權與安全性 → 麥克風</b>：開啟<b>麥克風存取權</b>和<b>讓桌面應用程式存取您的麥克風</b>。</li>
+        <li>短的中文句子被辨識成英文？<b class="ui">Voice language</b> <span class="m">3</span> → <b>中文</b>。</li>
+        <li>想要更準的辨識？<b class="ui">STT model</b> <span class="m">4</span> → <b class="ui">medium</b>（一次性下載約 1.5 GB，會稍慢一點）。</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────── 7. From data to report ─────────────────────────── -->
+  <section class="card" id="fit">
+    <h2><span class="n">7</span><span lang="en">From your data to a report</span><span lang="zh-Hant">從你的數據到一份報告</span></h2>
+    <p class="lead" lang="en">The whole analysis in eight steps.</p><p class="lead" lang="zh-Hant">完整的分析，八個步驟。</p>
+    <ol class="steps">
+      <li class="step"><div><h4 lang="en">Load your data</h4><h4 lang="zh-Hant">載入數據</h4>
+        <p lang="en">Click <b class="ui">Load Data…</b> and choose your file. Your curve appears on the plot.</p><p lang="zh-Hant">按 <b class="ui">Load Data…</b> 選你的檔案。曲線會出現在圖上。</p>
+        <div class="shot"><a class="zoom" lang="en" href="img/load-data.png" target="_blank" rel="noopener noreferrer"><img src="img/load-data.png" width="371" height="42" alt="The Load Data… button at the top-left (number 1)" loading="lazy"></a><a class="zoom" lang="zh-Hant" href="img/load-data.png" target="_blank" rel="noopener noreferrer"><img src="img/load-data.png" width="371" height="42" alt="左上角的 Load Data… 按鈕（編號 1）" loading="lazy"></a><a class="zoom" lang="en" href="img/action-bar.png" target="_blank" rel="noopener noreferrer"><img src="img/action-bar.png" width="571" height="46" alt="The row of buttons under the plot: Web Search (number 2) and Auto-Fit (number 3)" loading="lazy"></a><a class="zoom" lang="zh-Hant" href="img/action-bar.png" target="_blank" rel="noopener noreferrer"><img src="img/action-bar.png" width="571" height="46" alt="圖下方的按鈕列：Web Search（編號 2）和 Auto-Fit（編號 3）" loading="lazy"></a></div></div></li>
+      <li class="step"><div><h4 lang="en">Leave Web Search on</h4><h4 lang="zh-Hant">讓 Web Search 保持開啟</h4>
+        <p lang="en">With <b class="ui">Web Search</b> on, PicoSAS looks up papers about your sample and lists them in the report. For a confidential sample turn it off: the fit runs the same, and nothing you describe is sent to a search site.</p><p lang="zh-Hant"><b class="ui">Web Search</b> 開著時，PicoSAS 會查你樣品的相關文獻，列在報告裡。樣品需要保密就把它關掉：擬合照常進行，你描述的內容不會送到搜尋網站。</p></div></li>
+      <li class="step"><div><h4 lang="en">Click ▶ Auto-Fit and describe your sample</h4><h4 lang="zh-Hant">按 ▶ Auto-Fit，描述你的樣品</h4>
+        <p lang="en">Write one line: what it is, the solvent, SAXS or SANS, and what you want to know. Not sure? You can leave it empty and PicoSAS will read the question from the data, but a line about what you want to know gives a more useful answer. Click <b>✓ Use this</b>.</p><p lang="zh-Hant">寫一行：這是什麼、溶劑、SAXS 還是 SANS、你想知道什麼。不確定？也可以留空，PicoSAS 會從數據去判斷你想知道什麼，但寫上你想知道的事，答案會比較有用。按 <b>✓ Use this</b>。</p>
+        <div class="shot narrow"><a class="zoom" lang="en" href="img/describe-sample.png" target="_blank" rel="noopener noreferrer"><img src="img/describe-sample.png" width="563" height="464" alt="The Describe your sample window with the example line typed in and the Use this button (numbers 1 and 2)" loading="lazy"></a><a class="zoom" lang="zh-Hant" href="img/describe-sample.png" target="_blank" rel="noopener noreferrer"><img src="img/describe-sample.png" width="563" height="464" alt="Describe your sample 視窗：已輸入範例那一行，以及 Use this 按鈕（編號 1 和 2）" loading="lazy"></a></div></div></li>
+      <li class="step"><div><h4 lang="en">Wait a few minutes</h4><h4 lang="zh-Hant">等幾分鐘</h4>
+        <p lang="en">The <b class="ui">Flow</b> tab on the right shows each stage as it runs. <b class="ui">STOP</b> cancels.</p><p lang="zh-Hant">右邊的 <b class="ui">Flow</b> 分頁會即時顯示每個階段。<b class="ui">STOP</b> 可以取消。</p></div></li>
+      <li class="step"><div><h4 lang="en">Read the result</h4><h4 lang="zh-Hant">看結果</h4>
+        <p lang="en">The line on the plot is the fitted model. <b class="ui">SAS Model</b> shows which model PicoSAS chose and <b class="ui">chi2</b> how closely it follows your data (near 1 is best). To learn more, click the round PicoSAS picture and ask <i>“Why this model?”</i>; it explains the answer.</p><p lang="zh-Hant">圖上的線就是擬合出的模型。<b class="ui">SAS Model</b> 顯示 PicoSAS 選了哪個模型，<b class="ui">chi2</b> 顯示它和你的數據多接近（越接近 1 越好）。想知道更多，點圓形的小伐頭像，問它「<i>為什麼選這個模型？</i>」，它會解釋這個答案。</p>
+        <div class="shot wide"><a class="zoom" lang="en" href="img/result-plain.png" target="_blank" rel="noopener noreferrer"><img src="img/result-plain.png" width="850" height="806" alt="The result: the fitted line through the data, the model name and chi2" loading="lazy"></a><a class="zoom" lang="zh-Hant" href="img/result-plain.png" target="_blank" rel="noopener noreferrer"><img src="img/result-plain.png" width="850" height="806" alt="結果：線穿過數據，以及模型名稱和 chi2" loading="lazy"></a></div></div></li>
+      <li class="step"><div><h4 lang="en">Report tab → Generate</h4><h4 lang="zh-Hant">Report 分頁 → Generate</h4>
+        <p lang="en">Open the <b class="ui">Report</b> tab on the left. If you like, type your measurement conditions in <b class="ui">Exp. conditions</b> — anything you leave out is written as “not specified”, never made up. Click <b class="ui">Generate</b>.</p><p lang="zh-Hant">打開左邊的 <b class="ui">Report</b> 分頁。想要的話，在 <b class="ui">Exp. conditions</b> 填入量測條件——沒填的會寫成「not specified」，絕不會編造。按 <b class="ui">Generate</b>。</p>
+        <div class="shot narrow"><a class="zoom" lang="en" href="img/report-tab.png" target="_blank" rel="noopener noreferrer"><img src="img/report-tab.png" width="406" height="115" alt="The Report tab: Exp. conditions, Generate, DOCX and PDF (numbers 1 to 3)" loading="lazy"></a><a class="zoom" lang="zh-Hant" href="img/report-tab.png" target="_blank" rel="noopener noreferrer"><img src="img/report-tab.png" width="406" height="115" alt="Report 分頁：Exp. conditions、Generate、DOCX 和 PDF（編號 1 到 3）" loading="lazy"></a></div></div></li>
+      <li class="step"><div><h4 lang="en">Save the report: PDF or DOCX</h4><h4 lang="zh-Hant">儲存報告：PDF 或 DOCX</h4>
+        <p lang="en">When the report appears, click <b class="ui">PDF</b> <span class="m">3</span> (or <b class="ui">DOCX</b> for Word) and choose where to save it.</p><p lang="zh-Hant">報告出現後，按 <b class="ui">PDF</b> <span class="m">3</span>（或 <b class="ui">DOCX</b> 存成 Word），選擇存放位置。</p></div></li>
+      <li class="step"><div><h4 lang="en">Keep your work</h4><h4 lang="zh-Hant">保留你的工作</h4>
+        <p lang="en"><b>Project → Save Project…</b> saves the whole analysis; <b class="ui">Open Project…</b> brings it back. <b class="ui">Export</b> saves the numbers as CSV, DAT or JSON.</p><p lang="zh-Hant"><b>Project → Save Project…</b> 會儲存整個分析；<b class="ui">Open Project…</b> 可以再叫出來。<b class="ui">Export</b> 把數據存成 CSV、DAT 或 JSON。</p></div></li>
+    </ol>
+  </section>
+
+  <!-- ─────────────────────────── 8. Reading your result ─────────────────────────── -->
+  <section class="card" id="result">
+    <h2><span class="n">8</span><span lang="en">Reading your result</span><span lang="zh-Hant">看懂你的結果</span></h2>
+    <p class="lead" lang="en">PicoSAS would rather say “I can't tell” than guess. Here is how to read what it tells you.</p><p class="lead" lang="zh-Hant">PicoSAS 寧可說「我看不出來」，也不亂猜。下面教你怎麼看它告訴你的話。</p>
+
+    <h3 class="part" lang="en">What the assistant tells you when the analysis is done</h3><h3 class="part" lang="zh-Hant">分析完成後，助理告訴你的結果</h3>
+    <p class="lead" lang="en">When you start the analysis from the chat window (say “analyze”), the answer appears in the chat by itself when it is done. If you started with ▶ Auto-Fit, open the chat and ask “What is the result?”: you get the same message. Here it is for the sample file, followed by the same sample asked for something its curve can't give (the particle radius and the shell thickness).</p><p class="lead" lang="zh-Hant">從對話視窗開始分析（說「開始分析」）的話，分析完成時，答案會自己出現在對話裡。如果是按 ▶ Auto-Fit 開始的，打開對話問「結果怎麼樣？」，就會得到同一則訊息。下面是範例檔的結果，接著是同一個範例檔、但問了它的曲線給不出的東西（粒子半徑和殼層厚度）的結果。</p>
+    <div class="shot pair"><a class="zoom" lang="en" href="img/answer-en.png" target="_blank" rel="noopener noreferrer"><img src="img/answer-en.png" width="380" height="900" alt="The assistant's message for the sample: bottom line, model sphere with reduced chi-squared 1.07, a note about the unknown contrast, and radius = 60.01 Å" loading="lazy"></a><a class="zoom" lang="zh-Hant" href="img/answer-zh-Hant.png" target="_blank" rel="noopener noreferrer"><img src="img/answer-zh-Hant.png" width="380" height="900" alt="助理對範例檔的回覆：結論、模型 sphere 與 reduced χ² 1.07、對比度不明的提醒，以及粒徑 60.01 Å" loading="lazy"></a><a class="zoom" lang="en" href="img/answer-unresolved-en.png" target="_blank" rel="noopener noreferrer"><img src="img/answer-unresolved-en.png" width="380" height="900" alt="The assistant's message when the shell thickness was also asked for: the data answers the particle radius but cannot resolve the shell thickness" loading="lazy"></a><a class="zoom" lang="zh-Hant" href="img/answer-unresolved-zh-Hant.png" target="_blank" rel="noopener noreferrer"><img src="img/answer-unresolved-zh-Hant.png" width="380" height="900" alt="同時問了殼層厚度時助理的回覆：數據回答得了粒子半徑，但回答不了殼層厚度" loading="lazy"></a></div>
+    <p class="cap" lang="en">Left: the sample, asked for the particle radius. Right: the same sample, asked for the radius and the shell thickness.</p><p class="cap" lang="zh-Hant">左：範例檔，問粒子半徑。右：同一個範例檔，問半徑和殼層厚度。</p>
+    <table class="keys">
+      <tr><td class="k" lang="en"><b>Bottom line:</b></td><td class="k" lang="zh-Hant"><b>Bottom line:（結論）</b></td><td lang="en">One sentence: which quantities this data can measure, and which ones it can't resolve (shown as <i>not resolvable here</i>). That's an honest result, not a fault. The words after “for that” say what might help, for example a different measurement.</td><td lang="zh-Hant">一句話，說這份數據能量到哪些物理量、哪些量不到（<b>CANNOT resolve</b>）。量不到是誠實的結果，不是故障；「for that」後面的文字會告訴你可以怎麼做，例如換一種量測。</td></tr>
+      <tr><td class="k" lang="en"><b>Model:</b> … (reduced χ² = …)</td><td class="k" lang="zh-Hant"><b>模型：</b>… (reduced χ² = …)</td><td lang="en">The model PicoSAS used and how closely it follows your data (near 1 is best; see “chi2 in plain words” below).</td><td lang="zh-Hant">PicoSAS 用的模型，以及它貼合數據的程度（越接近 1 越好；看下面的「用白話看 chi2」）。</td></tr>
+      <tr><td class="k" lang="en"><b>⚠ About this measurement:</b></td><td class="k" lang="zh-Hant"><b>⚠ 量測條件提醒：</b></td><td lang="en">Things about your data or description that limit the answer. In the pictures: the material wasn't named, so its scattering contrast is unknown and a sphere can't be told from a core-shell particle. The radius itself isn't affected.</td><td lang="zh-Hant">你的數據或描述裡，會限制答案的地方。圖裡的例子：描述裡沒有寫材料，所以散射對比度不明，分不出球體和核殼粒子。半徑本身不受影響。</td></tr>
+      <tr><td class="k" lang="en"><b>• radius = 60.01 Å</b></td><td class="k" lang="zh-Hant"><b>• 粒徑（半徑） = 60.01 Å</b></td><td lang="en">One line per answered question: the number with its unit, and on the next line (↳) what it means. If the literature has a value, the line ends with <b>✓ consistent with literature</b> or <b>⚠ differs from literature … read with care</b>.</td><td lang="zh-Hant">每個回答得了的問題一行：數字加單位，下一行（↳）說明它的意思。如果文獻裡有這個值，這一行的最後會寫 <b>✓ 與文獻一致</b> 或 <b>⚠ 與文獻不同 … 請斟酌</b>。</td></tr>
+      <tr><td class="k" lang="en"><b>⚠ Note: this fit's χ² is high</b></td><td class="k" lang="zh-Hant"><b>⚠ 提醒：這個擬合的 χ² 偏高</b></td><td lang="en">Appears only when chi2 is above 5: the model doesn't fully follow the data, so treat the numbers as indicative only.</td><td lang="zh-Hant">只有 chi2 高於 5 時才會出現：模型沒有完全貼合數據，數字只能當參考。</td></tr>
+    </table>
+    <p lang="en">The last line points to the <b>Report</b> tab: the full report is written there when you press <b>Generate</b> (chapter 7).</p><p lang="zh-Hant">最後一行會指向 <b>Report</b> 分頁：按 <b>Generate</b> 就會在那裡寫出完整報告（第 7 章）。</p>
+
+    <h3 class="part" lang="en">Words you may meet</h3><h3 class="part" lang="zh-Hant">你可能會看到的字眼</h3>
+    <p class="lead" lang="en">These phrases belong to PicoSAS's full written analysis, the text report that the analysis tools and the MCP server return. The chat message above is the short form of the same checks.</p><p class="lead" lang="zh-Hant">這些字眼出現在 PicoSAS 完整的書面分析裡，也就是分析工具和 MCP 伺服器回傳的文字報告。上面的對話訊息是同樣檢查的簡短版。</p>
+    <table class="keys">
+      <tr><td class="k" lang="en"><b class="ui">systematic deviation</b> · <b class="ui">fit inadequate</b></td><td class="k" lang="zh-Hant"><b class="ui">systematic deviation</b> · <b class="ui">fit inadequate</b></td><td lang="en">The residuals show a pattern, so the model misses a feature of your curve. Look at the strip under the plot, and ask the assistant why it chose this model.</td><td lang="zh-Hant">殘差有規律，代表模型漏掉了你曲線的某個特徵。看圖下方的小圖，也可以問 AI 助理為什麼選這個模型。</td></tr>
+      <tr><td class="k" lang="en"><b class="ui">Self-check — this read is QUESTIONED, not confirmed</b></td><td class="k" lang="zh-Hant"><b class="ui">Self-check — this read is QUESTIONED, not confirmed</b></td><td lang="en">Independent cross-checks disagree. Treat the numbers as provisional and read the points listed under this banner first.</td><td lang="zh-Hant">幾個獨立的交叉檢查互相不一致。這些數字只能暫時參考，請先看橫幅底下列出的重點。</td></tr>
+      <tr><td class="k" lang="en"><b class="ui">UNIT UNVERIFIED</b> · <b class="ui">UNIT AMBIGUOUS</b> · <b class="ui">UNIT CONFLICT</b></td><td class="k" lang="zh-Hant"><b class="ui">UNIT UNVERIFIED</b> · <b class="ui">UNIT AMBIGUOUS</b> · <b class="ui">UNIT CONFLICT</b></td><td lang="en">PicoSAS had to guess the unit of q. A wrong guess makes every size off by a factor of 10. Put the unit in a note line at the top of your file (chapter 9) and load it again.</td><td lang="zh-Hant">PicoSAS 只能猜 q 的單位。猜錯的話，每個尺寸都會差 10 倍。在檔案最上面加一行註解寫明單位（第 9 章），再載入一次。</td></tr>
+      <tr><td class="k" lang="en"><b class="ui">not on absolute scale</b></td><td class="k" lang="zh-Hant"><b class="ui">not on absolute scale</b></td><td lang="en">Your intensity has no absolute unit, so answers that need it (volume fraction, molecular weight) are left out on purpose.</td><td lang="zh-Hant">你的強度沒有絕對單位，所以需要它的答案（體積分率、分子量）會刻意不給。</td></tr>
+      <tr><td class="k" lang="en"><b class="ui">MW (Porod, protein-cal.)</b></td><td class="k" lang="zh-Hant"><b class="ui">MW (Porod, protein-cal.)</b></td><td lang="en">Molecular-weight lines assume a folded protein. For nanoparticles, polymers or micelles, ignore them; the volume is the meaningful number.</td><td lang="zh-Hant">分子量那幾行是假設樣品為折疊好的蛋白質。奈米粒子、高分子或微胞請忽略它們，有意義的是體積。</td></tr>
+    </table>
+
+    <h3 class="part" lang="en">chi2 in plain words</h3><h3 class="part" lang="zh-Hant">用白話看 chi2</h3>
+    <p class="lead" lang="en">The <b class="ui">Fit Log</b> tab prints one of these words next to <b class="ui">reduced χ²</b>, which is the same number as <b class="ui">chi2</b>.</p><p class="lead" lang="zh-Hant"><b class="ui">Fit Log</b> 分頁會在 <b class="ui">reduced χ²</b>（和 <b class="ui">chi2</b> 是同一個數字）旁邊印出下面其中一個詞。</p>
+    <table class="keys">
+      <tr><td class="k" lang="en"><b class="ui">(overfit/σ high)</b></td><td class="k" lang="zh-Hant"><b class="ui">(overfit/σ high)</b></td><td lang="en">Below 0.5. The error bars are probably too large, or the fit has more freedom than the data needs.</td><td lang="zh-Hant">低於 0.5。誤差棒可能太大，或是擬合的自由度比數據需要的還多。</td></tr>
+      <tr><td class="k" lang="en"><b class="ui">(good)</b></td><td class="k" lang="zh-Hant"><b class="ui">(good)</b></td><td lang="en">0.5 to 2. The model follows your data as closely as the error bars allow. About 1 is ideal.</td><td lang="zh-Hant">0.5 到 2。模型貼合你的數據，貼到誤差棒容許的程度。接近 1 最理想。</td></tr>
+      <tr><td class="k" lang="en"><b class="ui">(acceptable)</b></td><td class="k" lang="zh-Hant"><b class="ui">(acceptable)</b></td><td lang="en">2 to 10. Good enough for a rough answer. Look at the strip under the plot for a pattern.</td><td lang="zh-Hant">2 到 10。拿來做粗略的答案還可以。看看圖下方的小圖有沒有規律。</td></tr>
+      <tr><td class="k" lang="en"><b class="ui">(poor fit)</b></td><td class="k" lang="zh-Hant"><b class="ui">(poor fit)</b></td><td lang="en">Above 10. The model misses something big. Don't trust its parameters.</td><td lang="zh-Hant">高於 10。模型漏掉了很大的東西，別相信它的參數。</td></tr>
+    </table>
+    <div class="tip">
+      <h4 lang="en">chi2 alone isn't the goal</h4><h4 lang="zh-Hant">只看 chi2 是不夠的</h4>
+      <p lang="en">A model can fit well and still be physically wrong. So PicoSAS puts the physical answer first and chi2 second, and it checks the answer in other ways too: Guinier, P(r) and the residuals.</p><p lang="zh-Hant">模型可以貼得很好，物理上卻是錯的。所以 PicoSAS 把物理答案放在前面、chi2 放在後面，也會用別的方法交叉檢查答案：Guinier、P(r)，還有殘差。</p>
+      <p lang="en">The strip under the plot, <b class="ui">Δ/σ</b>, shows for each point how many error bars the fit is away from the data. Dots scattered evenly around 0, mostly inside the shaded band (−2 to 2), mean the model follows the data; dots outside the band are drawn in a warning colour. A wave, or a long run of dots on one side of 0, means it doesn't.</p><p lang="zh-Hant">圖下方的小圖 <b class="ui">Δ/σ</b>，顯示每個點和擬合線差了幾個誤差棒。點均勻散在 0 的上下、大多落在淡色帶（−2 到 2）裡，就表示模型貼合數據（落在帶外的點會用警示色標出）；出現一道波浪，或一長串點都在 0 的同一邊，就表示沒有貼合。</p>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────── 9. Your own data ─────────────────────────── -->
+  <section class="card" id="data">
+    <h2><span class="n">9</span><span lang="en">Using your own data</span><span lang="zh-Hant">用你自己的數據</span></h2>
+    <p class="lead" lang="en">Five checks before you click Auto-Fit. They take a minute and prevent most surprises.</p><p class="lead" lang="zh-Hant">按 Auto-Fit 之前先檢查五件事。只要一分鐘，就能避開大部分的意外。</p>
+    <ol class="steps">
+      <li class="step"><div><h4 lang="en">Use a file PicoSAS can read</h4><h4 lang="zh-Hant">用 PicoSAS 讀得懂的檔案</h4>
+        <p lang="en">Text files (<code class="ext">.dat</code> <code class="ext">.abs</code> <code class="ext">.txt</code> <code class="ext">.csv</code>), canSAS XML (<code class="ext">.xml</code>) and NeXus / HDF5 files (<code class="ext">.h5</code> <code class="ext">.hdf5</code> <code class="ext">.hdf</code> <code class="ext">.nxs</code>) all work. A NeXus file is read in the units it declares, so an intensity given in 1/m is converted to 1/cm and its error bars are kept. A file with another ending is tried as XML first, then as text.</p><p lang="zh-Hant">純文字檔（<code class="ext">.dat</code> <code class="ext">.abs</code> <code class="ext">.txt</code> <code class="ext">.csv</code>）、canSAS 的 XML（<code class="ext">.xml</code>）和 NeXus / HDF5 檔（<code class="ext">.h5</code> <code class="ext">.hdf5</code> <code class="ext">.hdf</code> <code class="ext">.nxs</code>）都讀得進來。NeXus 檔會照它自己標示的單位讀，所以用 1/m 表示的強度會換算成 1/cm，誤差棒也會一起讀進來。副檔名不一樣的檔案，會先當成 XML 試，不行再當成純文字。</p></div></li>
+      <li class="step"><div><h4 lang="en">Put the numbers in columns</h4><h4 lang="zh-Hant">把數字排成欄</h4>
+        <p lang="en">One row per point: q, then I(q), then, if you have them, the error dI and the resolution dQ. Spaces, tabs or commas between the columns are all fine. Lines that start with <code>#</code>, <code>;</code>, <code>%</code> or <code>/</code> are notes and are skipped. So is any line that isn't made of numbers, so a line of column names does no harm.</p><p lang="zh-Hant">一個點一列：先是 q，再來是 I(q)，有的話再加上誤差 dI 和解析度 dQ。欄與欄之間用空格、Tab 或逗號都可以。以 <code>#</code>、<code>;</code>、<code>%</code>、<code>/</code> 開頭的行是註解，會被略過；不是由數字組成的行也會略過，所以多一行欄位名稱也沒關係。</p>
+        <div class="shot"><pre class="file" data-file="PicoSAS-sample-sphere.dat"># PicoSAS sample data (synthetic): uniform spheres in D2O, SANS
+# q [1/A]    I(q) [1/cm]    dI [1/cm]
+6.000000e-03  1.501774e+01  4.422855e-01
+6.256783e-03  1.416192e+01  4.412816e-01
+6.524557e-03  1.476892e+01  4.401922e-01
+6.803790e-03  1.423131e+01  4.390102e-01
+…</pre></div></div></li>
+      <li class="step"><div><h4 lang="en">Say the units in a note line</h4><h4 lang="zh-Hant">用一行註解寫明單位</h4>
+        <p lang="en">Add a line such as <code># q [1/A]  I(q) [1/cm]</code> at the top. PicoSAS reads the units from it. Without one it decides from the size of the numbers and tells you in the report (<b class="ui">UNIT UNVERIFIED</b>). A wrong guess makes every size off by a factor of 10. Intensity in 1/cm also lets PicoSAS give volume fraction and molecular weight; without a unit they are left out.</p><p lang="zh-Hant">在檔案最上面加一行，例如 <code># q [1/A]  I(q) [1/cm]</code>，PicoSAS 會從這行讀出單位。沒有這行的話，它會從數字的大小去判斷，並在報告裡告訴你（<b class="ui">UNIT UNVERIFIED</b>）。猜錯的話，每個尺寸都會差 10 倍。強度用 1/cm 的話，PicoSAS 才能給出體積分率和分子量；沒有單位就會刻意不給。</p></div></li>
+      <li class="step"><div><h4 lang="en">Remove obviously bad points</h4><h4 lang="zh-Hant">拿掉明顯有問題的點</h4>
+        <p lang="en">Points with negative intensity are dropped automatically, and the report says so. If it warns about spikes (single points far from their neighbours), delete them from the file and load it again.</p><p lang="zh-Hant">強度是負值的點會自動剔除，報告會寫出來。如果報告警告有突波（單獨一個點離鄰近的點很遠），把它們從檔案裡刪掉，再載入一次。</p></div></li>
+      <li class="step"><div><h4 lang="en">Write one line about the sample</h4><h4 lang="zh-Hant">用一行描述樣品</h4>
+        <p lang="en">What it is, the solvent, SAXS or SANS, and what you want to know, as in the sample of “Start here”. The question matters most. These are the questions PicoSAS can answer:</p><p lang="zh-Hant">寫下它是什麼、溶劑、SAXS 還是 SANS，還有你想知道什麼，就像「從這裡開始」的範例那樣。最重要的是問題。PicoSAS 回答得了的問題有這些：</p>
+        <table class="keys">
+          <tr><td class="k" lang="en"><b class="ui">Radius of gyration (Rg)</b></td><td class="k" lang="zh-Hant"><b class="ui">Radius of gyration (Rg)</b></td><td lang="en">The overall size of a particle: how far, on average, its mass is from its centre.</td><td lang="zh-Hant">粒子的整體大小：它的質量平均離中心多遠。</td></tr>
+          <tr><td class="k" lang="en"><b class="ui">Particle / core radius</b></td><td class="k" lang="zh-Hant"><b class="ui">Particle / core radius</b></td><td lang="en">The radius of a sphere-like particle, or of the core of a core-shell particle.</td><td lang="zh-Hant">類球形粒子的半徑，或核殼粒子的核的半徑。</td></tr>
+          <tr><td class="k" lang="en"><b class="ui">Shell / layer thickness</b></td><td class="k" lang="zh-Hant"><b class="ui">Shell / layer thickness</b></td><td lang="en">The thickness of a coating, a membrane or a bilayer.</td><td lang="zh-Hant">塗層、膜或雙層膜的厚度。</td></tr>
+          <tr><td class="k" lang="en"><b class="ui">Repeat spacing (d)</b></td><td class="k" lang="zh-Hant"><b class="ui">Repeat spacing (d)</b></td><td lang="en">The distance between repeating layers or lattice planes. Needs a peak in the curve.</td><td lang="zh-Hant">重複出現的層或晶格面之間的距離。曲線上要有一個峰。</td></tr>
+          <tr><td class="k" lang="en"><b class="ui">Correlation length (ξ)</b></td><td class="k" lang="zh-Hant"><b class="ui">Correlation length (ξ)</b></td><td lang="en">How far the structure stays correlated, for gels, blends and dense solutions.</td><td lang="zh-Hant">結構的相關可以延伸多遠，用在凝膠、混摻物和濃溶液。</td></tr>
+          <tr><td class="k" lang="en"><b class="ui">Mass-fractal dimension (Df)</b> · <b class="ui">Surface-fractal dimension (Ds)</b></td><td class="k" lang="zh-Hant"><b class="ui">Mass-fractal dimension (Df)</b> · <b class="ui">Surface-fractal dimension (Ds)</b></td><td lang="en">How open an aggregate is (1 rod-like, 3 solid), and how rough a surface is (2 smooth, 3 very rough).</td><td lang="zh-Hant">聚集體有多鬆散（1 像棒子，3 是實心），以及表面有多粗糙（2 平滑，3 非常粗糙）。</td></tr>
+          <tr><td class="k" lang="en"><b class="ui">Porosity</b> · <b class="ui">Volume fraction</b></td><td class="k" lang="zh-Hant"><b class="ui">Porosity</b> · <b class="ui">Volume fraction</b></td><td lang="en">The share of the volume that is empty pores, and the share taken by the particles. Volume fraction needs intensity in absolute units.</td><td lang="zh-Hant">空孔隙占體積的比例，以及粒子占體積的比例。體積分率需要絕對單位的強度。</td></tr>
+          <tr><td class="k" lang="en"><b class="ui">Aggregation number</b></td><td class="k" lang="zh-Hant"><b class="ui">Aggregation number</b></td><td lang="en">How many molecules sit in one aggregate, for example a micelle.</td><td lang="zh-Hant">一個聚集體裡有幾個分子，例如一顆微胞。</td></tr>
+          <tr><td class="k" lang="en"><b class="ui">Scattering length density (SLD)</b></td><td class="k" lang="zh-Hant"><b class="ui">Scattering length density (SLD)</b></td><td lang="en">How strongly a material scatters. PicoSAS usually needs to know the material or the absolute scale to report it.</td><td lang="zh-Hant">材料散射的強度。PicoSAS 通常要知道材料是什麼，或強度的絕對尺度，才給得出來。</td></tr>
+          <tr><td class="k" lang="en"><b class="ui">Molecular weight</b></td><td class="k" lang="zh-Hant"><b class="ui">Molecular weight</b></td><td lang="en">For proteins only. It assumes a folded protein.</td><td lang="zh-Hant">只適用於蛋白質，而且假設它是折疊好的。</td></tr>
+        </table></div></li>
+    </ol>
+  </section>
+
+  <!-- ─────────────────────────── 10. When something goes wrong ─────────────────────────── -->
+  <section class="card" id="help">
+    <h2><span class="n">10</span><span lang="en">When something goes wrong</span><span lang="zh-Hant">遇到問題怎麼辦</span></h2>
+    <p class="lead" lang="en">Find your case, click it, and read the fix.</p><p class="lead" lang="zh-Hant">找到你的狀況，點開它，照著做。</p>
+
+    <details class="faq" lang="en"><summary>A box called “Load Error” appears when I load my file</summary><p>The box shows the reason. “No numeric data rows found” means the file has no lines made of numbers. Open it in Notepad and check that each data line starts with q and then I(q) (chapter 9).</p></details>
+    <details class="faq" lang="zh-Hant"><summary>載入檔案時跳出「Load Error」</summary><p>方塊裡會寫原因。「No numeric data rows found」表示檔案裡沒有由數字組成的行。用記事本打開，確認每一行資料都是先 q、再 I(q)（第 9 章）。</p></details>
+
+    <details class="faq" lang="en"><summary>“No Data — Load a data file first.”</summary><p>You clicked a button that needs data before any data was loaded. Click <b class="ui">Load Data…</b> first.</p></details>
+    <details class="faq" lang="zh-Hant"><summary>「No Data — Load a data file first.」</summary><p>還沒載入任何數據就按了需要數據的按鈕。請先按 <b class="ui">Load Data…</b>。</p></details>
+
+    <details class="faq" lang="en"><summary>The sizes look ten times too large or too small</summary><p>Most likely q was read in the wrong unit. Look for “UNIT” in the data assessment of the report, put the unit in a note line at the top of your file (chapter 9) and load it again.</p></details>
+    <details class="faq" lang="zh-Hant"><summary>尺寸看起來大了或小了 10 倍</summary><p>很可能是 q 的單位讀錯了。到報告的數據評估裡找「UNIT」，在檔案最上面加一行註解寫明單位（第 9 章），再載入一次。</p></details>
+
+    <details class="faq" lang="en"><summary>The assistant says it “CANNOT resolve” something</summary><p>That is an honest answer, not a fault. Chapter 8 explains it, and the words after “for that” say what might answer the question.</p></details>
+    <details class="faq" lang="zh-Hant"><summary>助理說它「CANNOT resolve」某個東西</summary><p>這是誠實的答案，不是故障。第 8 章有說明，「for that」後面的文字會告訴你，可以怎麼做才回答得了。</p></details>
+
+    <details class="faq" lang="en"><summary>chi2 is far from 1</summary><p>See “chi2 in plain words” in chapter 8. Above 10 means the model misses something big: ask the assistant why it chose this model, and check the units and the q range.</p></details>
+    <details class="faq" lang="zh-Hant"><summary>chi2 離 1 很遠</summary><p>看第 8 章的「用白話看 chi2」。高於 10 表示模型漏掉了很大的東西：問問 AI 助理為什麼選這個模型，並檢查單位和 q 範圍。</p></details>
+    <details class="faq" lang="en"><summary>Cutting off the beamstop (or a noisy end): Q min / Q max</summary><p>Click the file, type the new <b class="ui">Q min</b> (or <b class="ui">Q max</b>) and press <kbd>Enter</kbd>. PicoSAS keeps that window for that file. It's used when you switch files and come back, run Auto-Fit or a batch, or ask the assistant to analyze. The model-free readings (Guinier Rg, Porod slope) use it too. Files you did not change keep their whole range.</p></details>
+    <details class="faq" lang="zh-Hant"><summary>去掉 beamstop（或雜訊太大的一端）：Q min / Q max</summary><p>先點那個檔案，輸入新的 <b class="ui">Q min</b>（或 <b class="ui">Q max</b>）後按 <kbd>Enter</kbd>。PicoSAS 會記住這個檔案的範圍：切到別的檔案再切回來、Auto-Fit、批次分析、或請 AI 助理分析，都用這個範圍；模型無關的讀數（Guinier Rg、Porod 斜率）也只在範圍內計算。沒改過的檔案維持完整範圍。</p></details>
+
+    <details class="faq" lang="en"><summary>The answers include things I did not ask for</summary><p>Write one line about the sample that includes what you want to know (chapter 9, last step). Without a question, PicoSAS reads what to answer from the shape of the data and may report extra items.</p></details>
+    <details class="faq" lang="zh-Hant"><summary>答案裡有我沒問的東西</summary><p>用一行描述樣品，並寫上你想知道什麼（第 9 章最後一步）。沒有寫問題的話，PicoSAS 會從數據的形狀去判斷要回答什麼，可能多列出一些項目。</p></details>
+
+    <details class="faq" lang="en"><summary>Is the report the same in the Report tab, in the chat and on Telegram?</summary><p>Yes. <b class="ui">Generate</b> shows the report of the analysis on screen, and it is the same text, the same plots and the same numbers that the chat's PDF, Telegram's <b>📄 Fit report</b> and an external agent get. It is written by the program from the analysis, not by an AI, so it does not change from one click to the next. What you type in <b class="ui">Exp. conditions</b> is added as you stated it.</p></details>
+    <details class="faq" lang="zh-Hant"><summary>Report 分頁、對話視窗和 Telegram 的報告一樣嗎？</summary><p>一樣。<b class="ui">Generate</b> 顯示的是畫面上這次分析的報告，和對話視窗的 PDF、Telegram 的 <b>📄 擬合報告</b>、外部 agent 拿到的，是同一份文字、同樣的圖、同樣的數字。它是程式依分析結果寫出來的，不是 AI 寫的，所以每次按都一樣。你在 <b class="ui">Exp. conditions</b> 填的內容會照你寫的加進去。</p></details>
+
+    <details class="faq" lang="en"><summary>The status bar says the offline AI assistant needs <span data-fact="perf_profile.MIN_RAM_GB">8</span> GB of memory</summary><p>Your computer has less memory than the offline AI needs. Fitting still works. For the chat and the wording of the report, choose a cloud AI under <b class="ui">AI Config</b> (chapter 3, part B; chapter 4 shows how to get a free key).</p></details>
+    <details class="faq" lang="zh-Hant"><summary>狀態列說離線 AI 助理需要 <span data-fact="perf_profile.MIN_RAM_GB">8</span> GB 的記憶體</summary><p>你的電腦記憶體比離線 AI 需要的少。擬合還是可以用。聊天和報告的文字，請到 <b class="ui">AI Config</b> 選一個雲端 AI（第 3 章的 B；第 4 章教你申請免費金鑰）。</p></details>
+
+    <details class="faq" lang="en"><summary>How do I update PicoSAS?</summary><p>You do not have to look for updates: when a new version is out, PicoSAS offers it at start-up. Click <b class="ui">Update now</b> (it usually takes a minute and keeps your data and settings), <b class="ui">Not now</b> to ask again next time, or <b class="ui">Skip this version</b>. To check yourself, use <b>Help → Check for Updates</b>.</p></details>
+    <details class="faq" lang="zh-Hant"><summary>怎麼更新 PicoSAS？</summary><p>不用自己去找更新：有新版時，PicoSAS 啟動時會提醒你。按 <b class="ui">Update now</b>（通常一分鐘，你的數據和設定都會保留）、<b class="ui">Not now</b>（下次再問），或 <b class="ui">Skip this version</b>。想自己檢查，用 <b>Help → Check for Updates</b>。</p></details>
+
+    <details class="faq" lang="en"><summary>PicoSAS froze or crashed</summary><p>Click <b class="ui">Report a problem</b> at the bottom-right, or use <b>Help → Report a Problem…</b>. Your log is attached automatically and you see everything before it is sent. After a crash, PicoSAS offers to do this the next time it starts.</p></details>
+    <details class="faq" lang="zh-Hant"><summary>PicoSAS 當掉或閃退了</summary><p>按右下角的 <b class="ui">Report a problem</b>，或用 <b>Help → Report a Problem…</b>。你的 log 會自動附上，送出前你會看到全部內容。閃退之後，PicoSAS 下次啟動時也會問你要不要送出。</p></details>
+
+    <details class="faq" lang="en"><summary>Where are my results saved?</summary><p>A report: where you chose when you clicked <b class="ui">PDF</b> or <b class="ui">DOCX</b>. The whole analysis: <b>Project → Save Project…</b>, and <b>Open Project…</b> brings it back. Your past fits: the <b class="ui">KB</b> tab.</p></details>
+    <details class="faq" lang="zh-Hant"><summary>我的結果存在哪裡？</summary><p>報告：存在你按 <b class="ui">PDF</b> 或 <b class="ui">DOCX</b> 時選的位置。整個分析：<b>Project → Save Project…</b>，用 <b>Open Project…</b> 叫回來。過去的擬合：<b class="ui">KB</b> 分頁。</p></details>
+
+    <details class="faq" lang="en"><summary>What leaves my computer?</summary><p>Never your data files or your keys. Once per version, PicoSAS sends a small install record: your operating system, CPU, memory, graphics card and NPU, plus the region and time zone set in Windows, so the team knows which computers to support. It is encrypted and only the PicoSAS team can read it. A problem report is sent only when you send it. The offline AI stays on your computer; a cloud AI (Gemini, Claude, MiniMax) receives what you ask it. <b class="ui">Web Search</b> sends search words taken from your sample description to public search sites, so turn it off for a confidential sample.</p></details>
+    <details class="faq" lang="zh-Hant"><summary>哪些東西會離開我的電腦？</summary><p>你的數據檔和金鑰絕不會。每個版本會傳一次很小的安裝紀錄：你的作業系統、CPU、記憶體、顯示卡和 NPU，以及 Windows 裡設定的地區和時區，讓團隊知道要支援哪些電腦。內容有加密，只有 PicoSAS 團隊讀得到。問題回報只有在你按下送出時才會傳。離線 AI 留在你的電腦裡；雲端 AI（Gemini、Claude、MiniMax）會收到你問它的內容。<b class="ui">Web Search</b> 會把從你的樣品描述取出的搜尋字詞送到公開的搜尋網站，所以機密樣品請把它關掉。</p></details>
+  </section>
+
+  <!-- ─────────────────────────── 11. 3D shape (preview) ─────────────────────────── -->
+  <section class="card" id="shape3d">
+    <h2><span class="n">11</span><span lang="en">3D shape modelling</span><span lang="zh-Hant">3D 形狀建模</span><span class="badge" lang="en">Preview</span><span class="badge" lang="zh-Hant">預覽</span></h2>
+    <p class="lead" lang="en">3D shape modelling is one of PicoSAS's features. It builds a low-resolution 3D bead model of a particle from its scattering curve, the same kind of model that DAMMIF and DAMMIN make in the ATSAS package. In this beta it's a <b>preview</b>: it hasn't yet passed its own accuracy test on every reference case (below), so treat its result as a first look, not a measurement. The tab and the messages say <b>PREVIEW</b>.</p><p class="lead" lang="zh-Hant">3D 形狀建模是 PicoSAS 的功能之一。它從散射曲線建出粒子的低解析度 3D 珠子模型，和 ATSAS 套件裡 DAMMIF、DAMMIN 做的是同一類模型，讓 PicoSAS 更貼近 SAS 數據處理的需求。它在這個封測版裡是<b>預覽</b>開放：還沒有在每一個參考案例上通過自己的準確度測試（見下），所以結果請當成初步參考，不是量測值。分頁和訊息上都會標 <b>PREVIEW</b>。</p>
+
+    <h3 class="part" lang="en">The bar it has to clear</h3><h3 class="part" lang="zh-Hant">它要通過的關卡</h3>
+    <p class="lead" lang="en">The <b class="ui">3D</b> tab (beside <b class="ui">P(r)</b> above the main plot) normally opens only after the model passes an accuracy test on each of our reference cases from the SASBDB database, where a published model exists to compare with. The test runs exactly as your copy runs, not in a separate research script. Each case has to pass all three checks:</p><p class="lead" lang="zh-Hant">主畫面上方、<b class="ui">P(r)</b> 旁邊的 <b class="ui">3D</b> 分頁，照規定要等模型通過測試才開放：對我們從 SASBDB 資料庫選出的每一個參考案例，拿已發表的參考模型來比。測試是在你的程式實際使用的那條路徑上做的，不是用研究用的腳本。每個案例，這三項都要達到：</p>
+    <table class="keys">
+      <tr><td class="k" lang="en">Fit to the data (χ²)</td><td class="k" lang="zh-Hant">貼合數據（χ²）</td><td lang="en">within <b data-fact="features._CHI2_TOL" data-scale="100">3</b> % of the reference model's</td><td lang="zh-Hant">在參考模型的 <b data-fact="features._CHI2_TOL" data-scale="100">3</b> % 以內</td></tr>
+      <tr><td class="k" lang="en">Shape (NSD to the known structure)</td><td class="k" lang="zh-Hant">形狀（和已知結構的 NSD）</td><td lang="en">within <b data-fact="features._NSD_TOL" data-scale="100">3</b> % of the reference model's</td><td lang="zh-Hant">在參考模型的 <b data-fact="features._NSD_TOL" data-scale="100">3</b> % 以內</td></tr>
+      <tr><td class="k" lang="en">Largest size (Dmax)</td><td class="k" lang="zh-Hant">最大尺寸（Dmax）</td><td lang="en">within <b data-fact="features._DMAX_TOL" data-scale="100">3</b> % of the reference model's</td><td lang="zh-Hant">在參考模型的 <b data-fact="features._DMAX_TOL" data-scale="100">3</b> % 以內</td></tr>
+    </table>
+    <p class="lead" lang="en">On the path your copy uses it has been measured on 11 reference cases (3 October 2026): in all 11 its model follows the data within the 3 % tolerance. It is open as a preview so that you can try it and tell us what you find. It gives you a reliability score from your own repeated runs and an estimate of the time left. If your curve can't support a shape, it tells you so instead of running.</p><p class="lead" lang="zh-Hant">我們在你的程式實際使用的路徑上量過 11 個參考案例（2026 年 10 月 3 日）：11 個案例裡，它的模型貼合數據都在 3 % 容許範圍內。它以預覽開放，讓你試用、告訴我們你的發現。它會用你自己多次重建的結果給誠實的可靠度分數、用演算法自己的停止規則估計剩餘時間，並在曲線撐不起一個形狀時拒絕執行。</p>
+
+    <h3 class="part" lang="en">How to use it</h3><h3 class="part" lang="zh-Hant">怎麼用</h3>
+    <ol class="steps">
+      <li class="step"><div><h4 lang="en">Load a clean curve of one kind of particle</h4><h4 lang="zh-Hant">載入一條乾淨的單一種粒子的曲線</h4>
+        <p lang="en">A dilute, uniform sample, for example a protein in solution. A scattering curve can't tell a shape from its mirror image, so the model may be the mirror image of the real particle.</p><p lang="zh-Hant">稀薄、均勻的樣品，例如溶液中的蛋白質。散射曲線分不出一個形狀和它的鏡像，所以建出來的模型可能是真實粒子的鏡像。</p></div></li>
+      <li class="step"><div><h4 lang="en">Open the 3D tab</h4><h4 lang="zh-Hant">點 3D 分頁</h4>
+        <p lang="en">First PicoSAS checks that your curve can support a shape. It needs two things. First, a radius of gyration: the Guinier Rg with its uncertainty or, if the Guinier region isn't resolved (the intensity keeps rising toward low q), the radius from P(r), with an assumed ±25 % shown in the title line. Second, at least <b data-fact="grounding._MIN_CLEAN_POINTS">20</b> points in the usable q range, which ends at <b data-fact="shape3d._QRG_MAX">8</b>/Rg or <b data-fact="shape3d._Q_BEAD_MAX">0.3</b> 1/Å, whichever is smaller (the usual rule in the field). If it can't, the tab says why instead of guessing. The one-line title shows the Rg, the points and the resolution used; rest the mouse on it for the full method and any warnings.</p><p lang="zh-Hant">PicoSAS 會先確認你的曲線撐得起一個形狀。它需要一個迴轉半徑——有不確定度的 Guinier Rg；Guinier 區讀不出來（強度一路往低 q 上升）時，就用讀懂數據那一步已經量好的 P(r) 半徑，並假設 ±25 % 的不確定度（標題那一行會寫出來）——以及可用 q 範圍內至少 <b data-fact="grounding._MIN_CLEAN_POINTS">20</b> 個點；這個範圍到 <b data-fact="shape3d._QRG_MAX">8</b>/Rg 和 <b data-fact="shape3d._Q_BEAD_MAX">0.3</b> 1/Å 之中比較小的那個為止（這個領域通用的建議）。做不到的話，分頁會告訴你原因，不會亂猜。最上面那一行是這次用的 Rg、點數和解析度；滑鼠停在上面會跳出完整的方法說明和警告。</p></div></li>
+      <li class="step"><div><h4 lang="en">Choose the bead size</h4><h4 lang="zh-Hant">選珠子大小</h4>
+        <p lang="en">The <b class="ui">Bead</b> bar decides how fine the model is. <b class="ui">Auto</b> is ticked at first: PicoSAS starts from a medium bead and makes it finer while the fit improves. To choose yourself, drag the bar or press <b>−</b> / <b>+</b> (this unticks Auto); the number beside the bar goes from 1 to <b data-fact="shape3d.SIZE_LEVELS">100</b>. <b>1</b> is the smallest useful bead for your data. A smaller bead would change the computed curve by less than your data's own error, so it would take longer without showing anything new. This gives the finest shape and takes the longest. <b>100</b> is the largest bead that still shows what your curve can resolve (half its resolution, 2π/q_max): a rough shape in seconds. The line under the bar gives the bead size in Å and nm and how many beads that is; after one run it also says roughly how long a run takes. On our test computer, for a computer-made sphere, one run took about 5 seconds at 100, about 20 seconds at 71 and about a minute and a half at 41.</p><p lang="zh-Hant"><b class="ui">Bead</b> 這條拉桿決定模型有多細。一開始 <b class="ui">Auto</b> 是勾選的：PicoSAS 從中等大小的珠子開始，只要擬合還有改善就繼續變細。想自己選，就拖動拉桿或按 <b>−</b>／<b>+</b>（Auto 會自動取消勾選）；拉桿旁邊的數字從 1 到 <b data-fact="shape3d.SIZE_LEVELS">100</b>。<b>1</b> 是對你的數據還有意義的最小珠子：再小，它對計算曲線的影響就比數據本身的誤差還小，只花時間，看不到更多東西。這一端的外形最細，也最花時間。<b>100</b> 是還能呈現你的曲線分辨得出的特徵的最大珠子（解析度 2π/q_max 的一半）：幾秒鐘就有一個粗略外形。拉桿下面那一行會寫出珠子的大小（Å 和 nm）和大約幾顆；跑完一次之後，還會寫一次重建大約要多久。在我們的測試電腦上，電腦模擬的球體一次重建：拉到 100 約 5 秒、71 約 20 秒、41 約一分半。</p></div></li>
+      <li class="step"><div><h4 lang="en">Choose the runs and click Start</h4><h4 lang="zh-Hant">選次數，按 Start</h4>
+        <p lang="en"><b class="ui">Runs</b> is the number of independent reconstructions: <b data-fact="shape3d.RUNS_DEFAULT">3</b> for a quick look, up to <b data-fact="shape3d.RUNS_MAX">15</b> for a publication. Then click <b class="ui">Start</b>. <b class="ui">Stop</b> cancels.</p><p lang="zh-Hant"><b class="ui">Runs</b> 是獨立重建的次數：快速看一下用 <b data-fact="shape3d.RUNS_DEFAULT">3</b> 次，要發表最多 <b data-fact="shape3d.RUNS_MAX">15</b> 次。然後按 <b class="ui">Start</b>。<b class="ui">Stop</b> 可以取消。</p></div></li>
+      <li class="step"><div><h4 lang="en">Watch the two bars</h4><h4 lang="zh-Hant">看兩條進度條</h4>
+        <p lang="en"><b class="ui">Overall</b> and <b class="ui">Stage</b> show the progress. The line under them shows the run, the stage, the time spent and, once the first run has been timed, the time left. On our test computer one run took about 1.7 minutes for a real protein curve and about 5 minutes for a computer-made sphere with many points.</p><p lang="zh-Hant"><b class="ui">Overall</b> 和 <b class="ui">Stage</b> 顯示進度。它們下面那一行會寫目前是第幾次、哪個階段、已經花的時間；第一次跑完之後，還會寫剩餘時間。在我們的測試電腦上，一次重建：真實的蛋白質曲線約 1.7 分鐘，點數很多的電腦模擬球體約 5 分鐘。</p></div></li>
+      <li class="step"><div><h4 lang="en">Read the result</h4><h4 lang="zh-Hant">看結果</h4>
+        <p lang="en"><span class="m">1</span> The bead model, coloured by distance from the centre; rotate it with the mouse. <span class="m">2</span> The data (dots) and the bead model's curve (line), with χ² next to the noise floor. <span class="m">3</span> The reliability line: the agreement between your runs, NSD. Below <b data-fact="shape3d._NSD_STABLE">0.6</b> is <b>stable</b>, up to <b data-fact="shape3d._NSD_FAIR">1.0</b> is <b>fair</b>, above that is <b>unreliable</b>. With one run it says <b>unknown (one run)</b>. <b class="ui">Export PDB…</b> saves the model for a molecular viewer.</p><p lang="zh-Hant"><span class="m">1</span> 珠子模型，顏色代表離中心的距離；可以用滑鼠轉動。<span class="m">2</span> 數據（點）和珠子模型的曲線（線），χ² 旁邊會標出雜訊底。<span class="m">3</span> 可靠度那一行：你的幾次重建互相有多一致，也就是 NSD。低於 <b data-fact="shape3d._NSD_STABLE">0.6</b> 是 <b>stable</b>，到 <b data-fact="shape3d._NSD_FAIR">1.0</b> 是 <b>fair</b>，再高就是 <b>unreliable</b>。只跑一次的話會寫 <b>unknown (one run)</b>。<b class="ui">Export PDB…</b> 可以把模型存成檔案，用分子檢視軟體打開。</p>
+        <div class="shot wide"><a class="zoom" lang="en" href="img/shape3d-window.png" target="_blank" rel="noopener noreferrer"><img src="img/shape3d-window.png" width="1100" height="740" alt="The 3D Shape window after one run: the bead model, the data with the bead model's fit, and the reliability line (numbers 1 to 3)" loading="lazy"></a><a class="zoom" lang="zh-Hant" href="img/shape3d-window.png" target="_blank" rel="noopener noreferrer"><img src="img/shape3d-window.png" width="1100" height="740" alt="跑完一次之後的 3D Shape 視窗：珠子模型、數據與珠子模型的曲線、可靠度那一行（編號 1 到 3）" loading="lazy"></a></div></div></li>
+    </ol>
+    <div class="tip">
+      <h4 lang="en">Help it get better</h4><h4 lang="zh-Hant">幫它變得更好</h4>
+      <p lang="en">A curve whose 3D model looks wrong is the most useful thing you can send us. Click <b class="ui">Report a problem</b>; your log goes with it.</p><p lang="zh-Hant">一條建出來的 3D 模型看起來不對的曲線，是你能給我們的最有用的東西。按 <b class="ui">Report a problem</b>，你的 log 會一起送出。</p>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────── 12. How it compares ─────────────────────────── -->
+  <section class="card" id="validation">
+    <h2><span class="n">12</span><span lang="en">How PicoSAS compares with other programs</span><span lang="zh-Hant">PicoSAS 和其他程式比起來如何</span></h2>
+    <p class="lead" lang="en">For anyone who wants to know where PicoSAS stands today: we give the same data files to PicoSAS and to widely used programs, and compare every result with a trusted reference. The results, with a table for each feature, are in the <a href="report.html" target="_blank" rel="noopener noreferrer">comparison report</a> (in English). It is rebuilt from the measurements each time we improve something.</p><p class="lead" lang="zh-Hant">想知道 PicoSAS 目前做到什麼程度的話：我們把同一份數據交給 PicoSAS 和業界常用的程式，再拿每個結果去和可信的參考值比較。每個功能的比較表，都在<a href="report.html" target="_blank" rel="noopener noreferrer">比較報告</a>裡（英文）。每次改進之後，報告都會依最新的量測重新產生。</p>
+
+    <h3 class="part" lang="en">How we compare</h3><h3 class="part" lang="zh-Hant">我們怎麼比</h3>
+    <table class="keys">
+      <tr><td class="k" lang="en">Same data for everyone</td><td class="k" lang="zh-Hant">大家用同一份數據</td><td lang="en">Every program gets the same file and the same q unit.</td><td lang="zh-Hant">每個程式拿到的都是同一個檔案、同一個 q 單位。</td></tr>
+      <tr><td class="k" lang="en">Trusted references</td><td class="k" lang="zh-Hant">可信的參考值</td><td lang="en">Protein curves from the SASBDB database, with the values their authors obtained with ATSAS; a published series of nanoparticle composites measured on an absolute scale.</td><td lang="zh-Hant">SASBDB 資料庫的蛋白質曲線，以及作者用 ATSAS 得到的數值；另外還有一組已發表、以絕對強度量測的奈米粒子複合材料系列。</td></tr>
+      <tr><td class="k" lang="en">Other programs</td><td class="k" lang="zh-Hant">比較的程式</td><td lang="en">BioXTAS RAW, FreeSAS, McSAS3 and DENSS, run on our computer with their standard settings.</td><td lang="zh-Hant">BioXTAS RAW、FreeSAS、McSAS3 和 DENSS，在我們的電腦上用它們的標準設定執行。</td></tr>
+      <tr><td class="k" lang="en">Rules set before the test</td><td class="k" lang="zh-Hant">規則先定好再考</td><td lang="en">The pass rule for each comparison is written down before it is run, and the final test uses curves that PicoSAS's development never touched, run once.</td><td lang="zh-Hant">每項比較的合格標準都在執行前寫好；最終測試用的是 PicoSAS 開發過程中從沒碰過的曲線，而且只跑一次。</td></tr>
+    </table>
+
+    <h3 class="part" lang="en">Where it stands now</h3><h3 class="part" lang="zh-Hant">目前的狀況</h3>
+    <p lang="en">On the same data, PicoSAS does as well as or better than these programs on: the radius of gyration (Rg); the maximum size (Dmax), where it gives an answer more often and is less often far off; molecular weight from the Porod volume; the volume fraction of concentrated composites; and 3D models, which fit the data best and match the known structures as well as the authors' own models. It also reads the q unit of a file by itself.</p><p lang="zh-Hant">在同一份數據上，下面這些項目 PicoSAS 和這些程式一樣好或更好：迴轉半徑（Rg）；給出最大尺寸（Dmax）的比例，而且很少偏得很遠；由 Porod 體積算的分子量；高濃度複合材料的體積分率；以及 3D 模型——最貼合數據，和已知結構的相似程度也和作者的模型一樣。它還會自己判讀檔案的 q 單位。</p>
+  </section>
+
+  <footer lang="en">
+    <h2>Stuck?</h2>
+    Look at <a href="#help">chapter 10</a> first. Then click <b class="ui">Report a problem</b> at the bottom-right of the PicoSAS window (or <b>Help → Report a Problem…</b>).
+    Describe what happened; PicoSAS adds its log and shows you everything before it is sent.
+    <h2 style="margin-top:18px">Not installed yet?</h2>
+    <a href="index.html">Install PicoSAS</a> · uninstall instructions are on the same page.
+  </footer>
+  <footer lang="zh-Hant">
+    <h2>卡住了？</h2>
+    先看<a href="#help">第 10 章</a>。還是不行，就按 PicoSAS 視窗右下角的 <b class="ui">Report a problem</b>（或 <b>Help → Report a Problem…</b>）。描述發生了什麼；PicoSAS 會附上它的 log，送出前會先讓你看到全部內容。
+    <h2 style="margin-top:18px">還沒安裝？</h2>
+    <a href="index.html">安裝 PicoSAS</a> · 解除安裝的方法也在同一頁。
+  </footer>
+</main>
+</div>
+<script>
+(function () {
+  var titles = {en: "PicoSAS Quick Start", "zh-Hant": "PicoSAS 快速入門"};
+  function render(l) {
+    document.documentElement.lang = l;
+    document.title = titles[l] || titles.en;
+    document.querySelectorAll(".lang button").forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.lang === l); });
+  }
+  document.querySelectorAll(".lang button").forEach(function (b) {
+    b.addEventListener("click", function () {
+      render(b.dataset.lang);
+      try { localStorage.setItem("picosas-lang", b.dataset.lang); } catch (e) {}
+    });
+  });
+  document.querySelectorAll("button.copy").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var done = function () { b.setAttribute("data-done", ""); setTimeout(function () { b.removeAttribute("data-done"); }, 2000); };
+      if (navigator.clipboard) navigator.clipboard.writeText(b.dataset.copy).then(done, function () {});
+    });
+  });
+  render(document.documentElement.lang);
+})();
+(function () {
+  var doc = document, root = doc.documentElement;
+  var q = doc.getElementById("q"), clr = doc.getElementById("qclear"), info = doc.getElementById("qinfo"),
+      tree = doc.getElementById("tree"), res = doc.getElementById("res"), drawer = doc.getElementById("drawer");
+  var LANGS = ["en", "zh-Hant"];
+  var UI = {
+    en: {ph: "Search the guide…", none: "No match. Try fewer or different words.", short: "Type at least two letters.",
+         n: function (k) { return k + (k === 1 ? " result" : " results"); }},
+    "zh-Hant": {ph: "搜尋說明…", none: "找不到。試試少一點、或換個關鍵字。", short: "請輸入至少兩個字母。",
+                n: function (k) { return k + " 個結果"; }}
+  };
+  var CJK = /[㐀-鿿]/;
+  var chapters = [], blocks = [], current = -1;
+  var wide = window.matchMedia("(min-width: 921px)");
+
+  function lang() { return root.getAttribute("lang") === "zh-Hant" ? "zh-Hant" : "en"; }
+  function zh(el) { var n = el.nextElementSibling; return n && n.getAttribute("lang") === "zh-Hant" ? n : el; }
+  function esc(s) { return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+
+  function text(node, L) {
+    var out = [], w = doc.createTreeWalker(node, NodeFilter.SHOW_TEXT, null), t, e;
+    while ((t = w.nextNode())) {
+      e = t.parentElement;
+      if (e.closest("script,style")) continue;
+      e = e.closest("[lang]");
+      if (e && e !== root && e.getAttribute("lang") !== L) continue;
+      out.push(t.nodeValue);
+    }
+    return out.join(" ").replace(/\s+/g, " ").trim();
+  }
+
+  function build() {
+    [].forEach.call(doc.querySelectorAll("main section.card"), function (sec, ci) {
+      var h2 = sec.querySelector("h2"), n = h2.querySelector(".n"), ch = {id: sec.id, el: sec, num: n ? n.textContent.trim() : "", title: {}, kids: []};
+      LANGS.forEach(function (L) { var s = h2.querySelector('[lang="' + L + '"]'); ch.title[L] = s ? s.textContent.trim() : ""; });
+      var k = 0;
+      function id(el, p) { if (!el.id) el.id = sec.id + "-" + p + (++k); return el.id; }
+      function add(kind, en, titleOf, container) {
+        var other = container ? en : zh(en), rec = {ch: ch, id: id(en, kind), el: {en: en, "zh-Hant": other}, title: {}, text: {}, hay: {}};
+        if (other !== en && !other.id) other.id = rec.id + "-zh";
+        LANGS.forEach(function (L) {
+          var host = container ? en : (L === "en" ? en : other);
+          rec.title[L] = titleOf(host, L);
+          rec.text[L] = text(host, L);
+          rec.hay[L] = (rec.title[L] + " " + rec.text[L]).toLowerCase();
+        });
+        blocks.push(rec);
+        return rec;
+      }
+      [].forEach.call(sec.querySelectorAll('h3.part[lang="en"]'), function (el) {
+        ch.kids.push(add("p", el, function (h) { return h.textContent.trim(); }));
+      });
+      [].forEach.call(sec.querySelectorAll("li.step"), function (li) {
+        var h = li.querySelector('h4[lang="en"]'), hz = li.querySelector('h4[lang="zh-Hant"]');
+        var rec = add("s", li, function (_h, L) { var e = L === "en" ? h : hz; return e ? e.textContent.trim() : ""; }, true);
+        if (h) { rec.navEl = {en: h, "zh-Hant": hz || h}; h.id = h.id || rec.id + "h"; if (hz) hz.id = hz.id || rec.id + "hz"; }
+        ch.kids.push(rec);
+      });
+      [].forEach.call(sec.querySelectorAll('details.faq[lang="en"]'), function (el) {
+        ch.kids.push(add("q", el, function (h) { var s = h.querySelector("summary"); return s ? s.textContent.trim() : ""; }));
+      });
+      [].forEach.call(sec.querySelectorAll("table.keys tr"), function (tr) {
+        add("r", tr, function (h, L) {
+          var c = h.querySelector('td.k[lang="' + L + '"]') || h.querySelector("td.k"); return c ? c.textContent.trim() : "";
+        }, true);
+      });
+      [].forEach.call(sec.querySelectorAll(".tip"), function (t) {
+        add("t", t, function (h, L) { var e = h.querySelector('h4[lang="' + L + '"]'); return e ? e.textContent.trim() : ""; }, true);
+      });
+      [].forEach.call(sec.querySelectorAll('p.lead[lang="en"]'), function (p) {
+        add("l", p, function (h) { return h.textContent.trim().slice(0, 70); });
+      });
+      chapters.push(ch);
+    });
+  }
+
+  function go(rec) {
+    var L = lang(), el = (rec.navEl || rec.el)[L] || rec.el[L];
+    if (!el) return;
+    if (!wide.matches) drawer.open = false;
+    el.scrollIntoView({behavior: "smooth", block: "start"});
+    var box = rec.el[L];
+    box.classList.remove("flash"); void box.offsetWidth; box.classList.add("flash");
+    setTimeout(function () { box.classList.remove("flash"); }, 1900);
+    try { history.replaceState(null, "", "#" + el.id); } catch (e) { /* the address bar is a convenience */ }
+  }
+
+  function chapterRec(ch) { return {ch: ch, id: ch.id, el: {en: ch.el, "zh-Hant": ch.el}}; }
+
+  function renderTree() {
+    var L = lang(), out = [];
+    chapters.forEach(function (ch, i) {
+      out.push('<li class="ch' + (i === current ? " cur open" : "") + '" data-i="' + i + '"><div class="row"><button type="button" class="tg" aria-label="expand">▸</button>' +
+               '<a href="#' + ch.id + '" data-c="' + i + '"><b>' + esc(ch.num) + "</b>" + esc(ch.title[L]) + '</a></div><ul class="sub">');
+      ch.kids.forEach(function (k, j) {
+        out.push('<li><a href="#' + k.id + '" data-c="' + i + '" data-k="' + j + '">' + esc(k.title[L] || "…") + "</a></li>");
+      });
+      out.push("</ul></li>");
+    });
+    tree.innerHTML = out.join("");
+  }
+
+  function terms() { return q.value.toLowerCase().split(/\s+/).filter(Boolean); }
+
+  function search() {
+    var L = lang(), ts = terms(), raw = q.value.trim();
+    clr.hidden = !raw;
+    if (!raw) { res.hidden = true; tree.hidden = false; info.textContent = ""; return []; }
+    tree.hidden = true; res.hidden = false;
+    if (raw.length < 2 && !CJK.test(raw)) { res.innerHTML = ""; info.textContent = UI[L].short; return []; }
+    var hits = [];
+    blocks.forEach(function (b, order) {
+      var hay = b.hay[L], score = 0;
+      for (var i = 0; i < ts.length; i++) {
+        var at = hay.indexOf(ts[i]);
+        if (at < 0) return;
+        score += (b.title[L].toLowerCase().indexOf(ts[i]) >= 0 ? 6 : 0) + Math.min(5, hay.split(ts[i]).length - 1);
+      }
+      hits.push({b: b, score: score, order: order});
+    });
+    hits.sort(function (x, y) { return y.score - x.score || x.order - y.order; });
+    hits = hits.slice(0, 40);
+    info.textContent = hits.length ? UI[L].n(hits.length) : UI[L].none;
+    res.innerHTML = hits.map(function (h, i) {
+      var b = h.b, t = b.text[L], low = t.toLowerCase(), at = Math.max(0, low.indexOf(ts[0]) - 40),
+          snip = esc(t.slice(at, at + 130));
+      ts.forEach(function (w) { snip = snip.replace(new RegExp(esc(w).replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "gi"), function (m) { return "<mark>" + m + "</mark>"; }); });
+      return '<li><a href="#' + b.id + '" data-r="' + i + '"><span class="tag">' + esc(b.ch.num + " " + b.ch.title[L]) + "</span><b>" +
+             esc(b.title[L] || b.ch.title[L]) + "</b><small>" + (at ? "…" : "") + snip + "…</small></a></li>";
+    }).join("");
+    res._hits = hits;
+    return hits;
+  }
+
+  function ui() {
+    var L = lang();
+    q.placeholder = UI[L].ph;
+    q.setAttribute("aria-label", UI[L].ph);
+  }
+
+  var obs;
+  function spyObs() {
+    return obs || (obs = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        var i = chapters.findIndex(function (c) { return c.el === e.target; });
+        if (i === current) return;
+        current = i;
+        [].forEach.call(tree.querySelectorAll(".ch"), function (li) {
+          var on = +li.getAttribute("data-i") === i;
+          li.classList.toggle("cur", on);
+          if (on) li.classList.add("open");
+        });
+      });
+    }, {rootMargin: "-25% 0px -65% 0px"}));
+  }
+
+  tree.addEventListener("click", function (e) {
+    var tg = e.target.closest(".tg"), a = e.target.closest("a");
+    if (tg) { tg.setAttribute("aria-expanded", tg.closest(".ch").classList.toggle("open")); return; }
+    if (!a) return;
+    e.preventDefault();
+    var ch = chapters[+a.getAttribute("data-c")], k = a.getAttribute("data-k");
+    go(k === null ? chapterRec(ch) : ch.kids[+k]);
+  });
+  res.addEventListener("click", function (e) {
+    var a = e.target.closest("a");
+    if (!a) return;
+    e.preventDefault();
+    go(res._hits[+a.getAttribute("data-r")].b);
+  });
+  q.addEventListener("input", search);
+  q.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") { q.value = ""; search(); }
+    else if (e.key === "ArrowDown") { var a = res.querySelector("a"); if (a) { e.preventDefault(); a.focus(); } }
+    else if (e.key === "Enter" && res._hits && res._hits.length) { e.preventDefault(); go(res._hits[0].b); }
+  });
+  res.addEventListener("keydown", function (e) {
+    var a = doc.activeElement, li = a && a.closest("li");
+    if (e.key === "ArrowDown" && li && li.nextElementSibling) { e.preventDefault(); li.nextElementSibling.querySelector("a").focus(); }
+    else if (e.key === "ArrowUp") { e.preventDefault(); if (li && li.previousElementSibling) li.previousElementSibling.querySelector("a").focus(); else q.focus(); }
+  });
+  clr.addEventListener("click", function () { q.value = ""; search(); q.focus(); });
+  doc.addEventListener("keydown", function (e) {
+    if (e.key !== "/" || /^(INPUT|TEXTAREA|SELECT)$/.test(doc.activeElement.tagName)) return;
+    e.preventDefault();
+    if (!wide.matches) drawer.open = true;
+    q.focus(); q.select();
+  });
+  function place() { if (wide.matches) drawer.open = true; }
+  if (wide.addEventListener) wide.addEventListener("change", place);
+
+  build();
+  drawer.open = wide.matches;
+  ui();
+  renderTree();
+  chapters.forEach(function (c) { spyObs().observe(c.el); });
+  new MutationObserver(function () { ui(); renderTree(); if (q.value.trim()) search(); }).observe(root, {attributes: true, attributeFilter: ["lang"]});
+  window.picosasGuide = {search: function (s) { q.value = s; return search().map(function (h) { return {id: h.b.id, chapter: h.b.ch.id, title: h.b.title[lang()]}; }); },
+                       chapters: function () { return chapters.map(function (c) { return {id: c.id, kids: c.kids.length}; }); }};
+})();
+</script>
+<script>(function () {
+  document.querySelectorAll(".ext[data-src]").forEach(function (box) {
+    var im = new Image();
+    im.onload = function () {
+      var a = document.createElement("a");
+      a.className = "zoom"; a.href = box.dataset.src; a.target = "_blank"; a.rel = "noopener noreferrer";
+      im.alt = box.dataset.altEn + " / " + box.dataset.altZh;
+      var d = box.querySelector(".drawn"); if (d) { d.remove(); }
+      a.appendChild(im); box.appendChild(a); box.hidden = false;
+    };
+    im.src = box.dataset.src;
+  });
+})();</script>
+<button type="button" id="totop"><span aria-hidden="true">↑</span><span class="sr" lang="en">Back to top</span><span class="sr" lang="zh-Hant">回到最上面</span></button>
+<script>(function () {
+  var b = document.getElementById("totop"), root = document.documentElement;
+  var T = {en: "Back to top", "zh-Hant": "回到最上面"};
+  function label() { b.title = T[root.getAttribute("lang") === "zh-Hant" ? "zh-Hant" : "en"]; }
+  function sync() { b.classList.toggle("show", window.scrollY > 320); }
+  b.addEventListener("click", function () {
+    var calm = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.scrollTo({top: 0, behavior: calm ? "auto" : "smooth"});
+    try { history.replaceState(null, "", location.pathname + location.search); } catch (e) { /* the address bar is a convenience */ }
+  });
+  window.addEventListener("scroll", sync, {passive: true});
+  new MutationObserver(label).observe(root, {attributes: true, attributeFilter: ["lang"]});
+  label(); sync();
+})();</script>
+</body>
+</html>
