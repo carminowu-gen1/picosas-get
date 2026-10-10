@@ -53,8 +53,10 @@ table.spec [data-spec] { font-weight: 700; color: var(--ink); }
 .note { margin: 12px 0 0; color: var(--muted); font-size: 15px; }
 .note.ok { color: var(--ok); }
 .note.warn { color: var(--warn); }
+.way { margin: 26px 0 4px; font-size: 21px; }
+.way:first-of-type { margin-top: 18px; }
 ol.steps { list-style: none; counter-reset: s; padding: 0; margin: 28px 0 0; display: grid; gap: 22px; }
-ol.steps > li { counter-increment: s; display: grid; grid-template-columns: 36px 1fr; gap: 14px; align-items: start; }
+ol.steps > li { counter-increment: s; display: grid; grid-template-columns: 36px minmax(0, 1fr); gap: 14px; align-items: start; }
 ol.steps > li::before { content: counter(s); width: 32px; height: 32px; border-radius: 50%; background: var(--soft);
   color: var(--accent); font-weight: 700; display: grid; place-items: center; }
 .step h3 { margin: 3px 0 4px; font-size: 18px; }
@@ -110,6 +112,10 @@ footer h2 { font-size: 17px; color: var(--ink); margin: 0 0 6px; }
   </div>
 
   <section class="card" data-panel="win">
+    <p lang="en" style="margin-top:0">There are two ways to install. Both install the same PicoSAS. <b>A</b> downloads an installer; Windows shows a security
+      warning before it starts. <b>B</b> pastes one line into PowerShell; no warning appears.</p>
+    <p lang="zh-Hant" style="margin-top:0">有兩種裝法，裝好的 PicoSAS 完全一樣。<b>A</b>：下載安裝檔，Windows 在開始前會先跳出安全警告。<b>B</b>：在 PowerShell 貼上一行指令，不會跳出警告。</p>
+    <h2 class="way" lang="en">A. Download the installer</h2><h2 class="way" lang="zh-Hant">A. 下載安裝檔</h2>
     <button class="big" id="dl">⬇ Download PicoSAS for Windows</button>
     <p class="note" id="dl-note"></p>
     <ol class="steps">
@@ -125,6 +131,7 @@ footer h2 { font-size: 17px; color: var(--ink); margin: 0 0 6px; }
           <path d="M382 58 l12 8 l-12 8" fill="none" stroke="#2563eb" stroke-width="3" stroke-linecap="round"/>
         </svg></div></div></li>
       <li class="step"><div><h3 lang="en">Windows warns first — click “More info”, then “Run anyway”</h3><h3 lang="zh-Hant">Windows 會先跳出警告——點「其他資訊」，再點「仍要執行」</h3>
+        <p class="note" lang="en" style="margin-top:0">Rather not see this warning? Use way B below.</p><p class="note" lang="zh-Hant" style="margin-top:0">不想看到這個警告？改用下面的方法 B。</p>
         <p lang="en">The window may be blue or red and says “Windows protected your PC”. It appears because the installer does not yet carry a paid code-signing certificate and Windows has not seen this new program before — not because anything harmful was found. Before anything is written to your computer, the installer checks the program against PicoSAS's own digital signature, and stops if it does not match.</p><p lang="zh-Hant">這個視窗可能是藍色或紅色，標題是「Windows 已保護您的電腦」。會出現是因為安裝程式還沒有購買數位簽章憑證、Windows 也還沒見過這個新軟體，並不是偵測到有害的東西。程式寫入你的電腦之前，安裝程式會先用 PicoSAS 自己的數位簽章逐一核對，對不上就停止安裝。英文版 Windows 的按鈕是「More info」和「Run anyway」。</p>
         <div class="shot"><svg viewBox="0 0 440 210" role="img" aria-label="Windows protected your PC: click More info, then Run anyway">
           <rect x="10" y="10" width="420" height="190" rx="4" fill="#c42b1c"/>
@@ -184,6 +191,18 @@ footer h2 { font-size: 17px; color: var(--ink); margin: 0 0 6px; }
           <rect x="370" y="22" width="58" height="16" rx="3" fill="#0a1530" stroke="#1f6fa8"/>
           <rect x="371" y="23" width="24" height="14" rx="2" fill="#34e7ff"/>
         </svg></div></div></li>
+    </ol>
+    <h2 class="way" lang="en">B. Paste one line (no security warning)</h2><h2 class="way" lang="zh-Hant">B. 貼上一行指令（不會出現安全警告）</h2>
+    <ol class="steps">
+      <li class="step"><div><h3 lang="en">Copy this line</h3><h3 lang="zh-Hant">複製這一行</h3>
+        <div class="cmd"><code class="win"></code><button class="copy">Copy</button></div>
+        <p class="note code-note"></p></div></li>
+      <li class="step"><div><h3 lang="en">Open PowerShell</h3><h3 lang="zh-Hant">打開 PowerShell</h3>
+        <p lang="en">Click <b>Start</b>, type <b>PowerShell</b>, and press <kbd>Enter</kbd>. A blue or black window opens.</p><p lang="zh-Hant">按 <b>開始</b>，輸入 <b>PowerShell</b>，按 <kbd>Enter</kbd>。會打開一個藍色或黑色的視窗。</p></div></li>
+      <li class="step"><div><h3 lang="en">Paste it and press Enter</h3><h3 lang="zh-Hant">貼上，然後按 Enter</h3>
+        <p lang="en">Press <kbd>Ctrl</kbd> + <kbd>V</kbd> (or right-click in the window), then <kbd>Enter</kbd>. When it asks for the install location, press <kbd>Enter</kbd> to use the suggested folder, or type the folder you want and press <kbd>Enter</kbd>.</p><p lang="zh-Hant">按 <kbd>Ctrl</kbd> + <kbd>V</kbd>（或在視窗裡按滑鼠右鍵），再按 <kbd>Enter</kbd>。問你安裝位置時，直接按 <kbd>Enter</kbd> 用建議的資料夾；想裝在別的地方，就輸入那個資料夾，再按 <kbd>Enter</kbd>。</p></div></li>
+      <li class="step"><div><h3 lang="en">Wait 5–15 minutes, then open PicoSAS from your Desktop</h3><h3 lang="zh-Hant">等 5–15 分鐘，然後從桌面開啟 PicoSAS</h3>
+        <p lang="en">Keep the computer online while Python and the PicoSAS components download. The offline AI assistant downloads by itself the first time you start PicoSAS.</p><p lang="zh-Hant">Python 和 PicoSAS 的元件下載時，請保持電腦連線。第一次啟動 PicoSAS 時，離線 AI 助理會自動下載。</p></div></li>
     </ol>
   </section>
 
@@ -268,7 +287,7 @@ footer h2 { font-size: 17px; color: var(--ink); margin: 0 0 6px; }
   };
   var ua = navigator.userAgent;
   var os = /Windows/i.test(ua) ? "win" : /Mac/i.test(ua) ? "mac" : /Linux|X11/i.test(ua) ? "linux" : "win";
-  var code = "", line = "", dlState = "idle";
+  var code = "", dlState = "idle";
   var dl = document.getElementById("dl");
   function t() { return T[document.documentElement.lang] || T.en; }
   function show(which) {
@@ -278,10 +297,14 @@ footer h2 { font-size: 17px; color: var(--ink); margin: 0 0 6px; }
   function apply() {
     var s = t();
     code = decodeURIComponent((location.hash || "").slice(1)).trim();
-    line = code ? "curl -fsSL -H 'Authorization: Bearer " + code + "' -H 'Accept: application/vnd.github.raw' " + api
+    var unix = code ? "curl -fsSL -H 'Authorization: Bearer " + code + "' -H 'Accept: application/vnd.github.raw' " + api
                   + "/install.sh | PICOSAS_CODE='" + code + "' sh"
                 : s.ask;
-    document.querySelectorAll("code.unix").forEach(function (c) { c.textContent = line; });
+    var win = code ? "irm -Headers @{Authorization='Bearer " + code + "';Accept='application/vnd.github.raw'} " + api
+                  + "/install.ps1 | iex; Install-PicoSAS '" + code + "'"
+                : s.ask;
+    document.querySelectorAll("code.unix").forEach(function (c) { c.textContent = unix; });
+    document.querySelectorAll("code.win").forEach(function (c) { c.textContent = win; });
     document.querySelectorAll(".code-note").forEach(function (n) {
       n.textContent = code ? s.lineYes : s.lineNo;
       n.className = "note " + (code ? "ok" : "warn") + " code-note";
@@ -312,7 +335,7 @@ footer h2 { font-size: 17px; color: var(--ink); margin: 0 0 6px; }
   document.querySelectorAll(".copy").forEach(function (b) {
     b.addEventListener("click", function () {
       var done = function () { b.textContent = t().copied; setTimeout(function () { b.textContent = t().copy; }, 2000); };
-      if (navigator.clipboard) navigator.clipboard.writeText(line).then(done, function () { select(b); });
+      if (navigator.clipboard) navigator.clipboard.writeText(b.previousElementSibling.textContent).then(done, function () { select(b); });
       else select(b);
     });
   });
