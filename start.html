@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>PicoSAS Quick Start</title>
-<meta name="picosas-build" content="2026-10-20c-v0.1">
+<meta name="picosas-build" content="2026-10-21a-v0.1">
 <link rel="icon" href="picosas.png">
 <script>document.documentElement.className+=" js"</script>
 <script>(function(){var l=null;try{l=localStorage.getItem("picosas-lang")}catch(e){}if(l!=="en"&&l!=="zh-Hant")l=/^zh(-hant)?-tw$/i.test(navigator.language||"")?"zh-Hant":"en";document.documentElement.lang=l})();</script>
@@ -206,6 +206,7 @@ html.js nav.toc { display: none; }
     <a href="#shape3d"><b>11</b><span lang="en">3D (preview)</span><span lang="zh-Hant">3D（預覽）</span></a>
     <a href="#data2d"><b>12</b><span lang="en">2D data</span><span lang="zh-Hant">2D 數據</span></a>
     <a href="#validation"><b>13</b><span lang="en">How it compares</span><span lang="zh-Hant">和業界比較</span></a>
+    <a href="#sevo"><b>14</b><span lang="en">S-EVO</span><span lang="zh-Hant">S-EVO 知識庫</span></a>
   </nav>
 
   <!-- ─────────────────────────── ★ Start here: the first result ─────────────────────────── -->
@@ -874,6 +875,39 @@ html.js nav.toc { display: none; }
 
     <h3 class="part" lang="en">Where it stands now</h3><h3 class="part" lang="zh-Hant">目前的狀況</h3>
     <p lang="en">On the same data, PicoSAS does as well as or better than these programs on: the radius of gyration (Rg); molecular weight from the Porod volume; the volume fraction of concentrated composites; and 3D models, which fit the data best and match the known structures as well as the authors' own models. It also reads the q unit of a file by itself.</p><p lang="zh-Hant">在同一份數據上，下面這些項目 PicoSAS 和這些程式一樣好或更好：迴轉半徑（Rg）；由 Porod 體積算的分子量；高濃度複合材料的體積分率；以及 3D 模型——最貼合數據，和已知結構的相似程度也和作者的模型一樣。它還會自己判讀檔案的 q 單位。</p>
+  </section>
+
+  <section class="card" id="sevo">
+    <h2><span class="n">14</span><span lang="en">S-EVO: the knowledge library that learns</span><span lang="zh-Hant">S-EVO：會自己學習的知識庫</span></h2>
+    <p class="lead" lang="en">PicoSAS keeps a library of knowledge cards. Each card says, for one kind of sample, which model describes it, which quantity it answers (a thickness, a radius, Rg…) and, when it is known, what the literature reports, together with how far the card can be trusted. The <b class="ui">S-EVO</b> tab on the right shows this library and lets you decide whether it may study on its own.</p><p class="lead" lang="zh-Hant">PicoSAS 有一個「知識卡片」庫。每張卡片記錄某一類樣品該用哪個模型描述、回答的是哪個量（厚度、半徑、Rg…），文獻有數值時也一併記下，並標明這張卡片可信到什麼程度。右側的 <b class="ui">S-EVO</b> 分頁顯示這個知識庫，也讓你決定要不要讓它自己學習。</p>
+
+    <h3 class="part" lang="en">What it does for your analysis</h3><h3 class="part" lang="zh-Hant">它對你的分析有什麼用</h3>
+    <p lang="en">While it reads your sample description, PicoSAS looks up the cards: they tell it which quantities your kind of sample is usually asked for, which models are worth trying, and what the literature reports, so that your answer can be checked against it (<b>answers cross-checked vs literature</b> on the panel). The data still decides: a card can suggest a model, but the fit to your curve chooses which one wins, and a card never changes a fitted number.</p><p lang="zh-Hant">讀你的樣品描述時，PicoSAS 會查這些卡片：同類樣品通常要回答哪些量、哪些模型值得試、文獻報告過什麼數值，好讓你的答案可以拿來對照（面板上的 <b>answers cross-checked vs literature</b>）。最後還是由數據決定：卡片可以建議模型，但哪個模型勝出要看它和你的曲線擬合得好不好；卡片也絕不會改動擬合出來的數字。</p>
+
+    <h3 class="part" lang="en">How it learns</h3><h3 class="part" lang="zh-Hant">它怎麼學</h3>
+    <table class="keys">
+      <tr><td class="k" lang="en">From your own fits (always)</td><td class="k" lang="zh-Hant">從你自己的擬合學（一直都會）</td><td lang="en">When an analysis fits your data well and answers the question, the result becomes a card checked on real data. A weak card that your data contradicts is removed. This happens whether or not the switch is on (<b>measurements learned from YOUR real fits</b>).</td><td lang="zh-Hant">當一次分析和你的數據擬合得好、也回答了問題，這個結果就會變成一張用真實數據驗證過的卡片；和你的數據矛盾的弱卡片會被刪掉。不管開關有沒有打開，這都會發生（面板上的 <b>measurements learned from YOUR real fits</b>）。</td></tr>
+      <tr><td class="k" lang="en">Background study (the switch)</td><td class="k" lang="zh-Hant">背景研究（就是那個開關）</td><td lang="en">When you have been away from the computer for <span data-fact="copilot_gui._SEVO_IDLE_S">120</span> seconds and no analysis is running, it takes one topic from its study list (a kind of sample, never your data) and asks the AI you chose which model describes it. The answer is kept only if the model exists and a test fit works; whether its cited paper is found decides its level (below). A topic that fails is marked as not learned and nothing is written.</td><td lang="zh-Hant">當你離開電腦 <span data-fact="copilot_gui._SEVO_IDLE_S">120</span> 秒、而且沒有分析在跑時，它會從學習清單拿一個主題（一類樣品，絕不是你的數據），問你選的 AI 該用哪個模型描述它。答案要模型確實存在、試擬合可行才會留下；引用的論文查不查得到，決定它是第幾級（見下面）。沒通過的主題會標成「沒學成」，什麼都不寫入。</td></tr>
+      <tr><td class="k" lang="en">New topics</td><td class="k" lang="zh-Hant">新主題</td><td lang="en">When every topic on the list is done, it asks the AI for new ones, and it stops once the library has reached its precision goal (below).</td><td lang="zh-Hant">清單上的主題都做完時，它會請 AI 出新的主題；知識庫達到下面說的精度目標後就停止。</td></tr>
+      <tr><td class="k" lang="en">Re-checking</td><td class="k" lang="zh-Hant">重新查證</td><td lang="en">It also looks again for the papers of provisional cards; when one is found, that card moves up a level.</td><td lang="zh-Hant">它也會再去找暫定卡片引用的論文；找到了，那張卡片就升一級。</td></tr>
+    </table>
+
+    <h3 class="part" lang="en">How far a card can be trusted</h3><h3 class="part" lang="zh-Hant">卡片可信到什麼程度</h3>
+    <table class="keys">
+      <tr><td class="k" lang="en">Level 1</td><td class="k" lang="zh-Hant">第 1 級</td><td lang="en">A certified reference value, or a real measurement (yours included) that an open-access paper confirms.</td><td lang="zh-Hant">認證過的參考值，或是有開放取用論文佐證的真實量測（包括你的數據）。</td></tr>
+      <tr><td class="k" lang="en">Level 2</td><td class="k" lang="zh-Hant">第 2 級</td><td lang="en">Sound but not fully confirmed: a good fit of your data that no paper confirms yet, or an AI answer that passed the test fit and whose paper was found by its DOI.</td><td lang="zh-Hant">可靠但還沒完全確認：還沒有論文佐證的、你的數據的好擬合；或是通過試擬合、引用論文用 DOI 查得到的 AI 答案。</td></tr>
+      <tr><td class="k" lang="en">Level 3</td><td class="k" lang="zh-Hant">第 3 級</td><td lang="en">Provisional: it passed the test fit, but no paper has been confirmed yet.</td><td lang="zh-Hant">暫定：通過試擬合，但還沒有確認過任何論文。</td></tr>
+    </table>
+
+    <h3 class="part" lang="en">Using the panel</h3><h3 class="part" lang="zh-Hant">面板怎麼用</h3>
+    <table class="keys">
+      <tr><td class="k" lang="en">Background self-evolution</td><td class="k" lang="zh-Hant">Background self-evolution（開關）</td><td lang="en">On: it studies by itself while you are away. Off: it only learns from your fits. It uses the AI named beside the switch; with a cloud AI, each topic uses some of that service's allowance.</td><td lang="zh-Hant">打開：你離開時它自己研究。關閉：只從你的擬合學。它用的是開關旁邊寫的那個 AI；如果是雲端 AI，每個主題都會用掉一點該服務的額度。</td></tr>
+      <tr><td class="k" lang="en">STUDY NOW</td><td class="k" lang="zh-Hant">STUDY NOW</td><td lang="en">One round of study right away, without waiting for you to be away.</td><td lang="zh-Hant">立刻研究一輪，不必等你離開電腦。</td></tr>
+      <tr><td class="k" lang="en">CARDS · DOMAINS</td><td class="k" lang="zh-Hant">CARDS · DOMAINS</td><td lang="en">How many cards it has, and in how many fields.</td><td lang="zh-Hant">目前有幾張卡片、分布在幾個領域。</td></tr>
+      <tr><td class="k" lang="en">DISPERSION</td><td class="k" lang="zh-Hant">DISPERSION</td><td lang="en">How precisely its trusted cards (levels 1 and 2) cover each field: the more trusted cards a field has, the lower the number. The goal is below <span data-fact="kb_coverage.DISPERSION_GOAL" data-scale="100">1</span> %.</td><td lang="zh-Hant">可信卡片（第 1、2 級）把每個領域涵蓋得多精確：一個領域的可信卡片越多，這個數字越低。目標是低於 <span data-fact="kb_coverage.DISPERSION_GOAL" data-scale="100">1</span> %。</td></tr>
+      <tr><td class="k" lang="en">TOPICS STUDIED</td><td class="k" lang="zh-Hant">TOPICS STUDIED</td><td lang="en">Topics learned out of the topics on its list.</td><td lang="zh-Hant">清單上的主題裡，已經學會幾個。</td></tr>
+      <tr><td class="k" lang="en">"nothing left to study"</td><td class="k" lang="zh-Hant">「nothing left to study」</td><td lang="en">Every topic on the list is done and the AI proposed no new one (or the precision goal is met). The switch can stay on: your fits still teach it.</td><td lang="zh-Hant">清單上的主題都做完了，AI 也沒有提出新主題（或已達到精度目標）。開關可以繼續開著：你的擬合還是會教它。</td></tr>
+    </table>
   </section>
 
   <footer lang="en">
