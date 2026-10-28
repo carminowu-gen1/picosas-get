@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>PicoSAS Quick Start</title>
-<meta name="picosas-build" content="2026-10-23a-v0.1">
+<meta name="picosas-build" content="2026-10-28a-v0.1">
 <link rel="icon" href="picosas.png">
 <script>document.documentElement.className+=" js"</script>
 <script>(function(){var l=null;try{l=localStorage.getItem("picosas-lang")}catch(e){}if(l!=="en"&&l!=="zh-Hant")l=/^zh(-hant)?-tw$/i.test(navigator.language||"")?"zh-Hant":"en";document.documentElement.lang=l})();</script>
@@ -315,7 +315,7 @@ html.js nav.toc { display: none; }
         <p lang="en">Click <b>📎</b>, paste, or drag files in. They appear above the question box (✕ removes one); type a question if you like, then send. You can send a file without typing anything.</p><p lang="zh-Hant">按 <b>📎</b>、貼上，或把檔案拖進來。它們會列在輸入框上方（按 ✕ 可以拿掉）；想問什麼就打字，再送出。不打字直接送也可以。</p>
         <table class="keys prov">
           <tr><td class="k" lang="en">Measurement data</td><td class="k" lang="zh-Hant">量測數據</td><td lang="en"><code>.dat .abs .txt .csv .xml .h5 .nxs</code> — loaded into <b class="ui">Batch</b> and onto the plot. Then say “analyze”.</td><td lang="zh-Hant"><code>.dat .abs .txt .csv .xml .h5 .nxs</code>——載入 <b class="ui">Batch</b> 並畫在圖上。接著說「開始分析」。</td></tr>
-          <tr><td class="k" lang="en">Papers and notes</td><td class="k" lang="zh-Hant">論文和筆記</td><td lang="en"><code>.pdf .md .txt</code> — added to your own material. Ask about them and it names the file and page. A scanned PDF (pictures of pages, no text) can't be read yet.</td><td lang="zh-Hant"><code>.pdf .md .txt</code>——加進你自己的資料。之後問它內容，它會註明檔名和頁碼。掃描的 PDF（每頁是圖片、沒有文字）目前還讀不了。</td></tr>
+          <tr><td class="k" lang="en">Papers and notes</td><td class="k" lang="zh-Hant">論文和筆記</td><td lang="en"><code>.pdf .md .txt</code> — added to your own material. Ask about them and it names the file and page. The first time you add one, PicoSAS downloads a model (about 1.1 GB, once) in the background that finds the right page more often; until it is ready, the simpler search is used. A scanned PDF (pictures of pages, no text) can't be read yet.</td><td lang="zh-Hant"><code>.pdf .md .txt</code>——加進你自己的資料。之後問它內容，它會註明檔名和頁碼。第一次加入時，PicoSAS 會在背景下載一個模型（約 1.1 GB，只下載一次），讓它更常找到正確的那一頁；下載好之前先用原本較簡單的搜尋。掃描的 PDF（每頁是圖片、沒有文字）目前還讀不了。</td></tr>
           <tr><td class="k" lang="en">Pictures</td><td class="k" lang="zh-Hant">圖片</td><td lang="en"><code>.png .jpg .webp</code>, screenshots — it describes the picture and reads the text in it, answering your question. It takes about 1–4 minutes per picture on a laptop, and it can be wrong about details: check what matters.</td><td lang="zh-Hant"><code>.png .jpg .webp</code>、螢幕截圖——它會描述圖片、讀出圖上的文字，並回答你的問題。在筆電上每張大約 1–4 分鐘，細節可能看錯：重要的地方請自己核對。</td></tr>
         </table>
         <p lang="en">Reading pictures uses the built-in Qwen3.5-4B with its vision file. If it isn't installed yet (usually on computers with 12 GB of memory or more), PicoSAS asks before it reads your first picture. It tells you how much it needs to download (about 3.5 GB, or 0.7 GB if the 4B is already there) and waits for your “yes”.</p><p lang="zh-Hant">看圖用的是內建的 Qwen3.5-4B 和它的視覺檔。還沒裝的電腦（通常是 12 GB 以上記憶體的），第一次傳圖片時它會先問你——告訴你要下載多少（約 3.5 GB；已經有 4B 的話約 0.7 GB），等你說「要」才下載。</p></div></li>
